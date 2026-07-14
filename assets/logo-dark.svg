@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Logo EcoTrueque — versión OSCURA (para splash, fondos verdes o negros) -->
+<svg width="360" height="100" viewBox="0 0 360 100"
+     xmlns="http://www.w3.org/2000/svg"
+     role="img" aria-label="EcoTrueque Venezuela">
+
+  <defs>
+    <!-- Ícono: fondo blanco semitransparente, hoja verde -->
+    <linearGradient id="iconGradDark" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+      <stop offset="0%"   stop-color="rgba(255,255,255,0.20)"/>
+      <stop offset="100%" stop-color="rgba(255,255,255,0.08)"/>
+    </linearGradient>
+    <filter id="glowDark" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#2EC786" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- ÍCONO -->
+  <g transform="translate(0, 10)" filter="url(#glowDark)">
+    <rect x="0" y="0" width="80" height="80" rx="18" ry="18"
+          fill="url(#iconGradDark)" stroke="rgba(255,255,255,0.15)" stroke-width="1.2"/>
+
+    <!-- Hoja verde brillante -->
+    <path d="M40 10
+             C53 19 58 34 52 47
+             C48 56 40 60 40 60
+             C40 60 32 56 28 47
+             C22 34 27 19 40 10 Z"
+          fill="#2EC786"/>
+
+    <!-- Nervio central -->
+    <line x1="40" y1="14" x2="40" y2="57"
+          stroke="#0A5C43" stroke-width="1.4"
+          stroke-linecap="round" stroke-dasharray="2.5,2"/>
+
+    <!-- Flecha derecha → -->
+    <g stroke="white" stroke-width="2.3"
+       stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+      <line x1="26" y1="33" x2="48" y2="33"/>
+      <polyline points="43,29 48,33 43,37"/>
+    </g>
+
+    <!-- Flecha izquierda ← -->
+    <g stroke="white" stroke-width="2.3"
+       stroke-linecap="round" stroke-linejoin="round" fill="none" opacity="0.9">
+      <line x1="51" y1="45" x2="29" y2="45"/>
+      <polyline points="34,41 29,45 34,49"/>
+    </g>
+  </g>
+
+  <!-- TEXTO BLANCO -->
+  <text x="96" y="60"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="38" font-weight="300"
+        fill="rgba(255,255,255,0.80)">eco</text>
+
+  <text x="163" y="60"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="38" font-weight="800"
+        fill="white">trueque</text>
+
+  <line x1="96" y1="67" x2="338" y2="67"
+        stroke="rgba(255,255,255,0.20)" stroke-width="0.6"/>
+
+  <text x="96" y="82"
+        font-family="'Helvetica Neue', Helvetica, Arial, sans-serif"
+        font-size="10" font-weight="500"
+        fill="rgba(255,255,255,0.45)" letter-spacing="5.5">VENEZUELA</text>
+
+</svg>

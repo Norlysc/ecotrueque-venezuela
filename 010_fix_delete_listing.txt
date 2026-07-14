@@ -1,0 +1,37 @@
+-- =======================================================
+-- FIX: Error al eliminar publicación
+-- Pegar esto en Supabase Dashboard → SQL Editor → Run
+-- =======================================================
+-- El problema: al hacer UPDATE status='deleted', la política
+-- RLS de SELECT (status != 'deleted') hace invisible la fila
+-- DESPUÉS del update. PostgreSQL lanza un error porque la fila
+-- actualizada ya no pasa el check de visibilidad.
+-- La solución: función SECURITY DEFINER que hace el soft-delete
+-- internamente, verifica que el usuario sea el dueño, y bypasea
+-- la validación post-update de RLS.
+-- =======================================================
+
+CREATE OR REPLACE FUNCTION public.delete_own_listing(p_listing_id UUID)
+RETURNS VOID
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  -- Solo el dueño puede eliminar
+  IF NOT EXISTS (
+    SELECT 1 FROM public.listings
+    WHERE id = p_listing_id AND user_id = auth.uid()
+  ) THEN
+    RAISE EXCEPTION 'No autorizado: solo el dueño puede eliminar esta publicación';
+  END IF;
+
+  -- Soft delete (bypasea el check de visibilidad por SECURITY DEFINER)
+  UPDATE public.listings
+  SET status = 'deleted', updated_at = NOW()
+  WHERE id = p_listing_id;
+END;
+$$;
+
+-- Permitir que usuarios autenticados llamen la función
+GRANT EXECUTE ON FUNCTION public.delete_own_listing(UUID) TO authenticated;

@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Stop-Process -Name \"node\" -ErrorAction SilentlyContinue)",
+      "Bash(curl -s \"http://localhost:8081/node_modules/expo-router/entry.bundle?platform=web&dev=true\")",
+      "Bash(curl -s \"http://localhost:8081/node_modules/expo-router/entry.bundle?platform=web&dev=true&hot=false&lazy=true&transform.engine=hermes&transform.routerRoot=src%2Fapp&unstable_transformProfile=hermes-stable\")",
+      "PowerShell(Get-Process node -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(New-Item -ItemType Directory -Force \"c:\\\\Users\\\\casta\\\\ecotrueque\\\\ecotrueque-venezuela\\\\ecotrueque\\\\src\\\\app\\\\user\")",
+      "Read(//c/Users/casta/.claude/projects/c--Users-casta-ecotrueque-ecotrueque-venezuela-ecotrueque/memory/**)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\casta\\.claude\\projects\\c--Users-casta-ecotrueque-ecotrueque-venezuela-ecotrueque\\memory"
+    ]
+  }
+}
