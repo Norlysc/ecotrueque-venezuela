@@ -67,7 +67,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
     }],
   ],
   web: {
-    favicon: './assets/logo.svg',
+    favicon: './assets/favicon.png',
     name: 'EcoTrueque Venezuela',
     shortName: 'EcoTrueque',
     description: 'Plataforma de trueques ecológicos de Venezuela',
