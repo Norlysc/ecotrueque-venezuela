@@ -5,7 +5,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Platform } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import { queryClient } from '@lib/queryClient';
 import { supabase } from '@lib/supabase';
@@ -60,7 +60,9 @@ export default function RootLayout() {
         (payload) => {
           const notif = payload.new as Notification;
           addNotification(notif);
-          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          if (Platform.OS !== 'web') {
+            Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+          }
           Toast.show({
             type: 'info',
             text1: notif.title,
