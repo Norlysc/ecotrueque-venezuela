@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { QueryClientProvider } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
 import { StyleSheet, Platform } from 'react-native';
@@ -13,6 +12,7 @@ import { useAuthStore } from '@stores/authStore';
 import { useThemeStore } from '@stores/themeStore';
 import { useNotificationStore } from '@stores/notificationStore';
 import { toastConfig } from '@components/ui/Toast';
+import { BottomSheetProvider } from '@components/ui/BottomSheetProvider';
 import { authService } from '@services/auth.service';
 import type { Notification } from '@/types/app.types';
 
@@ -127,7 +127,7 @@ export default function RootLayout() {
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.root}>
-        <BottomSheetModalProvider>
+        <BottomSheetProvider>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
             <Stack.Screen name="(auth)" />
@@ -179,7 +179,7 @@ export default function RootLayout() {
           </Stack>
           <StatusBar style="auto" />
           <Toast config={toastConfig} />
-        </BottomSheetModalProvider>
+        </BottomSheetProvider>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );
