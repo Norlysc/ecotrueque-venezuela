@@ -53,6 +53,130 @@ export default function LoginScreen() {
     setMagicLinkSent(true);
   };
 
+  const formBody = (
+    <>
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label="Correo electrónico"
+            placeholder="tu@email.com"
+            value={value}
+            onChangeText={onChange}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            leftIcon={Mail}
+            error={errors.email?.message}
+            isDark={isDark}
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="password"
+        render={({ field: { onChange, value } }) => (
+          <Input
+            label="Contraseña"
+            placeholder="Tu contraseña"
+            value={value}
+            onChangeText={onChange}
+            isPassword
+            leftIcon={Lock}
+            error={errors.password?.message}
+            isDark={isDark}
+          />
+        )}
+      />
+
+      <TouchableOpacity
+        onPress={() => router.push('/(auth)/forgot-password')}
+        style={styles.forgotBtn}
+      >
+        <Text style={[styles.forgotText, { color: COLORS.primary }]}>
+          ¿Olvidé mi contraseña?
+        </Text>
+      </TouchableOpacity>
+
+      <Button
+        label="Iniciar sesión"
+        onPress={handleSubmit(onSubmit)}
+        variant="primary"
+        size="lg"
+        isLoading={isLoading}
+        fullWidth
+      />
+
+      <View style={styles.divider}>
+        <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+        <Text style={[styles.dividerText, { color: theme.textTertiary }]}>o</Text>
+        <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
+      </View>
+
+      <Button
+        label={magicLinkSent ? '✓ Enlace enviado a tu email' : 'Entrar con enlace mágico'}
+        onPress={handleMagicLink}
+        variant="outline"
+        size="lg"
+        icon={Send}
+        fullWidth
+        disabled={magicLinkSent}
+      />
+
+      <View style={[styles.ecoCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
+        <Text style={styles.ecoEmoji}>🌍</Text>
+        <View style={{ flex: 1 }}>
+          <Text style={[styles.ecoTitle, { color: COLORS.primaryDark }]}>
+            Comunidad EcoTrueque
+          </Text>
+          <Text style={[styles.ecoText, { color: COLORS.primary }]}>
+            2,400 kg de CO₂ evitados juntos
+          </Text>
+        </View>
+      </View>
+
+      <View style={styles.registerRow}>
+        <Text style={[styles.registerText, { color: theme.textSecondary }]}>
+          ¿No tienes cuenta?{' '}
+        </Text>
+        <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
+          <Text style={[styles.registerLink, { color: COLORS.primary }]}>
+            Regístrate gratis
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </>
+  );
+
+  // ── Web: gradiente de fondo + tarjeta flotante centrada ──────────────
+  if (Platform.OS === 'web') {
+    return (
+      <LinearGradient
+        colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
+        style={styles.webBackground}
+      >
+        <ScrollView
+          contentContainerStyle={styles.webScrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.webLogoWrapper}>
+            <Logo iconSize={72} onDark showTagline />
+          </View>
+
+          <View style={[styles.webCard, { backgroundColor: theme.background }]}>
+            <Text style={[styles.title, { color: theme.text }]}>Bienvenido de vuelta</Text>
+            <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
+              Inicia sesión para continuar
+            </Text>
+            {formBody}
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    );
+  }
+
+  // ── Móvil: layout original sin cambios ───────────────────────────────
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -63,7 +187,6 @@ export default function LoginScreen() {
         contentContainerStyle={{ flexGrow: 1 }}
         keyboardShouldPersistTaps="handled"
       >
-        {/* Header gradiente */}
         <LinearGradient
           colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
           style={[styles.header, { paddingTop: insets.top + 20 }]}
@@ -71,107 +194,12 @@ export default function LoginScreen() {
           <Logo iconSize={76} onDark showTagline />
         </LinearGradient>
 
-        {/* Formulario */}
         <View style={[styles.form, { backgroundColor: theme.background }]}>
           <Text style={[styles.title, { color: theme.text }]}>Bienvenido de vuelta</Text>
           <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
             Inicia sesión para continuar
           </Text>
-
-          <Controller
-            control={control}
-            name="email"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Correo electrónico"
-                placeholder="tu@email.com"
-                value={value}
-                onChangeText={onChange}
-                keyboardType="email-address"
-                autoCapitalize="none"
-                leftIcon={Mail}
-                error={errors.email?.message}
-                isDark={isDark}
-              />
-            )}
-          />
-
-          <Controller
-            control={control}
-            name="password"
-            render={({ field: { onChange, value } }) => (
-              <Input
-                label="Contraseña"
-                placeholder="Tu contraseña"
-                value={value}
-                onChangeText={onChange}
-                isPassword
-                leftIcon={Lock}
-                error={errors.password?.message}
-                isDark={isDark}
-              />
-            )}
-          />
-
-          <TouchableOpacity
-            onPress={() => router.push('/(auth)/forgot-password')}
-            style={styles.forgotBtn}
-          >
-            <Text style={[styles.forgotText, { color: COLORS.primary }]}>
-              ¿Olvidé mi contraseña?
-            </Text>
-          </TouchableOpacity>
-
-          <Button
-            label="Iniciar sesión"
-            onPress={handleSubmit(onSubmit)}
-            variant="primary"
-            size="lg"
-            isLoading={isLoading}
-            fullWidth
-          />
-
-          {/* Divisor */}
-          <View style={styles.divider}>
-            <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
-            <Text style={[styles.dividerText, { color: theme.textTertiary }]}>o</Text>
-            <View style={[styles.dividerLine, { backgroundColor: theme.border }]} />
-          </View>
-
-          <Button
-            label={magicLinkSent ? '✓ Enlace enviado a tu email' : 'Entrar con enlace mágico'}
-            onPress={handleMagicLink}
-            variant="outline"
-            size="lg"
-            icon={Send}
-            fullWidth
-            disabled={magicLinkSent}
-          />
-
-          {/* Card eco */}
-          <View style={[styles.ecoCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-            <Text style={styles.ecoEmoji}>🌍</Text>
-            <View style={{ flex: 1 }}>
-              <Text style={[styles.ecoTitle, { color: COLORS.primaryDark }]}>
-                Comunidad EcoTrueque
-              </Text>
-              <Text style={[styles.ecoText, { color: COLORS.primary }]}>
-                2,400 kg de CO₂ evitados juntos
-              </Text>
-            </View>
-          </View>
-
-          {/* Link registro */}
-          <View style={styles.registerRow}>
-            <Text style={[styles.registerText, { color: theme.textSecondary }]}>
-              ¿No tienes cuenta?{' '}
-            </Text>
-            <TouchableOpacity onPress={() => router.push('/(auth)/register')}>
-              <Text style={[styles.registerLink, { color: COLORS.primary }]}>
-                Regístrate gratis
-              </Text>
-            </TouchableOpacity>
-          </View>
+          {formBody}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -179,6 +207,7 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
+  // Móvil
   container: { flex: 1 },
   header: {
     alignItems: 'center',
@@ -194,6 +223,35 @@ const styles = StyleSheet.create({
     paddingTop: SPACING['2xl'],
     paddingBottom: SPACING['3xl'],
   },
+
+  // Web
+  webBackground: { flex: 1 },
+  webScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+  },
+  webLogoWrapper: {
+    marginBottom: 28,
+    alignItems: 'center',
+  },
+  webCard: {
+    width: '100%',
+    maxWidth: 440,
+    borderRadius: 20,
+    paddingHorizontal: 36,
+    paddingTop: 36,
+    paddingBottom: 40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 10,
+  },
+
+  // Compartidos
   title: {
     fontSize: TYPOGRAPHY.size.xl,
     fontWeight: TYPOGRAPHY.weight.bold,
