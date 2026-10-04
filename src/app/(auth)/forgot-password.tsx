@@ -18,6 +18,7 @@ import { z } from 'zod';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
+import { Logo } from '@components/ui/LogoSVG';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { useAuth } from '@hooks/useAuth';
 
@@ -55,28 +56,8 @@ export default function ForgotPasswordScreen() {
     }, 1000);
   };
 
-  return (
-    <KeyboardAvoidingView
-      style={{ flex: 1 }}
-      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-    >
-      <ScrollView
-        style={[styles.container, { backgroundColor: theme.background }]}
-        contentContainerStyle={{ flexGrow: 1 }}
-        keyboardShouldPersistTaps="handled"
-      >
-        <LinearGradient
-          colors={['#0F6E56', '#1D9E75']}
-          style={[styles.header, { paddingTop: insets.top + 16 }]}
-        >
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
-          </TouchableOpacity>
-          <Text style={styles.emoji}>🔑</Text>
-          <Text style={styles.headerTitle}>Recuperar contraseña</Text>
-        </LinearGradient>
-
-        <View style={[styles.form, { backgroundColor: theme.background }]}>
+  const formBody = (
+    <>
           {!sent ? (
             <>
               <Text style={[styles.title, { color: theme.text }]}>
@@ -163,6 +144,56 @@ export default function ForgotPasswordScreen() {
               Volver al inicio de sesión
             </Text>
           </TouchableOpacity>
+    </>
+  );
+
+  // ── Web: gradiente de fondo + tarjeta flotante centrada (igual que login) ──
+  if (Platform.OS === 'web') {
+    return (
+      <LinearGradient
+        colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
+        style={styles.webBackground}
+      >
+        <ScrollView
+          contentContainerStyle={styles.webScrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.webLogoWrapper}>
+            <Logo iconSize={72} onDark showTagline />
+          </View>
+
+          <View style={[styles.webCard, { backgroundColor: theme.background }]}>
+            {formBody}
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    );
+  }
+
+  // ── Móvil ──
+  return (
+    <KeyboardAvoidingView
+      style={{ flex: 1 }}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView
+        style={[styles.container, { backgroundColor: theme.background }]}
+        contentContainerStyle={{ flexGrow: 1 }}
+        keyboardShouldPersistTaps="handled"
+      >
+        <LinearGradient
+          colors={['#0F6E56', '#1D9E75']}
+          style={[styles.header, { paddingTop: insets.top + 16 }]}
+        >
+          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
+            <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
+          </TouchableOpacity>
+          <Text style={styles.emoji}>🔑</Text>
+          <Text style={styles.headerTitle}>Recuperar contraseña</Text>
+        </LinearGradient>
+
+        <View style={[styles.form, { backgroundColor: theme.background }]}>
+          {formBody}
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
@@ -192,6 +223,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING['2xl'],
     paddingTop: SPACING['2xl'],
     paddingBottom: SPACING['3xl'],
+  },
+  // Web
+  webBackground: { flex: 1 },
+  webScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+  },
+  webLogoWrapper: {
+    marginBottom: 28,
+    alignItems: 'center',
+  },
+  webCard: {
+    width: '100%',
+    maxWidth: 440,
+    borderRadius: 20,
+    paddingHorizontal: 36,
+    paddingTop: 36,
+    paddingBottom: 40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 10,
   },
   successIcon: { alignItems: 'center', marginBottom: SPACING.base },
   successEmoji: { fontSize: 64 },

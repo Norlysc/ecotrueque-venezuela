@@ -19,6 +19,7 @@ import Toast from 'react-native-toast-message';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
+import { Logo } from '@components/ui/LogoSVG';
 import { authService } from '@services/auth.service';
 import { useAuthStore } from '@stores/authStore';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
@@ -156,6 +157,30 @@ export default function ResetPasswordScreen() {
     );
   };
 
+  // ── Web: gradiente de fondo + tarjeta flotante centrada (igual que login) ──
+  if (Platform.OS === 'web') {
+    return (
+      <LinearGradient
+        colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
+        style={styles.webBackground}
+      >
+        <ScrollView
+          contentContainerStyle={styles.webScrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.webLogoWrapper}>
+            <Logo iconSize={72} onDark showTagline />
+          </View>
+
+          <View style={[styles.webCard, { backgroundColor: theme.background }]}>
+            {renderBody()}
+          </View>
+        </ScrollView>
+      </LinearGradient>
+    );
+  }
+
+  // ── Móvil ──
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -204,6 +229,32 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING['2xl'],
     paddingTop: SPACING['2xl'],
     paddingBottom: SPACING['3xl'],
+  },
+  // Web
+  webBackground: { flex: 1 },
+  webScrollContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 48,
+    paddingHorizontal: 24,
+  },
+  webLogoWrapper: {
+    marginBottom: 28,
+    alignItems: 'center',
+  },
+  webCard: {
+    width: '100%',
+    maxWidth: 440,
+    borderRadius: 20,
+    paddingHorizontal: 36,
+    paddingTop: 36,
+    paddingBottom: 40,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.18,
+    shadowRadius: 24,
+    elevation: 10,
   },
   title: {
     fontSize: TYPOGRAPHY.size.xl,
