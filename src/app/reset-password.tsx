@@ -22,6 +22,7 @@ import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
 import { UniversityBadge } from '@components/ui/UniversityBadge';
+import { BrandBackground } from '@components/ui/BrandBackground';
 import { authService } from '@services/auth.service';
 import { useAuthStore } from '@stores/authStore';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
@@ -162,10 +163,7 @@ export default function ResetPasswordScreen() {
   // ── Web: gradiente de fondo + tarjeta flotante centrada (igual que login) ──
   if (Platform.OS === 'web') {
     return (
-      <LinearGradient
-        colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
-        style={styles.webBackground}
-      >
+      <BrandBackground style={styles.webBackground}>
         <ScrollView
           contentContainerStyle={styles.webScrollContent}
           keyboardShouldPersistTaps="handled"
@@ -180,7 +178,7 @@ export default function ResetPasswordScreen() {
             {renderBody()}
           </View>
         </ScrollView>
-      </LinearGradient>
+      </BrandBackground>
     );
   }
 
