@@ -1,5 +1,6 @@
 // FASE 1 — Pega aquí el código de /src/lib/supabase.ts
 import { createClient } from '@supabase/supabase-js';
+import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import 'react-native-url-polyfill/auto';
 import Constants from 'expo-constants';
@@ -19,7 +20,8 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
     storage: AsyncStorage,
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: false,
+    // En web el enlace de recuperación de contraseña trae la sesión en la URL
+    detectSessionInUrl: Platform.OS === 'web',
   },
 });
 

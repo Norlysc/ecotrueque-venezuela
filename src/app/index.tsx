@@ -5,7 +5,7 @@ import { useAuthStore } from '@stores/authStore';
 import { COLORS } from '@constants/theme';
 
 export default function Index() {
-  const { isAuthenticated, isLoading } = useAuthStore();
+  const { isAuthenticated, isLoading, isPasswordRecovery } = useAuthStore();
 
   if (isLoading) {
     return (
@@ -13,6 +13,10 @@ export default function Index() {
         <ActivityIndicator size="large" color={COLORS.primary} />
       </View>
     );
+  }
+
+  if (isPasswordRecovery) {
+    return <Redirect href="/reset-password" />;
   }
 
   if (isAuthenticated) {

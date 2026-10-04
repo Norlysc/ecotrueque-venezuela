@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Stack } from 'expo-router';
+import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -17,7 +17,7 @@ import { authService } from '@services/auth.service';
 import type { Notification } from '@/types/app.types';
 
 export default function RootLayout() {
-  const { setSession, setProfile, setLoading, user } = useAuthStore();
+  const { setSession, setProfile, setLoading, setPasswordRecovery, isPasswordRecovery, user } = useAuthStore();
   const { loadSaved } = useThemeStore();
   const { addNotification, setUnreadCount, setUnreadMessageCount, incrementUnreadMessageCount } = useNotificationStore();
 
@@ -109,7 +109,10 @@ export default function RootLayout() {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (_event, session) => {
+      async (event, session) => {
+        if (event === 'PASSWORD_RECOVERY') {
+          setPasswordRecovery(true);
+        }
         setSession(session);
         if (session?.user) {
           const profile = await authService.getProfile(session.user.id);
@@ -124,6 +127,13 @@ export default function RootLayout() {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Si el usuario llegó desde el enlace de recuperación, llevarlo a crear la nueva contraseña
+  useEffect(() => {
+    if (isPasswordRecovery) {
+      router.replace('/reset-password');
+    }
+  }, [isPasswordRecovery]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <GestureHandlerRootView style={styles.root}>
@@ -132,6 +142,7 @@ export default function RootLayout() {
             <Stack.Screen name="index" />
             <Stack.Screen name="(auth)" />
             <Stack.Screen name="(tabs)" />
+            <Stack.Screen name="reset-password" />
             <Stack.Screen
               name="listing/[id]"
               options={{ presentation: 'card', animation: 'slide_from_right' }}

@@ -8,12 +8,15 @@ interface AuthState {
   profile: UserProfile | null;
   isLoading: boolean;
   isAuthenticated: boolean;
+  // true cuando el usuario entró desde el enlace de "recuperar contraseña"
+  isPasswordRecovery: boolean;
 }
 
 interface AuthActions {
   setSession: (session: Session | null) => void;
   setProfile: (profile: UserProfile | null) => void;
   setLoading: (isLoading: boolean) => void;
+  setPasswordRecovery: (value: boolean) => void;
   clear: () => void;
 }
 
@@ -23,6 +26,7 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
   profile: null,
   isLoading: true,
   isAuthenticated: false,
+  isPasswordRecovery: false,
 
   setSession: (session) =>
     set({
@@ -35,6 +39,8 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
 
   setLoading: (isLoading) => set({ isLoading }),
 
+  setPasswordRecovery: (isPasswordRecovery) => set({ isPasswordRecovery }),
+
   clear: () =>
     set({
       session: null,
@@ -42,5 +48,6 @@ export const useAuthStore = create<AuthState & AuthActions>((set) => ({
       profile: null,
       isAuthenticated: false,
       isLoading: false,
+      isPasswordRecovery: false,
     }),
 }));
