@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
-import { UniversityFooter } from '@components/ui/UniversityFooter';
+import { UniversityBadge } from '@components/ui/UniversityBadge';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { useAuth } from '@hooks/useAuth';
 
@@ -160,6 +160,8 @@ export default function ForgotPasswordScreen() {
           contentContainerStyle={styles.webScrollContent}
           keyboardShouldPersistTaps="handled"
         >
+          <UniversityBadge />
+
           <View style={styles.webLogoWrapper}>
             <Logo iconSize={72} onDark showTagline />
           </View>
@@ -167,8 +169,6 @@ export default function ForgotPasswordScreen() {
           <View style={[styles.webCard, { backgroundColor: theme.background }]}>
             {formBody}
           </View>
-
-          <UniversityFooter />
         </ScrollView>
       </LinearGradient>
     );
@@ -192,13 +192,13 @@ export default function ForgotPasswordScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
             <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
           </TouchableOpacity>
+          <UniversityBadge style={{ marginTop: 40 }} />
           <IconTile icon={KeyRound} size={64} iconSize={30} variant="onDark" rounded style={{ marginTop: SPACING.lg }} />
           <Text style={styles.headerTitle}>Recuperar contraseña</Text>
         </LinearGradient>
 
         <View style={[styles.form, { backgroundColor: theme.background }]}>
           {formBody}
-          <UniversityFooter onDark={false} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

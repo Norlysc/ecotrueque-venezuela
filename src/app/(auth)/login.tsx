@@ -20,7 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
-import { UniversityFooter } from '@components/ui/UniversityFooter';
+import { UniversityBadge } from '@components/ui/UniversityBadge';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { useAuth } from '@hooks/useAuth';
 
@@ -162,6 +162,8 @@ export default function LoginScreen() {
           contentContainerStyle={styles.webScrollContent}
           keyboardShouldPersistTaps="handled"
         >
+          <UniversityBadge />
+
           <View style={styles.webLogoWrapper}>
             <Logo iconSize={72} onDark showTagline />
           </View>
@@ -173,8 +175,6 @@ export default function LoginScreen() {
             </Text>
             {formBody}
           </View>
-
-          <UniversityFooter />
         </ScrollView>
       </LinearGradient>
     );
@@ -195,6 +195,7 @@ export default function LoginScreen() {
           colors={['#0F6E56', '#1D9E75', '#5DCAA5']}
           style={[styles.header, { paddingTop: insets.top + 20 }]}
         >
+          <UniversityBadge />
           <Logo iconSize={76} onDark showTagline />
         </LinearGradient>
 
@@ -204,7 +205,6 @@ export default function LoginScreen() {
             Inicia sesión para continuar
           </Text>
           {formBody}
-          <UniversityFooter onDark={false} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

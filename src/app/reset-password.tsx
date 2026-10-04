@@ -21,7 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
-import { UniversityFooter } from '@components/ui/UniversityFooter';
+import { UniversityBadge } from '@components/ui/UniversityBadge';
 import { authService } from '@services/auth.service';
 import { useAuthStore } from '@stores/authStore';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
@@ -170,6 +170,8 @@ export default function ResetPasswordScreen() {
           contentContainerStyle={styles.webScrollContent}
           keyboardShouldPersistTaps="handled"
         >
+          <UniversityBadge />
+
           <View style={styles.webLogoWrapper}>
             <Logo iconSize={72} onDark showTagline />
           </View>
@@ -177,8 +179,6 @@ export default function ResetPasswordScreen() {
           <View style={[styles.webCard, { backgroundColor: theme.background }]}>
             {renderBody()}
           </View>
-
-          <UniversityFooter />
         </ScrollView>
       </LinearGradient>
     );
@@ -199,13 +199,13 @@ export default function ResetPasswordScreen() {
           colors={['#0F6E56', '#1D9E75']}
           style={[styles.header, { paddingTop: insets.top + 16 }]}
         >
+          <UniversityBadge style={{ marginTop: 40 }} />
           <IconTile icon={LockKeyhole} size={64} iconSize={30} variant="onDark" rounded style={{ marginTop: SPACING.lg }} />
           <Text style={styles.headerTitle}>Restablecer contraseña</Text>
         </LinearGradient>
 
         <View style={[styles.form, { backgroundColor: theme.background }]}>
           {renderBody()}
-          <UniversityFooter onDark={false} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
