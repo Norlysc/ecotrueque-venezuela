@@ -11,6 +11,7 @@ import {
   useWindowDimensions,
   Platform,
   Animated,
+  Image,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
@@ -190,6 +191,19 @@ export default function HomeScreen() {
           <ChevronRight size={18} color="rgba(255,255,255,0.8)" strokeWidth={1.75} />
         </TouchableOpacity>
 
+        {/* Universidad Valle del Momboy */}
+        <View style={[styles.uvmCard, { backgroundColor: theme.surface, borderColor: theme.border }]}>
+          <View style={styles.uvmLogoWrap}>
+            <Image source={require('../../../assets/logo-uvm.png')} style={styles.uvmLogo} resizeMode="contain" />
+          </View>
+          <View style={{ flex: 1 }}>
+            <Text style={[styles.uvmTitle, { color: theme.text }]}>Universidad Valle del Momboy</Text>
+            <Text style={[styles.uvmSubtitle, { color: theme.textSecondary }]}>
+              Trabajo de grado · Facultad de Ingeniería · Trujillo, Venezuela
+            </Text>
+          </View>
+        </View>
+
         {/* Filtros de categoría */}
         <ScrollView
           horizontal
@@ -363,6 +377,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     ...SHADOWS.green,
   },
+  uvmCard: {
+    marginHorizontal: SPACING.base,
+    marginBottom: SPACING.sm,
+    padding: SPACING.md,
+    borderRadius: RADIUS.lg,
+    borderWidth: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+  },
+  uvmLogoWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  uvmLogo: { width: 48, height: 48 },
+  uvmTitle: { fontSize: TYPOGRAPHY.size.base, fontWeight: TYPOGRAPHY.weight.semibold },
+  uvmSubtitle: { fontSize: TYPOGRAPHY.size.xs, marginTop: 2 },
   ecoBannerContent: { flexDirection: 'row', alignItems: 'center', gap: SPACING.md },
   ecoBannerEmoji: { fontSize: 32 },
   ecoBannerTitle: { color: 'rgba(255,255,255,0.8)', fontSize: TYPOGRAPHY.size.sm },
