@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { ArrowLeft, Mail, Send, RefreshCw } from 'lucide-react-native';
+import { ArrowLeft, Mail, Send, RefreshCw, MailCheck, KeyRound } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -98,7 +99,7 @@ export default function ForgotPasswordScreen() {
           ) : (
             <>
               <View style={styles.successIcon}>
-                <Text style={styles.successEmoji}>📧</Text>
+                <IconTile icon={MailCheck} size={80} iconSize={36} rounded />
               </View>
               <Text style={[styles.title, { color: theme.text }]}>
                 ¡Correo enviado!
@@ -188,7 +189,7 @@ export default function ForgotPasswordScreen() {
           <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
             <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
           </TouchableOpacity>
-          <Text style={styles.emoji}>🔑</Text>
+          <IconTile icon={KeyRound} size={64} iconSize={30} variant="onDark" rounded style={{ marginTop: SPACING.lg }} />
           <Text style={styles.headerTitle}>Recuperar contraseña</Text>
         </LinearGradient>
 

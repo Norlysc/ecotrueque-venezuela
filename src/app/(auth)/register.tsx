@@ -362,7 +362,7 @@ export default function RegisterScreen() {
               {/* Card beneficios */}
               <View style={[styles.benefitsCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
                 <Text style={[styles.benefitsTitle, { color: COLORS.primaryDark }]}>
-                  🌱 Al unirte obtienes:
+                  Al unirte obtienes:
                 </Text>
                 {[
                   '100 EcoPoints de bienvenida',

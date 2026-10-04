@@ -64,7 +64,7 @@ export function useCreateTradeRequest() {
       qc.invalidateQueries({ queryKey: TRADE_KEYS.my(user?.id ?? '') });
       Toast.show({
         type: 'success',
-        text1: '¡Propuesta enviada! 🤝',
+        text1: '¡Propuesta enviada!',
         text2: 'El otro usuario recibirá una notificación',
       });
     },
@@ -89,7 +89,7 @@ export function useRespondToRequest() {
       qc.invalidateQueries({ queryKey: TRADE_KEYS.received(user?.id ?? '') });
       Toast.show({
         type: 'success',
-        text1: action === 'accept' ? '✅ Trueque aceptado' : '❌ Trueque rechazado',
+        text1: action === 'accept' ? 'Trueque aceptado' : 'Trueque rechazado',
       });
     },
     onError: () => {
@@ -117,7 +117,7 @@ export function useConfirmMeeting() {
       }
       Toast.show({
         type: 'success',
-        text1: '✅ Encuentro confirmado',
+        text1: 'Encuentro confirmado',
         text2: 'Si el otro también confirma, el trueque se completará',
       });
     },
@@ -151,7 +151,7 @@ export function useCreateReview() {
       qc.invalidateQueries({ queryKey: ['reviews', 'hasReviewed'] });
       Toast.show({
         type: 'success',
-        text1: '⭐ Reseña enviada',
+        text1: 'Reseña enviada',
         text2: 'Gracias por tu valoración',
       });
     },

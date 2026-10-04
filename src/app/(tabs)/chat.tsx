@@ -11,7 +11,7 @@ import {
   useColorScheme,
 } from 'react-native';
 import { router } from 'expo-router';
-import { Pencil, Search, X, ChevronRight, Bell } from 'lucide-react-native';
+import { Pencil, Search, X, ChevronRight, Bell, Package, MessagesSquare } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -90,9 +90,10 @@ function ConversationItem({ item, isDark }: { item: Conversation; isDark: boolea
           </Text>
         </View>
         {listingTitle && (
-          <Text style={[styles.listingLabel, { color: COLORS.primary }]} numberOfLines={1}>
-            📦 {listingTitle}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Package size={12} color={COLORS.primary} strokeWidth={2} />
+            <Text style={[styles.listingLabel, { color: COLORS.primary, flex: 1 }]} numberOfLines={1}>{listingTitle}</Text>
+          </View>
         )}
 
         <View style={styles.messagePreviewRow}>
@@ -107,9 +108,9 @@ function ConversationItem({ item, isDark }: { item: Conversation; isDark: boolea
             numberOfLines={1}
           >
             {item.last_message?.type === 'image'
-              ? '📷 Imagen'
+              ? 'Imagen'
               : item.last_message?.type === 'trade_proposal'
-              ? '🤝 Propuesta de trueque'
+              ? 'Propuesta de trueque'
               : item.last_message?.content ?? 'Inicia la conversación'}
           </Text>
           {hasUnread && (
@@ -123,9 +124,10 @@ function ConversationItem({ item, isDark }: { item: Conversation; isDark: boolea
 
         {/* Listing relacionado */}
         {item.trade_request?.requested_listing && (
-          <Text style={[styles.listingRef, { color: COLORS.primary }]} numberOfLines={1}>
-            📦 {item.trade_request.requested_listing.title}
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+            <Package size={12} color={COLORS.primary} strokeWidth={2} />
+            <Text style={[styles.listingRef, { color: COLORS.primary, flex: 1 }]} numberOfLines={1}>{item.trade_request.requested_listing.title}</Text>
+          </View>
         )}
       </View>
     </TouchableOpacity>
@@ -216,7 +218,7 @@ export default function ChatScreen() {
         ListEmptyComponent={
           !isLoading ? (
             <EmptyState
-              emoji="💬"
+              icon={MessagesSquare}
               title="Sin conversaciones"
               subtitle="Cuando propongas un trueque, la conversación aparecerá aquí"
               isDark={isDark}

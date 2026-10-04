@@ -1,9 +1,12 @@
 import { View, Text, StyleSheet } from 'react-native';
+import type { LucideIcon } from 'lucide-react-native';
 import { Button } from './Button';
+import { IconTile } from './IconTile';
 import { THEME, TYPOGRAPHY, SPACING } from '@constants/theme';
 
 interface EmptyStateProps {
   emoji?: string;
+  icon?: LucideIcon;
   title: string;
   subtitle?: string;
   actionLabel?: string;
@@ -13,6 +16,7 @@ interface EmptyStateProps {
 
 export function EmptyState({
   emoji = '📭',
+  icon,
   title,
   subtitle,
   actionLabel,
@@ -23,7 +27,11 @@ export function EmptyState({
 
   return (
     <View style={styles.container}>
-      <Text style={styles.emoji}>{emoji}</Text>
+      {icon ? (
+        <IconTile icon={icon} size={80} iconSize={36} rounded style={{ marginBottom: SPACING.sm }} />
+      ) : (
+        <Text style={styles.emoji}>{emoji}</Text>
+      )}
       <Text style={[styles.title, { color: theme.text }]}>{title}</Text>
       {subtitle && (
         <Text style={[styles.subtitle, { color: theme.textSecondary }]}>{subtitle}</Text>

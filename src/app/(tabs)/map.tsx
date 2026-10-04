@@ -11,7 +11,7 @@ import {
   TextInput,
 } from 'react-native';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Shield, Search, Crosshair } from 'lucide-react-native';
+import { Shield, Search, Crosshair, Package } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import { useLocationStore } from '@stores/locationStore';
@@ -115,9 +115,11 @@ export default function MapScreen() {
                   selectedListing?.id === listing.id && styles.markerContainerSelected,
                 ]}
               >
-                <Text style={styles.markerEmoji}>
-                  {CATEGORIES.find((c) => c.id === listing.category)?.emoji ?? '📦'}
-                </Text>
+                {(() => {
+                  const CatIcon = CATEGORIES.find((c) => c.id === listing.category)?.icon ?? Package;
+                  const selected = selectedListing?.id === listing.id;
+                  return <CatIcon size={18} color={selected ? '#fff' : COLORS.primary} strokeWidth={2} />;
+                })()}
                 {selectedListing?.id === listing.id && (
                   <Text style={styles.markerTitle} numberOfLines={1}>
                     {listing.title}

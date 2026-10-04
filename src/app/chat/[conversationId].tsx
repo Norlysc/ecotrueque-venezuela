@@ -13,7 +13,7 @@ import {
   Alert,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import { ArrowLeft, EllipsisVertical, Image as ImageIcon, Camera, Send, CheckCircle, Check } from 'lucide-react-native';
+import { ArrowLeft, EllipsisVertical, Image as ImageIcon, Camera, Send, CheckCircle, Check, Handshake, Package, Hourglass, CircleCheck } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { format, isToday, isYesterday } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -163,9 +163,10 @@ export default function ChatScreen() {
     if (item.type === 'trade_proposal') {
       return (
         <View style={[styles.tradeProposal, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-          <Text style={[styles.tradeProposalTitle, { color: COLORS.primaryDark }]}>
-            🤝 Propuesta de trueque
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Handshake size={16} color={COLORS.primaryDark} strokeWidth={2} />
+            <Text style={[styles.tradeProposalTitle, { color: COLORS.primaryDark }]}>Propuesta de trueque</Text>
+          </View>
           {item.content ? (
             <Text style={[styles.tradeProposalText, { color: COLORS.primaryDark }]}>
               {item.content}
@@ -191,7 +192,7 @@ export default function ChatScreen() {
           )}
           {tradeStatus && tradeStatus !== 'pending' && (
             <Text style={{ color: tradeStatus === 'accepted' ? COLORS.success : COLORS.error, fontWeight: '600', marginTop: 4 }}>
-              {tradeStatus === 'accepted' ? '✅ Aceptado' : tradeStatus === 'rejected' ? '❌ Rechazado' : `Estado: ${tradeStatus}`}
+              {tradeStatus === 'accepted' ? 'Aceptado' : tradeStatus === 'rejected' ? 'Rechazado' : tradeStatus === 'completed' ? 'Completado' : `Estado: ${tradeStatus}`}
             </Text>
           )}
         </View>
@@ -269,9 +270,10 @@ export default function ChatScreen() {
               {otherUser?.full_name ?? 'Conversación'}
             </Text>
             {listingTitle && !tradeStatus && (
-              <Text style={[styles.onlineStatus, { color: COLORS.primary }]} numberOfLines={1}>
-                📦 {listingTitle}
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                <Package size={11} color={COLORS.primary} strokeWidth={2} />
+                <Text style={[styles.onlineStatus, { color: COLORS.primary }]} numberOfLines={1}>{listingTitle}</Text>
+              </View>
             )}
             {tradeStatus && (
               <Text style={[styles.onlineStatus, {
@@ -279,10 +281,10 @@ export default function ChatScreen() {
                   : tradeStatus === 'accepted' ? COLORS.success
                   : COLORS.error
               }]}>
-                {tradeStatus === 'pending' ? '⏳ Pendiente'
-                  : tradeStatus === 'accepted' ? '✅ Aceptado'
-                  : tradeStatus === 'rejected' ? '❌ Rechazado'
-                  : tradeStatus === 'completed' ? '🎉 Completado'
+                {tradeStatus === 'pending' ? 'Pendiente'
+                  : tradeStatus === 'accepted' ? 'Aceptado'
+                  : tradeStatus === 'rejected' ? 'Rechazado'
+                  : tradeStatus === 'completed' ? 'Completado'
                   : ''}
               </Text>
             )}
@@ -296,21 +298,22 @@ export default function ChatScreen() {
       {/* Confirm meeting banner */}
       {tradeStatus === 'accepted' && (
         <View style={[styles.confirmBanner, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0', borderColor: COLORS.primary + '40' }]}>
-          <Text style={[styles.confirmBannerTitle, { color: COLORS.primaryDark }]}>
-            🤝 ¿Realizaron el encuentro?
-          </Text>
+          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <Handshake size={16} color={COLORS.primaryDark} strokeWidth={2} />
+            <Text style={[styles.confirmBannerTitle, { color: COLORS.primaryDark }]}>¿Realizaron el encuentro?</Text>
+          </View>
           <Text style={[styles.confirmBannerSub, { color: COLORS.primary }]}>
             Ambos deben confirmar para completar el trueque
           </Text>
           <View style={styles.confirmStatus}>
             <View style={styles.confirmStatusItem}>
-              <Text style={{ fontSize: 18 }}>{myConfirmed ? '✅' : '⏳'}</Text>
+              {myConfirmed ? <CircleCheck size={18} color={COLORS.primary} strokeWidth={2} /> : <Hourglass size={18} color={COLORS.warning} strokeWidth={2} />}
               <Text style={[styles.confirmStatusLabel, { color: theme.textSecondary }]}>
                 {myConfirmed ? 'Tú confirmaste' : 'Tú: pendiente'}
               </Text>
             </View>
             <View style={styles.confirmStatusItem}>
-              <Text style={{ fontSize: 18 }}>{otherConfirmed ? '✅' : '⏳'}</Text>
+              {otherConfirmed ? <CircleCheck size={18} color={COLORS.primary} strokeWidth={2} /> : <Hourglass size={18} color={COLORS.warning} strokeWidth={2} />}
               <Text style={[styles.confirmStatusLabel, { color: theme.textSecondary }]}>
                 {otherConfirmed ? 'El otro confirmó' : 'El otro: pendiente'}
               </Text>
@@ -334,15 +337,13 @@ export default function ChatScreen() {
         <View style={[styles.reviewBanner, {
           backgroundColor: hasReviewed
             ? isDark ? '#0F2D24' : '#E8F5F0'
-            : isDark ? '#1A1500' : '#FFFBEA',
-          borderColor: hasReviewed ? COLORS.primary + '60' : '#FFC107' + '60',
+            : isDark ? '#0F2D24' : '#E8F5F0',
+          borderColor: COLORS.primary + '60',
         }]}>
           <Text style={[styles.reviewBannerTitle, {
-            color: hasReviewed
-              ? COLORS.primary
-              : isDark ? '#FFC107' : '#B8860B',
+            color: COLORS.primaryDark,
           }]}>
-            {hasReviewed ? '✅ Reseña enviada' : '⭐ ¡Trueque completado!'}
+            {hasReviewed ? 'Reseña enviada' : '¡Trueque completado!'}
           </Text>
           <Text style={[styles.reviewBannerSub, { color: theme.textSecondary }]}>
             {hasReviewed

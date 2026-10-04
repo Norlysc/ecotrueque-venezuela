@@ -9,7 +9,10 @@ import {
   Platform,
 } from 'react-native';
 import { router } from 'expo-router';
-import { ArrowLeft, MapPin, Shield, Star, Award, Wind, MessageCircle, Mail } from 'lucide-react-native';
+import { ArrowLeft, MapPin, Shield, Star, Award, Wind, MessageCircle, Mail, UserPlus, Camera, Map as MapIcon, Handshake, Leaf } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
+import { LogoMark } from '@components/ui/LogoSVG';
+import { ECO_LEVELS as LEVELS } from '@constants/theme';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
@@ -18,32 +21,32 @@ const VERSION = '1.0.0';
 
 const STEPS = [
   {
-    emoji: '📝',
+    icon: UserPlus,
     title: 'Regístrate gratis',
     desc: 'Crea tu cuenta con email y contraseña. Obtienes puntos ecológicos desde el primer día.',
   },
   {
-    emoji: '📸',
+    icon: Camera,
     title: 'Publica lo que ya no usas',
     desc: 'Toma fotos de objetos que tengas en casa, describe lo que buscas a cambio y publícalos en el mapa.',
   },
   {
-    emoji: '🗺️',
+    icon: MapIcon,
     title: 'Explora el mapa',
     desc: 'Busca trueques cercanos a tu ubicación. Filtra por categoría, radio de distancia o palabras clave.',
   },
   {
-    emoji: '🤝',
+    icon: Handshake,
     title: 'Propón un trueque',
     desc: 'Cuando encuentres algo que te interese, envía una solicitud de trueque al dueño del objeto.',
   },
   {
-    emoji: '💬',
+    icon: MessageCircle,
     title: 'Coordina por chat',
     desc: 'Usa el chat integrado para hablar con la otra persona, acordar detalles y elegir un sitio seguro para el intercambio.',
   },
   {
-    emoji: '🌿',
+    icon: Leaf,
     title: 'Gana EcoPoints',
     desc: 'Cada trueque completado te suma puntos ecológicos. Sube de nivel y desbloquea logros por cuidar el planeta.',
   },
@@ -59,12 +62,12 @@ const FEATURES = [
 ];
 
 const ECO_LEVELS = [
-  { emoji: '🌱', name: 'Semilla',      pts: '0 pts',    desc: 'Tu primer paso en el mundo del trueque' },
-  { emoji: '🌿', name: 'Brote',        pts: '100 pts',  desc: 'Ya conoces el camino ecológico' },
-  { emoji: '🍃', name: 'Guardián',     pts: '300 pts',  desc: 'Proteges el entorno con tus acciones' },
-  { emoji: '🌳', name: 'Protector',    pts: '700 pts',  desc: 'Un pilar de la comunidad verde' },
-  { emoji: '🦋', name: 'Héroe Eco',    pts: '1500 pts', desc: 'Tu impacto inspira a otros' },
-  { emoji: '🌍', name: 'Leyenda Verde',pts: '3000 pts', desc: 'El nivel más alto. Eres referente ecológico' },
+  { icon: LEVELS.seedling.icon, name: 'Semilla',      pts: '0 pts',    desc: 'Tu primer paso en el mundo del trueque' },
+  { icon: LEVELS.sprout.icon, name: 'Brote',        pts: '100 pts',  desc: 'Ya conoces el camino ecológico' },
+  { icon: LEVELS.guardian.icon, name: 'Guardián',     pts: '300 pts',  desc: 'Proteges el entorno con tus acciones' },
+  { icon: LEVELS.protector.icon, name: 'Protector',    pts: '700 pts',  desc: 'Un pilar de la comunidad verde' },
+  { icon: LEVELS.hero.icon, name: 'Héroe Eco',    pts: '1500 pts', desc: 'Tu impacto inspira a otros' },
+  { icon: LEVELS.legend.icon, name: 'Leyenda Verde',pts: '3000 pts', desc: 'El nivel más alto. Eres referente ecológico' },
 ];
 
 export default function AboutScreen() {
@@ -87,7 +90,7 @@ export default function AboutScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
         </TouchableOpacity>
-        <Text style={styles.headerEmoji}>🌿</Text>
+        <View style={{ marginTop: 8 }}><LogoMark size={56} onDark /></View>
         <Text style={styles.headerTitle}>EcoTrueque Venezuela</Text>
         <Text style={styles.headerSub}>Versión {VERSION} · Intercambia. Recicla. Cuida el planeta.</Text>
       </LinearGradient>
@@ -115,7 +118,7 @@ export default function AboutScreen() {
           {STEPS.map((step, i) => (
             <View key={i} style={styles.stepRow}>
               <View style={[styles.stepNumber, { backgroundColor: COLORS.primary + '18' }]}>
-                <Text style={styles.stepEmoji}>{step.emoji}</Text>
+                <step.icon size={20} color={COLORS.primary} strokeWidth={1.75} />
               </View>
               <View style={styles.stepText}>
                 <Text style={[styles.stepTitle, { color: theme.text }]}>
@@ -164,7 +167,7 @@ export default function AboutScreen() {
                 i === ECO_LEVELS.length - 1 && { borderBottomWidth: 0 },
               ]}
             >
-              <Text style={styles.levelEmoji}>{lvl.emoji}</Text>
+              <IconTile icon={lvl.icon} size={36} rounded />
               <View style={{ flex: 1 }}>
                 <View style={styles.levelHeader}>
                   <Text style={[styles.levelName, { color: theme.text }]}>{lvl.name}</Text>
@@ -211,10 +214,10 @@ export default function AboutScreen() {
         {/* ── PIE ───────────────────────────────────── */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.textTertiary }]}>
-            🌿 EcoTrueque Venezuela · v{VERSION}
+            EcoTrueque Venezuela · v{VERSION}
           </Text>
           <Text style={[styles.footerText, { color: theme.textTertiary }]}>
-            © 2025 · Hecho con ❤️ en Venezuela
+            © 2025 · Hecho en Venezuela
           </Text>
         </View>
 

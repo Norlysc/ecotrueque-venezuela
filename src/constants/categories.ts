@@ -15,10 +15,18 @@ export type CategoryId =
   | 'beauty'
   | 'other';
 
+import {
+  Laptop, Shirt, Apple, BookOpen, Sofa, Wrench, Handshake, Dumbbell, HeartPulse,
+  Palette, Puzzle, Car, GraduationCap, Sparkles, Package,
+  type LucideIcon,
+} from 'lucide-react-native';
+
 export interface Category {
   id: CategoryId;
   label: string;
   emoji: string;
+  // Ícono profesional (Lucide) que se muestra en la interfaz
+  icon: LucideIcon;
   color: string;
   subcategories: string[];
 }
@@ -28,6 +36,7 @@ export const CATEGORIES: Category[] = [
     id: 'electronics',
     label: 'Electrónica',
     emoji: '💻',
+    icon: Laptop,
     color: '#378ADD',
     subcategories: [
       'Teléfonos',
@@ -44,6 +53,7 @@ export const CATEGORIES: Category[] = [
     id: 'clothing',
     label: 'Ropa',
     emoji: '👕',
+    icon: Shirt,
     color: '#7F77DD',
     subcategories: [
       'Ropa de hombre',
@@ -60,6 +70,7 @@ export const CATEGORIES: Category[] = [
     id: 'food',
     label: 'Alimentos',
     emoji: '🥑',
+    icon: Apple,
     color: '#34C759',
     subcategories: [
       'Frutas y verduras',
@@ -76,6 +87,7 @@ export const CATEGORIES: Category[] = [
     id: 'books',
     label: 'Libros',
     emoji: '📚',
+    icon: BookOpen,
     color: '#EF9F27',
     subcategories: [
       'Literatura venezolana',
@@ -92,6 +104,7 @@ export const CATEGORIES: Category[] = [
     id: 'furniture',
     label: 'Muebles',
     emoji: '🛋️',
+    icon: Sofa,
     color: '#C87E10',
     subcategories: [
       'Sala',
@@ -108,6 +121,7 @@ export const CATEGORIES: Category[] = [
     id: 'tools',
     label: 'Herramientas',
     emoji: '🔧',
+    icon: Wrench,
     color: '#6B7280',
     subcategories: [
       'Herramientas eléctricas',
@@ -124,6 +138,7 @@ export const CATEGORIES: Category[] = [
     id: 'services',
     label: 'Servicios',
     emoji: '🤝',
+    icon: Handshake,
     color: '#1D9E75',
     subcategories: [
       'Clases particulares',
@@ -140,6 +155,7 @@ export const CATEGORIES: Category[] = [
     id: 'sports',
     label: 'Deportes',
     emoji: '⚽',
+    icon: Dumbbell,
     color: '#E24B4A',
     subcategories: [
       'Fútbol',
@@ -156,6 +172,7 @@ export const CATEGORIES: Category[] = [
     id: 'health',
     label: 'Salud',
     emoji: '💊',
+    icon: HeartPulse,
     color: '#34C759',
     subcategories: [
       'Equipos médicos',
@@ -172,6 +189,7 @@ export const CATEGORIES: Category[] = [
     id: 'art',
     label: 'Arte',
     emoji: '🎨',
+    icon: Palette,
     color: '#FF6B6B',
     subcategories: [
       'Pinturas',
@@ -188,6 +206,7 @@ export const CATEGORIES: Category[] = [
     id: 'toys',
     label: 'Juguetes',
     emoji: '🧸',
+    icon: Puzzle,
     color: '#FF9F0A',
     subcategories: [
       'Juguetes para bebés',
@@ -204,6 +223,7 @@ export const CATEGORIES: Category[] = [
     id: 'vehicles',
     label: 'Vehículos',
     emoji: '🚗',
+    icon: Car,
     color: '#374151',
     subcategories: [
       'Automóviles',
@@ -220,6 +240,7 @@ export const CATEGORIES: Category[] = [
     id: 'education',
     label: 'Educación',
     emoji: '🎓',
+    icon: GraduationCap,
     color: '#5E56C4',
     subcategories: [
       'Preescolar',
@@ -236,6 +257,7 @@ export const CATEGORIES: Category[] = [
     id: 'beauty',
     label: 'Belleza',
     emoji: '💄',
+    icon: Sparkles,
     color: '#F472B6',
     subcategories: [
       'Maquillaje',
@@ -252,6 +274,7 @@ export const CATEGORIES: Category[] = [
     id: 'other',
     label: 'Otros',
     emoji: '📦',
+    icon: Package,
     color: '#9CA3AF',
     subcategories: [
       'Coleccionables',

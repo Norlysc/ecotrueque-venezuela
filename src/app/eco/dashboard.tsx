@@ -7,7 +7,8 @@ import {
   useColorScheme,
 } from 'react-native';
 import { router } from 'expo-router';
-import { ArrowLeft, Check } from 'lucide-react-native';
+import { ArrowLeft, Check, Sprout, Repeat, Camera, Star, Map as MapIcon, Recycle, Leaf, Earth, PiggyBank, Handshake, TreePine, Car, Droplets, Heart, ChartColumn, Trophy } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@stores/authStore';
@@ -46,14 +47,14 @@ export default function EcoDashboardScreen() {
   const litersWaterSaved = Math.floor(wasteReduced * 200);
 
   const ACHIEVEMENTS = [
-    { emoji: '🌱', title: 'Primera semilla', desc: 'Completa tu primer trueque', pts: 50, progress: Math.min(totalTrades / 1, 1), unlocked: totalTrades >= 1 },
-    { emoji: '🔄', title: 'Cinco trueques', desc: 'Realiza 5 trueques ecológicos', pts: 100, progress: Math.min(totalTrades / 5, 1), unlocked: totalTrades >= 5 },
-    { emoji: '📸', title: 'Fotógrafo', desc: 'Publica con 5 fotos', pts: 30, progress: 0, unlocked: false },
-    { emoji: '⭐', title: 'Calificación perfecta', desc: 'Recibe 5 estrellas', pts: 80, progress: 0, unlocked: false },
-    { emoji: '🗺️', title: 'Explorador', desc: 'Realiza trueques en 3 estados', pts: 120, progress: 0, unlocked: false },
-    { emoji: '♻️', title: 'Reciclador', desc: 'Ahorra 10 kg de residuos', pts: 150, progress: Math.min(wasteReduced / 10, 1), unlocked: wasteReduced >= 10 },
-    { emoji: '🌿', title: 'Guardián verde', desc: 'Alcanza nivel Guardián', pts: 200, progress: Math.min(ecoPoints / 300, 1), unlocked: ecoPoints >= 300 },
-    { emoji: '🌍', title: 'Leyenda verde', desc: 'Alcanza 3000 EcoPoints', pts: 500, progress: Math.min(ecoPoints / 3000, 1), unlocked: ecoPoints >= 3000 },
+    { icon: Sprout, title: 'Primera semilla', desc: 'Completa tu primer trueque', pts: 50, progress: Math.min(totalTrades / 1, 1), unlocked: totalTrades >= 1 },
+    { icon: Repeat, title: 'Cinco trueques', desc: 'Realiza 5 trueques ecológicos', pts: 100, progress: Math.min(totalTrades / 5, 1), unlocked: totalTrades >= 5 },
+    { icon: Camera, title: 'Fotógrafo', desc: 'Publica con 5 fotos', pts: 30, progress: 0, unlocked: false },
+    { icon: Star, title: 'Calificación perfecta', desc: 'Recibe 5 estrellas', pts: 80, progress: 0, unlocked: false },
+    { icon: MapIcon, title: 'Explorador', desc: 'Realiza trueques en 3 estados', pts: 120, progress: 0, unlocked: false },
+    { icon: Recycle, title: 'Reciclador', desc: 'Ahorra 10 kg de residuos', pts: 150, progress: Math.min(wasteReduced / 10, 1), unlocked: wasteReduced >= 10 },
+    { icon: Leaf, title: 'Guardián verde', desc: 'Alcanza nivel Guardián', pts: 200, progress: Math.min(ecoPoints / 300, 1), unlocked: ecoPoints >= 300 },
+    { icon: Earth, title: 'Leyenda verde', desc: 'Alcanza 3000 EcoPoints', pts: 500, progress: Math.min(ecoPoints / 3000, 1), unlocked: ecoPoints >= 3000 },
   ];
 
   return (
@@ -74,7 +75,7 @@ export default function EcoDashboardScreen() {
           style={styles.levelCard}
         >
           <View style={styles.levelBadge}>
-            <Text style={styles.levelEmoji}>{levelInfo.emoji}</Text>
+            <levelInfo.icon size={40} color="#fff" strokeWidth={1.75} />
           </View>
           <Text style={styles.levelLabel}>{levelInfo.label}</Text>
           <Text style={styles.levelPoints}>{ecoPoints} EcoPoints</Text>
@@ -86,7 +87,7 @@ export default function EcoDashboardScreen() {
             </View>
             {nextLevel && (
               <Text style={styles.progressLabel}>
-                {nextLevel.minPoints - ecoPoints} pts para {nextLevel.label} {nextLevel.emoji}
+                {nextLevel.minPoints - ecoPoints} pts para {nextLevel.label}
               </Text>
             )}
           </View>
@@ -97,13 +98,13 @@ export default function EcoDashboardScreen() {
         {/* Grid métricas */}
         <View style={styles.metricsGrid}>
           {[
-            { emoji: '🌿', label: 'CO₂ evitado', value: `${co2Saved} kg`, sub: `≈ ${treesEquivalent} árboles` },
-            { emoji: '♻️', label: 'Residuos evitados', value: `${wasteReduced} kg`, sub: `≈ ${bottlesEquivalent} botellas` },
-            { emoji: '💰', label: 'Dinero ahorrado', value: `$${((metrics?.estimated_money_saved_usd ?? 0)).toFixed(0)}`, sub: 'en intercambios' },
-            { emoji: '🤝', label: 'Trueques', value: String(totalTrades), sub: 'completados' },
+            { icon: Leaf, label: 'CO₂ evitado', value: `${co2Saved} kg`, sub: `≈ ${treesEquivalent} árboles` },
+            { icon: Recycle, label: 'Residuos evitados', value: `${wasteReduced} kg`, sub: `≈ ${bottlesEquivalent} botellas` },
+            { icon: PiggyBank, label: 'Dinero ahorrado', value: `$${((metrics?.estimated_money_saved_usd ?? 0)).toFixed(0)}`, sub: 'en intercambios' },
+            { icon: Handshake, label: 'Trueques', value: String(totalTrades), sub: 'completados' },
           ].map((m) => (
             <View key={m.label} style={[styles.metricCard, { backgroundColor: isDark ? '#252523' : '#F8F9FA' }]}>
-              <Text style={styles.metricEmoji}>{m.emoji}</Text>
+              <IconTile icon={m.icon} size={40} rounded style={{ marginBottom: 6 }} />
               <Text style={[styles.metricValue, { color: COLORS.primary }]}>{m.value}</Text>
               <Text style={[styles.metricLabel, { color: theme.text }]}>{m.label}</Text>
               <Text style={[styles.metricSub, { color: theme.textTertiary }]}>{m.sub}</Text>
@@ -112,7 +113,10 @@ export default function EcoDashboardScreen() {
         </View>
 
         {/* ── SECCIÓN ESTADÍSTICAS ── */}
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>📊 Estadísticas</Text>
+        <View style={styles.sectionTitleRow}>
+          <ChartColumn size={20} color={COLORS.primary} strokeWidth={2} />
+          <Text style={[styles.sectionTitle, styles.sectionTitleInRow, { color: theme.text }]}>Estadísticas</Text>
+        </View>
 
         {/* Anillos de progreso */}
         <View style={[styles.statsCard, { backgroundColor: isDark ? '#1C1C1A' : '#fff' }]}>
@@ -123,26 +127,26 @@ export default function EcoDashboardScreen() {
           <View style={styles.ringsRow}>
             <RingChart
               progress={co2Saved / 50}
-              color="#22C55E"
+              color="#1D9E75"
               label="CO₂ evitado"
               valueText={`${co2Saved} kg`}
-              emoji="🌿"
+              icon={Leaf}
               isDark={isDark}
             />
             <RingChart
               progress={wasteReduced / 20}
-              color="#3B82F6"
+              color="#0F6E56"
               label="Residuos"
               valueText={`${wasteReduced} kg`}
-              emoji="♻️"
+              icon={Recycle}
               isDark={isDark}
             />
             <RingChart
               progress={totalTrades / 10}
-              color="#F59E0B"
+              color="#5DCAA5"
               label="Trueques"
               valueText={String(totalTrades)}
-              emoji="🤝"
+              icon={Handshake}
               isDark={isDark}
             />
           </View>
@@ -158,10 +162,10 @@ export default function EcoDashboardScreen() {
             <DonutChart
               isDark={isDark}
               segments={[
-                { label: 'CO₂ ahorrado',    value: co2Saved * 2,        color: '#22C55E', emoji: '🌿' },
-                { label: 'Residuos',         value: wasteReduced * 3,    color: '#3B82F6', emoji: '♻️' },
-                { label: 'Bonus trueques',   value: totalTrades * 20,    color: '#F59E0B', emoji: '🤝' },
-                { label: 'Likes recibidos',  value: totalFavorites * 5,  color: '#EC4899', emoji: '❤️' },
+                { label: 'CO₂ ahorrado',    value: co2Saved * 2,        color: '#1D9E75' },
+                { label: 'Residuos',         value: wasteReduced * 3,    color: '#0F6E56' },
+                { label: 'Bonus trueques',   value: totalTrades * 20,    color: '#5DCAA5' },
+                { label: 'Likes recibidos',  value: totalFavorites * 5,  color: '#97C459' },
               ].filter(s => s.value > 0)}
             />
           </View>
@@ -176,7 +180,7 @@ export default function EcoDashboardScreen() {
               sublabel="Meta: 50 kg"
               value={co2Saved}
               max={50}
-              color="#22C55E"
+              color="#1D9E75"
               formatValue={(v) => `${v} kg`}
               isDark={isDark}
             />
@@ -185,7 +189,7 @@ export default function EcoDashboardScreen() {
               sublabel="Meta: 20 kg"
               value={wasteReduced}
               max={20}
-              color="#3B82F6"
+              color="#0F6E56"
               formatValue={(v) => `${v} kg`}
               isDark={isDark}
             />
@@ -194,7 +198,7 @@ export default function EcoDashboardScreen() {
               sublabel="Meta: 10 trueques"
               value={totalTrades}
               max={10}
-              color="#F59E0B"
+              color="#5DCAA5"
               isDark={isDark}
             />
             <AnimatedBar
@@ -202,7 +206,7 @@ export default function EcoDashboardScreen() {
               sublabel="Meta: 300 pts (Guardián)"
               value={ecoPoints}
               max={300}
-              color="#8B5CF6"
+              color="#0A5C43"
               formatValue={(v) => `${v} pts`}
               isDark={isDark}
             />
@@ -211,17 +215,18 @@ export default function EcoDashboardScreen() {
 
         {/* Card huella en el planeta */}
         <View style={[styles.planetCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-          <Text style={[styles.planetTitle, { color: COLORS.primaryDark }]}>
-            🌍 Tu huella en el planeta
-          </Text>
+          <View style={styles.sectionTitleRow}>
+            <Earth size={20} color={COLORS.primaryDark} strokeWidth={2} />
+            <Text style={[styles.planetTitle, styles.sectionTitleInRow, { color: COLORS.primaryDark }]}>Tu huella en el planeta</Text>
+          </View>
           {[
-            { emoji: '🌳', label: 'Árboles equivalentes', value: treesEquivalent },
-            { emoji: '🚗', label: 'km sin usar auto', value: kmWithoutCar },
-            { emoji: '💧', label: 'Litros de agua ahorrados', value: litersWaterSaved },
-            { emoji: '❤️', label: 'Likes recibidos en tus publicaciones', value: totalFavorites },
+            { icon: TreePine, label: 'Árboles equivalentes', value: treesEquivalent },
+            { icon: Car, label: 'km sin usar auto', value: kmWithoutCar },
+            { icon: Droplets, label: 'Litros de agua ahorrados', value: litersWaterSaved },
+            { icon: Heart, label: 'Likes recibidos en tus publicaciones', value: totalFavorites },
           ].map((item) => (
             <View key={item.label} style={styles.planetRow}>
-              <Text style={styles.planetItemEmoji}>{item.emoji}</Text>
+              <IconTile icon={item.icon} size={34} variant="solid" rounded />
               <Text style={[styles.planetItemLabel, { color: COLORS.primaryDark }]}>{item.label}</Text>
               <Text style={[styles.planetItemValue, { color: COLORS.primary }]}>{item.value}</Text>
             </View>
@@ -229,7 +234,10 @@ export default function EcoDashboardScreen() {
         </View>
 
         {/* Logros */}
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>🏆 Logros</Text>
+        <View style={styles.sectionTitleRow}>
+          <Trophy size={20} color={COLORS.primary} strokeWidth={2} />
+          <Text style={[styles.sectionTitle, styles.sectionTitleInRow, { color: theme.text }]}>Logros</Text>
+        </View>
         <View style={styles.achievementsGrid}>
           {ACHIEVEMENTS.map((a) => (
             <View
@@ -243,7 +251,7 @@ export default function EcoDashboardScreen() {
               ]}
             >
               <View style={styles.achievementEmoji}>
-                <Text style={styles.achievementEmojiText}>{a.emoji}</Text>
+                <IconTile icon={a.icon} size={48} variant={a.unlocked ? 'solid' : 'soft'} rounded />
                 {a.unlocked && (
                   <View style={styles.unlockCheck}>
                     <Check size={10} color="#fff" strokeWidth={1.75} />
@@ -264,7 +272,10 @@ export default function EcoDashboardScreen() {
         </View>
 
         {/* Niveles eco */}
-        <Text style={[styles.sectionTitle, { color: theme.text }]}>📊 Niveles EcoTrueque</Text>
+        <View style={styles.sectionTitleRow}>
+          <Sprout size={20} color={COLORS.primary} strokeWidth={2} />
+          <Text style={[styles.sectionTitle, styles.sectionTitleInRow, { color: theme.text }]}>Niveles EcoTrueque</Text>
+        </View>
         <View style={[styles.levelsContainer, { backgroundColor: isDark ? '#252523' : '#F8F9FA' }]}>
           {LEVEL_ORDER.map((levelKey, i) => {
             const lvl = ECO_LEVELS[levelKey];
@@ -293,7 +304,7 @@ export default function EcoDashboardScreen() {
                       },
                     ]}
                   >
-                    <Text style={styles.levelDotEmoji}>{lvl.emoji}</Text>
+                    <lvl.icon size={18} color={isCurrent || isPast ? '#fff' : theme.textTertiary} strokeWidth={2} />
                   </View>
                   <View style={{ flex: 1 }}>
                     <Text style={[styles.levelRowName, { color: isCurrent ? COLORS.primary : theme.text }]}>
@@ -317,6 +328,8 @@ export default function EcoDashboardScreen() {
 }
 
 const styles = StyleSheet.create({
+  sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: SPACING.base, marginTop: SPACING.xl, marginBottom: SPACING.md },
+  sectionTitleInRow: { marginTop: 0, marginBottom: 0, paddingHorizontal: 0, marginLeft: 0 },
   container: { flex: 1 },
   header: {
     flexDirection: 'row',

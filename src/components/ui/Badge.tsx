@@ -1,5 +1,5 @@
 ﻿import { View, Text, StyleSheet } from 'react-native';
-import { CheckCircle } from 'lucide-react-native';
+import { CheckCircle, type LucideIcon } from 'lucide-react-native';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { ECO_LEVELS, getEcoLevel } from '@constants/theme';
 import type { EcoLevel } from '@/types/app.types';
@@ -21,6 +21,7 @@ interface BadgeProps {
   label: string;
   variant?: BadgeVariant;
   size?: BadgeSize;
+  icon?: LucideIcon;
 }
 
 const VARIANT_STYLES: Record<BadgeVariant, { bg: string; text: string; border?: string }> = {
@@ -41,7 +42,7 @@ const SIZE_STYLES: Record<BadgeSize, { paddingH: number; paddingV: number; fontS
   md: { paddingH: SPACING.md, paddingV: SPACING.xs + 2, fontSize: TYPOGRAPHY.size.sm },
 };
 
-export function Badge({ label, variant = 'neutral', size = 'sm' }: BadgeProps) {
+export function Badge({ label, variant = 'neutral', size = 'sm', icon: Icon }: BadgeProps) {
   const variantStyle = VARIANT_STYLES[variant];
   const sizeStyle = SIZE_STYLES[size];
 
@@ -54,8 +55,10 @@ export function Badge({ label, variant = 'neutral', size = 'sm' }: BadgeProps) {
           paddingHorizontal: sizeStyle.paddingH,
           paddingVertical: sizeStyle.paddingV,
         },
+        Icon && styles.withIcon,
       ]}
     >
+      {Icon && <Icon size={sizeStyle.fontSize + 2} color={variantStyle.text} strokeWidth={2} />}
       <Text
         style={[
           styles.label,
@@ -77,7 +80,8 @@ export function EcoBadge({ level, size = 'sm' }: EcoBadgeProps) {
   const levelInfo = ECO_LEVELS[level];
   return (
     <Badge
-      label={`${levelInfo.emoji} ${levelInfo.label}`}
+      label={levelInfo.label}
+      icon={levelInfo.icon}
       variant="eco"
       size={size}
     />
@@ -106,6 +110,7 @@ export function VerifiedBadge({ size = 'sm' }: VerifiedBadgeProps) {
 }
 
 const styles = StyleSheet.create({
+  withIcon: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   badge: {
     borderRadius: RADIUS.full,
     alignSelf: 'flex-start',

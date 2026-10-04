@@ -49,7 +49,7 @@ export const tradesService = {
     await supabase.from('notifications').insert({
       user_id: data.owner_id,
       type: 'trade_request',
-      title: '🤝 Nueva propuesta de trueque',
+      title: 'Nueva propuesta de trueque',
       body: 'Alguien quiere intercambiar contigo',
       data: { trade_request_id: request.id },
     });
@@ -72,7 +72,7 @@ export const tradesService = {
     if (error) throw error;
 
     const notifType = action === 'accept' ? 'trade_accepted' : 'trade_rejected';
-    const notifTitle = action === 'accept' ? '✅ ¡Trueque aceptado!' : '❌ Trueque rechazado';
+    const notifTitle = action === 'accept' ? '¡Trueque aceptado!' : 'Trueque rechazado';
 
     await supabase.from('notifications').insert({
       user_id: (request as any).requester_id,
@@ -212,7 +212,7 @@ export const tradesService = {
     await supabase.from('notifications').insert({
       user_id: data.reviewed_id,
       type: 'new_review',
-      title: '⭐ Nueva reseña',
+      title: 'Nueva reseña',
       body: `Recibiste ${data.rating} estrellas en tu trueque`,
       data: { trade_id: data.trade_id },
     });

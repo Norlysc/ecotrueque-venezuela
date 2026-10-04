@@ -10,7 +10,8 @@ import {
   Image,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import { X, Repeat, CheckCircle, Shield, ChevronRight, Plus } from 'lucide-react-native';
+import { X, Repeat, CheckCircle, Shield, ChevronRight, Plus, Package, Earth, Send } from 'lucide-react-native';
+import { IconTile, CategoryIcon } from '@components/ui/IconTile';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useListingDetail } from '@hooks/useListings';
@@ -83,7 +84,6 @@ export default function TradeRequestScreen() {
                   {targetListing.title}
                 </Text>
                 <Text style={[styles.listingCategory, { color: COLORS.primary }]}>
-                  {CATEGORIES.find((c) => c.id === targetListing.category)?.emoji}{' '}
                   {CATEGORIES.find((c) => c.id === targetListing.category)?.label}
                 </Text>
                 <View style={styles.ownerRow}>
@@ -116,7 +116,7 @@ export default function TradeRequestScreen() {
 
         {activeListings.length === 0 ? (
           <View style={[styles.noListingsCard, { backgroundColor: isDark ? '#252523' : '#F8F9FA' }]}>
-            <Text style={styles.noListingsEmoji}>📦</Text>
+            <IconTile icon={Package} size={64} iconSize={28} rounded style={{ marginBottom: 8 }} />
             <Text style={[styles.noListingsTitle, { color: theme.text }]}>
               No tienes publicaciones activas
             </Text>
@@ -161,10 +161,8 @@ export default function TradeRequestScreen() {
                 {listing.images.length > 0 ? (
                   <Image source={{ uri: listing.images[0].url }} style={styles.myListingImage} />
                 ) : (
-                  <View style={[styles.myListingImagePlaceholder, { backgroundColor: theme.border }]}>
-                    <Text style={{ fontSize: 24 }}>
-                      {CATEGORIES.find((c) => c.id === listing.category)?.emoji ?? '📦'}
-                    </Text>
+                  <View style={[styles.myListingImagePlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+                    <CategoryIcon categoryId={listing.category} size={40} rounded />
                   </View>
                 )}
                 <Text style={[styles.myListingTitle, { color: theme.text }]} numberOfLines={2}>
@@ -203,27 +201,28 @@ export default function TradeRequestScreen() {
 
         {/* Card sitios seguros */}
         <TouchableOpacity
-          style={[styles.safeCard, { backgroundColor: isDark ? '#0D1F3C' : '#EBF4FF' }]}
+          style={[styles.safeCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}
           onPress={() => router.push('/(tabs)/map')}
         >
-          <Shield size={20} color={COLORS.info} strokeWidth={1.75} />
+          <Shield size={20} color={COLORS.primary} strokeWidth={1.75} />
           <View style={{ flex: 1 }}>
-            <Text style={[styles.safeTitle, { color: COLORS.infoDark }]}>
-              💙 Realiza el intercambio en un sitio seguro
+            <Text style={[styles.safeTitle, { color: COLORS.primaryDark }]}>
+              Realiza el intercambio en un sitio seguro
             </Text>
-            <Text style={[styles.safeSubtitle, { color: COLORS.info }]}>
+            <Text style={[styles.safeSubtitle, { color: COLORS.primary }]}>
               Ver sitios seguros verificados en el mapa
             </Text>
           </View>
-          <ChevronRight size={16} color={COLORS.info} strokeWidth={1.75} />
+          <ChevronRight size={16} color={COLORS.primary} strokeWidth={1.75} />
         </TouchableOpacity>
 
         {/* Impacto eco estimado */}
         {ecoImpact && (
           <View style={[styles.ecoImpactCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-            <Text style={[styles.ecoImpactTitle, { color: COLORS.primaryDark }]}>
-              🌍 Impacto eco estimado de este trueque
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              <Earth size={18} color={COLORS.primaryDark} strokeWidth={2} />
+              <Text style={[styles.ecoImpactTitle, { color: COLORS.primaryDark, flex: 1 }]}>Impacto eco estimado de este trueque</Text>
+            </View>
             <View style={styles.ecoImpactRow}>
               <View style={styles.ecoImpactItem}>
                 <Text style={[styles.ecoImpactValue, { color: COLORS.primary }]}>
@@ -243,7 +242,8 @@ export default function TradeRequestScreen() {
 
         {/* Botón enviar */}
         <Button
-          label="Enviar propuesta de trueque 🤝"
+          label="Enviar propuesta de trueque"
+          icon={Send}
           onPress={handleSubmit}
           variant="primary"
           size="lg"

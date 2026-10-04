@@ -4,7 +4,8 @@ import {
   useColorScheme, ActivityIndicator,
 } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-import { ArrowLeft, Star, Package, MessageCircle, Flag } from 'lucide-react-native';
+import { ArrowLeft, Star, Package, MessageCircle, Flag, MapPin, BadgeCheck } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useQuery } from '@tanstack/react-query';
@@ -107,15 +108,16 @@ export default function UserProfileScreen() {
 
           <Text style={styles.profileName}>{profile.full_name}</Text>
           {(profile.city || profile.state) && (
-            <Text style={styles.profileLocation}>
-              📍 {[profile.city, profile.state].filter(Boolean).join(', ')}
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+              <MapPin size={13} color="rgba(255,255,255,0.85)" strokeWidth={1.75} />
+              <Text style={styles.profileLocation}>{[profile.city, profile.state].filter(Boolean).join(', ')}</Text>
+            </View>
           )}
 
           {/* Badges */}
           <View style={styles.badgesRow}>
-            {profile.is_verified && <Badge label="✓ Verificado" variant="verified" size="sm" />}
-            <Badge label={`${levelInfo.emoji} ${levelInfo.label}`} variant="eco" size="sm" />
+            {profile.is_verified && <Badge label="Verificado" icon={BadgeCheck} variant="verified" size="sm" />}
+            <Badge label={levelInfo.label} icon={levelInfo.icon} variant="eco" size="sm" />
           </View>
 
           {/* Rating */}
@@ -180,7 +182,7 @@ export default function UserProfileScreen() {
               <ActivityIndicator color={COLORS.primary} style={{ padding: SPACING['2xl'] }} />
             ) : (listings ?? []).length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={{ fontSize: 40 }}>📦</Text>
+                <IconTile icon={Package} size={64} iconSize={28} rounded />
                 <Text style={[styles.emptyText, { color: theme.textSecondary }]}>Sin publicaciones activas</Text>
               </View>
             ) : (
@@ -203,7 +205,7 @@ export default function UserProfileScreen() {
               <ActivityIndicator color={COLORS.primary} style={{ padding: SPACING['2xl'] }} />
             ) : (reviews ?? []).length === 0 ? (
               <View style={styles.emptyState}>
-                <Text style={{ fontSize: 40 }}>⭐</Text>
+                <IconTile icon={Star} size={64} iconSize={28} rounded />
                 <Text style={[styles.emptyText, { color: theme.textSecondary }]}>Sin reseñas todavía</Text>
               </View>
             ) : (

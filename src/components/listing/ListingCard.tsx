@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { TouchableOpacity, View, Text, Image, StyleSheet, type DimensionValue } from 'react-native';
-import { Heart, MapPin, Pencil, Trash2 } from 'lucide-react-native';
+import { Heart, MapPin, Pencil, Trash2, Repeat, Leaf, Package, Handshake } from 'lucide-react-native';
 import { Avatar } from '@components/ui/Avatar';
 import { Badge } from '@components/ui/Badge';
+import { CategoryIcon } from '@components/ui/IconTile';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
 import { CATEGORIES } from '@constants/categories';
 import { useToggleFavorite } from '@hooks/useListings';
@@ -63,16 +64,17 @@ export function ListingCard({
           {imageUri ? (
             <Image source={{ uri: imageUri }} style={styles.gridImage} resizeMode="cover" />
           ) : (
-            <View style={[styles.gridImagePlaceholder, { backgroundColor: isDark ? '#252523' : '#F0F2F5' }]}>
-              <Text style={styles.imagePlaceholderEmoji}>{category?.emoji ?? '📦'}</Text>
+            <View style={[styles.gridImagePlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+              <CategoryIcon categoryId={listing.category} size={64} rounded />
             </View>
           )}
 
           {/* Badge tipo */}
           <View style={styles.gridBadge}>
             <Badge
-              label={listing.type === 'good' ? '📦 Bien' : '🤝 Servicio'}
-              variant="info"
+              label={listing.type === 'good' ? 'Bien' : 'Servicio'}
+              icon={listing.type === 'good' ? Package : Handshake}
+              variant="eco"
               size="xs"
             />
           </View>
@@ -109,9 +111,12 @@ export function ListingCard({
             </View>
           )}
 
-          <Text style={[styles.lookingFor, { color: COLORS.primary }]} numberOfLines={1}>
-            🔄 {listing.looking_for}
-          </Text>
+          <View style={styles.iconRow}>
+            <Repeat size={11} color={COLORS.primary} strokeWidth={2} />
+            <Text style={[styles.lookingFor, { color: COLORS.primary, flex: 1 }]} numberOfLines={1}>
+              {listing.looking_for}
+            </Text>
+          </View>
 
           {/* Footer */}
           <View style={styles.gridFooter}>
@@ -124,7 +129,8 @@ export function ListingCard({
               />
             )}
             <View style={styles.ecoStat}>
-              <Text style={styles.ecoStatText}>🌿 {listing.eco_impact.co2_saved_kg}kg</Text>
+              <Leaf size={11} color={COLORS.primary} strokeWidth={2} />
+              <Text style={styles.ecoStatText}>{listing.eco_impact.co2_saved_kg} kg</Text>
             </View>
             {localCount > 0 && (
               <View style={styles.favStat}>
@@ -195,22 +201,25 @@ export function ListingCard({
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.featuredImage} resizeMode="cover" />
         ) : (
-          <View style={[styles.featuredImage, { backgroundColor: isDark ? '#252523' : '#F0F2F5', alignItems: 'center', justifyContent: 'center' }]}>
-            <Text style={{ fontSize: 48 }}>{category?.emoji ?? '📦'}</Text>
+          <View style={[styles.featuredImage, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2', alignItems: 'center', justifyContent: 'center' }]}>
+            <CategoryIcon categoryId={listing.category} size={80} rounded />
           </View>
         )}
 
         <View style={styles.featuredOverlay} />
 
         <View style={styles.featuredTopBadges}>
-          <Badge label={category?.emoji + ' ' + (category?.label ?? '')} variant="neutral" size="xs" />
+          <Badge label={category?.label ?? ''} icon={category?.icon} variant="neutral" size="xs" />
         </View>
 
         <View style={styles.featuredBottom}>
           <Text style={styles.featuredTitle} numberOfLines={2}>{listing.title}</Text>
-          <Text style={styles.featuredLookingFor} numberOfLines={1}>
-            🔄 {listing.looking_for}
-          </Text>
+          <View style={styles.iconRow}>
+            <Repeat size={12} color="rgba(255,255,255,0.9)" strokeWidth={2} />
+            <Text style={[styles.featuredLookingFor, { flex: 1 }]} numberOfLines={1}>
+              {listing.looking_for}
+            </Text>
+          </View>
           <View style={styles.featuredFooter}>
             {listing.user && (
               <>
@@ -218,7 +227,7 @@ export function ListingCard({
                 <Text style={styles.featuredOwner} numberOfLines={1}>{listing.user.full_name}</Text>
               </>
             )}
-            <Badge label={`🌿 ${listing.eco_impact.co2_saved_kg}kg`} variant="eco" size="xs" />
+            <Badge label={`${listing.eco_impact.co2_saved_kg} kg`} icon={Leaf} variant="eco" size="xs" />
           </View>
         </View>
       </TouchableOpacity>
@@ -239,8 +248,8 @@ export function ListingCard({
       {imageUri ? (
         <Image source={{ uri: imageUri }} style={styles.horizontalImage} resizeMode="cover" />
       ) : (
-        <View style={[styles.horizontalImage, { backgroundColor: isDark ? '#252523' : '#F0F2F5', alignItems: 'center', justifyContent: 'center' }]}>
-          <Text style={{ fontSize: 30 }}>{category?.emoji ?? '📦'}</Text>
+        <View style={[styles.horizontalImage, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2', alignItems: 'center', justifyContent: 'center' }]}>
+          <CategoryIcon categoryId={listing.category} size={48} rounded />
         </View>
       )}
 
@@ -248,16 +257,23 @@ export function ListingCard({
         <Text style={[styles.horizontalTitle, { color: theme.text }]} numberOfLines={2}>
           {listing.title}
         </Text>
-        <Text style={[styles.horizontalCategory, { color: theme.textSecondary }]}>
-          {category?.emoji} {category?.label}
-        </Text>
-        <Text style={[styles.horizontalLookingFor, { color: COLORS.primary }]} numberOfLines={1}>
-          🔄 {listing.looking_for}
-        </Text>
-        {listing.distance_km !== undefined && (
-          <Text style={[styles.distanceText, { color: theme.textTertiary }]}>
-            📍 {listing.distance_km.toFixed(1)} km
+        <View style={styles.iconRow}>
+          {category?.icon && <category.icon size={12} color={COLORS.primary} strokeWidth={2} />}
+          <Text style={[styles.horizontalCategory, { color: theme.textSecondary }]}>{category?.label}</Text>
+        </View>
+        <View style={styles.iconRow}>
+          <Repeat size={11} color={COLORS.primary} strokeWidth={2} />
+          <Text style={[styles.horizontalLookingFor, { color: COLORS.primary, flex: 1 }]} numberOfLines={1}>
+            {listing.looking_for}
           </Text>
+        </View>
+        {listing.distance_km !== undefined && (
+          <View style={styles.distanceRow}>
+            <MapPin size={10} color={theme.textTertiary} strokeWidth={1.75} />
+            <Text style={[styles.distanceText, { color: theme.textTertiary }]}>
+              {listing.distance_km.toFixed(1)} km
+            </Text>
+          </View>
         )}
       </View>
 
@@ -292,7 +308,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  imagePlaceholderEmoji: { fontSize: 40 },
+  iconRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   gridBadge: { position: 'absolute', bottom: SPACING.sm, left: SPACING.sm },
   favoriteBtn: {
     position: 'absolute',
@@ -311,7 +327,7 @@ const styles = StyleSheet.create({
   distanceText: { fontSize: TYPOGRAPHY.size.xs },
   lookingFor: { fontSize: TYPOGRAPHY.size.xs, fontWeight: TYPOGRAPHY.weight.medium },
   gridFooter: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginTop: 4 },
-  ecoStat: { flex: 1 },
+  ecoStat: { flex: 1, flexDirection: 'row', alignItems: 'center', gap: 3 },
   ecoStatText: { fontSize: TYPOGRAPHY.size.xs, color: COLORS.primary },
   favStat: { flexDirection: 'row', alignItems: 'center', gap: 2 },
   favStatText: { fontSize: TYPOGRAPHY.size.xs, color: '#E53935', fontWeight: TYPOGRAPHY.weight.medium },

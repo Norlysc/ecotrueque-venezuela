@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Lock, Check, RefreshCw } from 'lucide-react-native';
+import { Lock, Check, RefreshCw, LockKeyhole } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -195,7 +196,7 @@ export default function ResetPasswordScreen() {
           colors={['#0F6E56', '#1D9E75']}
           style={[styles.header, { paddingTop: insets.top + 16 }]}
         >
-          <Text style={styles.emoji}>🔒</Text>
+          <IconTile icon={LockKeyhole} size={64} iconSize={30} variant="onDark" rounded style={{ marginTop: SPACING.lg }} />
           <Text style={styles.headerTitle}>Restablecer contraseña</Text>
         </LinearGradient>
 

@@ -13,7 +13,8 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import { useLocalSearchParams, router } from 'expo-router';
-import { ArrowLeft, Share2, Heart, MapPin, ChevronRight, Edit2, Pause, Play, MessageCircle } from 'lucide-react-native';
+import { ArrowLeft, Share2, Heart, MapPin, ChevronRight, Edit2, Pause, Play, MessageCircle, Sparkles, Star, ThumbsUp, CircleAlert, Wrench, Package, Handshake, Repeat, Leaf, Recycle, Banknote, Target, BadgeCheck, type LucideIcon } from 'lucide-react-native';
+import { IconTile, CategoryIcon } from '@components/ui/IconTile';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -29,12 +30,12 @@ import { ListingCardSkeleton } from '@components/ui/Skeleton';
 import { COLORS, THEME, ECO_LEVELS, getEcoLevel, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, WEB_MAX_WIDTH } from '@constants/theme';
 import { CATEGORIES } from '@constants/categories';
 
-const CONDITION_LABELS: Record<string, { label: string; color: string }> = {
-  new: { label: '✨ Nuevo', color: COLORS.success },
-  like_new: { label: '🌟 Como nuevo', color: COLORS.success },
-  good: { label: '👍 Buen estado', color: COLORS.primary },
-  fair: { label: '🔶 Regular', color: COLORS.warning },
-  poor: { label: '🔧 Para reparar', color: COLORS.error },
+const CONDITION_LABELS: Record<string, { label: string; color: string; icon: LucideIcon }> = {
+  new: { label: 'Nuevo', color: COLORS.success, icon: Sparkles },
+  like_new: { label: 'Como nuevo', color: COLORS.success, icon: Star },
+  good: { label: 'Buen estado', color: COLORS.primary, icon: ThumbsUp },
+  fair: { label: 'Regular', color: COLORS.warning, icon: CircleAlert },
+  poor: { label: 'Para reparar', color: COLORS.error, icon: Wrench },
 };
 
 export default function ListingDetailScreen() {
@@ -195,8 +196,8 @@ export default function ListingDetailScreen() {
                 </View>
               ))
             ) : (
-              <View style={{ width: screenWidth, height: galleryHeight, alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#1E1E1C' : '#F0F2F5' }}>
-                <Text style={{ fontSize: 72 }}>{category?.emoji ?? '📦'}</Text>
+              <View style={{ width: screenWidth, height: galleryHeight, alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }}>
+                <CategoryIcon categoryId={listing.category} size={110} rounded />
                 <Text style={{ fontSize: 14, color: isDark ? '#888' : '#999', marginTop: 8 }}>Sin fotos</Text>
               </View>
             )}
@@ -210,9 +211,9 @@ export default function ListingDetailScreen() {
 
           {/* Badges sobre imagen */}
           <View style={styles.imageBadges}>
-            <Badge label={listing.type === 'good' ? '📦 Bien' : '🤝 Servicio'} variant="info" size="sm" />
+            <Badge label={listing.type === 'good' ? 'Bien' : 'Servicio'} icon={listing.type === 'good' ? Package : Handshake} variant="eco" size="sm" />
             {category && (
-              <Badge label={`${category.emoji} ${category.label}`} variant="neutral" size="sm" />
+              <Badge label={category.label} icon={category.icon} variant="eco" size="sm" />
             )}
           </View>
 
@@ -237,6 +238,7 @@ export default function ListingDetailScreen() {
             {listing.condition && CONDITION_LABELS[listing.condition] && (
               <Badge
                 label={CONDITION_LABELS[listing.condition].label}
+                icon={CONDITION_LABELS[listing.condition].icon}
                 variant="neutral"
                 size="sm"
               />
@@ -245,9 +247,10 @@ export default function ListingDetailScreen() {
 
           {/* Busca a cambio */}
           <View style={[styles.lookingForCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-            <Text style={[styles.lookingForLabel, { color: COLORS.primaryDark }]}>
-              🔄 Busca a cambio:
-            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Repeat size={15} color={COLORS.primaryDark} strokeWidth={2} />
+              <Text style={[styles.lookingForLabel, { color: COLORS.primaryDark }]}>Busca a cambio:</Text>
+            </View>
             <Text style={[styles.lookingForText, { color: COLORS.primaryDarker }]}>
               {listing.looking_for}
             </Text>
@@ -256,10 +259,10 @@ export default function ListingDetailScreen() {
           {/* Métricas eco */}
           <View style={styles.ecoMetrics}>
             {[
-              { emoji: '🌿', label: 'CO₂ evitado', value: `${listing.eco_impact.co2_saved_kg} kg` },
-              { emoji: '♻️', label: 'Residuos', value: `${listing.eco_impact.waste_reduced_kg} kg` },
+              { icon: Leaf, label: 'CO₂ evitado', value: `${listing.eco_impact.co2_saved_kg} kg` },
+              { icon: Recycle, label: 'Residuos', value: `${listing.eco_impact.waste_reduced_kg} kg` },
               {
-                emoji: '💵',
+                icon: Banknote,
                 label: 'Valor USD',
                 value: listing.eco_impact.estimated_value_usd
                   ? `$${listing.eco_impact.estimated_value_usd}`
@@ -270,7 +273,7 @@ export default function ListingDetailScreen() {
                 key={m.label}
                 style={[styles.ecoMetric, { backgroundColor: isDark ? '#252523' : '#F8F9FA' }]}
               >
-                <Text style={styles.ecoMetricEmoji}>{m.emoji}</Text>
+                <IconTile icon={m.icon} size={36} rounded />
                 <Text style={[styles.ecoMetricValue, { color: COLORS.primary }]}>{m.value}</Text>
                 <Text style={[styles.ecoMetricLabel, { color: theme.textTertiary }]}>{m.label}</Text>
               </View>
@@ -337,17 +340,19 @@ export default function ListingDetailScreen() {
               <View style={{ flex: 1 }}>
                 <Text style={[styles.ownerName, { color: theme.text }]}>{listing.user.full_name}</Text>
                 <View style={styles.ownerStats}>
-                  <Text style={[styles.ownerStat, { color: theme.textSecondary }]}>
-                    ⭐ {listing.user.reputation_score.toFixed(1)}
-                  </Text>
-                  <Text style={[styles.ownerStat, { color: theme.textSecondary }]}>
-                    🔄 {listing.user.total_trades} trueques
-                  </Text>
+                  <View style={styles.ownerStatRow}>
+                    <Star size={13} color={COLORS.primary} strokeWidth={2} />
+                    <Text style={[styles.ownerStat, { color: theme.textSecondary }]}>{listing.user.reputation_score.toFixed(1)}</Text>
+                  </View>
+                  <View style={styles.ownerStatRow}>
+                    <Repeat size={13} color={COLORS.primary} strokeWidth={2} />
+                    <Text style={[styles.ownerStat, { color: theme.textSecondary }]}>{listing.user.total_trades} trueques</Text>
+                  </View>
                 </View>
               </View>
               <View>
-                {listing.user.is_verified && <Badge label="✓ Verificado" variant="verified" size="xs" />}
-                <Badge label={`${ECO_LEVELS[ownerLevel].emoji} ${ECO_LEVELS[ownerLevel].label}`} variant="eco" size="xs" />
+                {listing.user.is_verified && <Badge label="Verificado" icon={BadgeCheck} variant="verified" size="xs" />}
+                <Badge label={ECO_LEVELS[ownerLevel].label} icon={ECO_LEVELS[ownerLevel].icon} variant="eco" size="xs" />
               </View>
             </TouchableOpacity>
           )}
@@ -355,9 +360,10 @@ export default function ListingDetailScreen() {
           {/* Matches inteligentes */}
           {(matches ?? []).length > 0 && (
             <View style={styles.section}>
-              <Text style={[styles.sectionTitle, { color: theme.text }]}>
-                🎯 Matches inteligentes
-              </Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                <Target size={18} color={COLORS.primary} strokeWidth={2} />
+                <Text style={[styles.sectionTitle, { color: theme.text, marginBottom: 0 }]}>Matches inteligentes</Text>
+              </View>
               <Text style={[styles.sectionSubtitle, { color: theme.textSecondary }]}>
                 Personas que buscan lo que tú tienes
               </Text>
@@ -423,7 +429,7 @@ export default function ListingDetailScreen() {
               disabled={chatLoading}
             />
             <Button
-              label="Proponer trueque 🤝"
+              label="Proponer trueque"
               variant="primary"
               size="md"
               onPress={() =>
@@ -438,6 +444,7 @@ export default function ListingDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  ownerStatRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   container: { flex: 1 },
   floatingHeader: {
     position: 'absolute',

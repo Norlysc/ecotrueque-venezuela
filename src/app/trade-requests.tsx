@@ -4,7 +4,8 @@ import {
   Image, useColorScheme, ActivityIndicator,
 } from 'react-native';
 import { router } from 'expo-router';
-import { ArrowLeft, ChevronRight, RefreshCw } from 'lucide-react-native';
+import { ArrowLeft, ChevronRight, RefreshCw, Hourglass, CircleCheck, CircleX, Ban, PartyPopper, ArrowLeftRight, MessageCircle, Check, Star, Inbox } from 'lucide-react-native';
+import { IconTile, CategoryIcon } from '@components/ui/IconTile';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -13,15 +14,14 @@ import { Avatar } from '@components/ui/Avatar';
 import { Badge } from '@components/ui/Badge';
 import { Button } from '@components/ui/Button';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
-import { CATEGORIES } from '@constants/categories';
 import type { TradeRequest } from '@/types/app.types';
 
 const STATUS_CONFIG = {
-  pending:   { label: 'Pendiente',   variant: 'warning'  as const, emoji: '⏳' },
-  accepted:  { label: 'Aceptado',    variant: 'success'  as const, emoji: '✅' },
-  rejected:  { label: 'Rechazado',   variant: 'error'    as const, emoji: '❌' },
-  cancelled: { label: 'Cancelado',   variant: 'error'    as const, emoji: '🚫' },
-  completed: { label: 'Completado',  variant: 'info'     as const, emoji: '🎉' },
+  pending:   { label: 'Pendiente',   variant: 'warning'  as const, icon: Hourglass },
+  accepted:  { label: 'Aceptado',    variant: 'success'  as const, icon: CircleCheck },
+  rejected:  { label: 'Rechazado',   variant: 'error'    as const, icon: CircleX },
+  cancelled: { label: 'Cancelado',   variant: 'error'    as const, icon: Ban },
+  completed: { label: 'Completado',  variant: 'eco'      as const, icon: PartyPopper },
 };
 
 export default function TradeRequestsScreen() {
@@ -45,8 +45,6 @@ export default function TradeRequestsScreen() {
 
   const renderItem = ({ item }: { item: TradeRequest }) => {
     const statusCfg = STATUS_CONFIG[item.status] ?? STATUS_CONFIG.pending;
-    const offeredCat = CATEGORIES.find(c => c.id === item.offered_listing?.category);
-    const requestedCat = CATEGORIES.find(c => c.id === item.requested_listing?.category);
     const isThisResponding = isResponding &&
       (respondingVars?.requestId === item.id);
 
@@ -63,7 +61,7 @@ export default function TradeRequestsScreen() {
               {formatDistanceToNow(new Date(item.created_at), { locale: es, addSuffix: true })}
             </Text>
           </View>
-          <Badge label={`${statusCfg.emoji} ${statusCfg.label}`} variant={statusCfg.variant} size="sm" />
+          <Badge label={statusCfg.label} icon={statusCfg.icon} variant={statusCfg.variant} size="sm" />
         </View>
 
         {/* Trade details */}
@@ -74,8 +72,8 @@ export default function TradeRequestsScreen() {
             {item.offered_listing?.images?.[0]?.url ? (
               <Image source={{ uri: item.offered_listing.images[0].url }} style={styles.tradeImage} />
             ) : (
-              <View style={[styles.tradeImagePlaceholder, { backgroundColor: offeredCat?.color + '20' ?? '#F0F2F5' }]}>
-                <Text style={{ fontSize: 26 }}>{offeredCat?.emoji ?? '📦'}</Text>
+              <View style={[styles.tradeImagePlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+                <CategoryIcon categoryId={item.offered_listing?.category} size={44} rounded />
               </View>
             )}
             <Text style={[styles.tradeTitle, { color: theme.text }]} numberOfLines={2}>
@@ -85,7 +83,7 @@ export default function TradeRequestsScreen() {
 
           {/* Arrow */}
           <View style={styles.tradeArrow}>
-            <Text style={styles.tradeArrowText}>🔄</Text>
+            <IconTile icon={ArrowLeftRight} size={36} variant="solid" rounded />
           </View>
 
           {/* They want */}
@@ -94,8 +92,8 @@ export default function TradeRequestsScreen() {
             {item.requested_listing?.images?.[0]?.url ? (
               <Image source={{ uri: item.requested_listing.images[0].url }} style={styles.tradeImage} />
             ) : (
-              <View style={[styles.tradeImagePlaceholder, { backgroundColor: requestedCat?.color + '20' ?? '#F0F2F5' }]}>
-                <Text style={{ fontSize: 26 }}>{requestedCat?.emoji ?? '📦'}</Text>
+              <View style={[styles.tradeImagePlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+                <CategoryIcon categoryId={item.requested_listing?.category} size={44} rounded />
               </View>
             )}
             <Text style={[styles.tradeTitle, { color: theme.text }]} numberOfLines={2}>
@@ -107,7 +105,10 @@ export default function TradeRequestsScreen() {
         {/* Message if any */}
         {item.message && (
           <View style={[styles.messageBox, { backgroundColor: isDark ? '#252523' : '#F0F2F5' }]}>
-            <Text style={[styles.messageText, { color: theme.textSecondary }]}>💬 {item.message}</Text>
+            <View style={{ flexDirection: 'row', gap: 6, alignItems: 'flex-start' }}>
+              <MessageCircle size={14} color={COLORS.primary} strokeWidth={1.75} style={{ marginTop: 2 }} />
+              <Text style={[styles.messageText, { color: theme.textSecondary, flex: 1 }]}>{item.message}</Text>
+            </View>
           </View>
         )}
 
@@ -123,7 +124,8 @@ export default function TradeRequestsScreen() {
                 onPress={() => respond({ requestId: item.id, action: 'reject' })}
               />
               <Button
-                label="✅ Aceptar trueque"
+                label="Aceptar trueque"
+                icon={Check}
                 variant="primary"
                 size="sm"
                 isLoading={isThisResponding}
@@ -134,8 +136,8 @@ export default function TradeRequestsScreen() {
           {item.status === 'accepted' && (
             <View style={{ flex: 1 }}>
               <View style={styles.confirmRow}>
-                <Text style={{ fontSize: 14 }}>{item.owner_confirmed ? '✅ Tú confirmaste' : '⏳ Tú: pendiente'}</Text>
-                <Text style={{ fontSize: 14 }}>{item.requester_confirmed ? '✅ El solicitante confirmó' : '⏳ El otro: pendiente'}</Text>
+                <ConfirmStatus ok={!!item.owner_confirmed} okText="Tú confirmaste" pendingText="Tú: pendiente" color={theme.text} />
+                <ConfirmStatus ok={!!item.requester_confirmed} okText="El solicitante confirmó" pendingText="El otro: pendiente" color={theme.text} />
               </View>
               {!item.owner_confirmed && (
                 <Button
@@ -161,7 +163,8 @@ export default function TradeRequestsScreen() {
           )}
           {item.status === 'completed' && (
             <Button
-              label="⭐ Dejar reseña"
+              label="Dejar reseña"
+              icon={Star}
               variant="outline"
               size="sm"
               onPress={() =>
@@ -211,7 +214,7 @@ export default function TradeRequestsScreen() {
             style={[styles.filterChip, { backgroundColor: filter === f ? COLORS.primary : isDark ? '#2A2A28' : '#F0F2F5' }]}
           >
             <Text style={[styles.filterText, { color: filter === f ? '#fff' : theme.textSecondary }]}>
-              {f === 'all' ? 'Todas' : f === 'pending' ? '⏳ Pendientes' : '✅ Aceptadas'}
+              {f === 'all' ? 'Todas' : f === 'pending' ? 'Pendientes' : 'Aceptadas'}
             </Text>
             {f === 'pending' && pendingCount > 0 && (
               <View style={styles.filterBadge}>
@@ -237,7 +240,7 @@ export default function TradeRequestsScreen() {
           onRefresh={refetch}
           ListEmptyComponent={
             <View style={styles.emptyState}>
-              <Text style={{ fontSize: 56 }}>📭</Text>
+              <IconTile icon={Inbox} size={80} iconSize={36} rounded />
               <Text style={[styles.emptyTitle, { color: theme.text }]}>
                 {filter === 'pending' ? 'Sin solicitudes pendientes' : 'Sin solicitudes'}
               </Text>
@@ -248,6 +251,16 @@ export default function TradeRequestsScreen() {
           }
         />
       )}
+    </View>
+  );
+}
+
+function ConfirmStatus({ ok, okText, pendingText, color }: { ok: boolean; okText: string; pendingText: string; color: string }) {
+  const Icon = ok ? CircleCheck : Hourglass;
+  return (
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+      <Icon size={15} color={ok ? COLORS.primary : COLORS.warning} strokeWidth={2} />
+      <Text style={{ fontSize: 14, color }}>{ok ? okText : pendingText}</Text>
     </View>
   );
 }

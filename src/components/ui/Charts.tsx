@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { View, Text, StyleSheet, Animated } from 'react-native';
+import type { LucideIcon } from 'lucide-react-native';
 import Svg, { Circle, G } from 'react-native-svg';
 import { COLORS, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 
@@ -12,7 +13,7 @@ interface RingProps {
   bgColor?: string;
   label: string;
   valueText: string;
-  emoji: string;
+  icon: LucideIcon;
   isDark?: boolean;
 }
 
@@ -24,7 +25,7 @@ export function RingChart({
   bgColor,
   label,
   valueText,
-  emoji,
+  icon: Icon,
   isDark = false,
 }: RingProps) {
   const radius = (size - strokeWidth) / 2;
@@ -78,7 +79,7 @@ export function RingChart({
         </Svg>
         {/* Centro */}
         <View style={[styles.ringCenter, { width: size, height: size }]}>
-          <Text style={styles.ringEmoji}>{emoji}</Text>
+          <Icon size={18} color={color} strokeWidth={2} />
           <Text style={[styles.ringPct, { color }]}>{pct}%</Text>
         </View>
       </View>
@@ -93,7 +94,6 @@ interface DonutSegment {
   label: string;
   value: number;
   color: string;
-  emoji: string;
 }
 
 interface DonutProps {
@@ -154,7 +154,7 @@ export function DonutChart({ segments, size = 160, strokeWidth = 26, isDark = fa
             <View key={i} style={styles.legendRow}>
               <View style={[styles.legendDot, { backgroundColor: seg.color }]} />
               <Text style={[styles.legendLabel, { color: isDark ? '#D1D5DB' : '#374151' }]}>
-                {seg.emoji} {seg.label}
+                {seg.label}
               </Text>
               <Text style={[styles.legendPct, { color: seg.color }]}>{pct}%</Text>
             </View>

@@ -78,7 +78,7 @@ export default function ReviewModal() {
         <ScrollView showsVerticalScrollIndicator={false}>
           {/* Header */}
           <View style={styles.header}>
-            <Text style={[styles.title, { color: theme.text }]}>⭐ Califica el trueque</Text>
+            <Text style={[styles.title, { color: theme.text }]}>Califica el trueque</Text>
             <Text style={[styles.subtitle, { color: theme.textSecondary }]}>
               ¿Cómo fue tu experiencia con esta persona?
             </Text>
@@ -116,7 +116,7 @@ export default function ReviewModal() {
 
           {rating > 0 && (
             <Text style={[styles.ratingLabel, { color: COLORS.primary }]}>
-              {['', '😞 Muy malo', '😐 Regular', '🙂 Bien', '😊 Muy bien', '🤩 Excelente'][rating]}
+              {['', 'Muy malo', 'Regular', 'Bien', 'Muy bien', 'Excelente'][rating]}
             </Text>
           )}
 

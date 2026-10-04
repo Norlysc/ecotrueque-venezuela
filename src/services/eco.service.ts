@@ -102,8 +102,8 @@ export const ecoService = {
         await supabase.from('notifications').insert({
           user_id: userId,
           type: 'achievement_unlocked',
-          title: `🏆 ¡Logro desbloqueado!`,
-          body: `${achievement.emoji} ${achievement.title} (+${achievement.points_reward} pts)`,
+          title: '¡Logro desbloqueado!',
+          body: `${achievement.title} (+${achievement.points_reward} pts)`,
           data: { achievement_id: achievement.id },
         });
       }

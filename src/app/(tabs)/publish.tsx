@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
-import { X, Check, Image as ImageIcon, Camera, CheckCircle, ArrowRight, Tag, DollarSign } from 'lucide-react-native';
+import { X, Check, Image as ImageIcon, Camera, CheckCircle, ArrowRight, Tag, DollarSign, Sparkles, Star, ThumbsUp, CircleAlert, Wrench, Package, Handshake, Repeat } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -26,11 +27,11 @@ import type { CategoryId } from '@constants/categories';
 import type { ListingType } from '@/types/app.types';
 
 const CONDITIONS = [
-  { id: 'new', label: 'Nuevo', emoji: '✨' },
-  { id: 'like_new', label: 'Como nuevo', emoji: '🌟' },
-  { id: 'good', label: 'Buen estado', emoji: '👍' },
-  { id: 'fair', label: 'Regular', emoji: '🔶' },
-  { id: 'poor', label: 'Para reparar', emoji: '🔧' },
+  { id: 'new', label: 'Nuevo', icon: Sparkles },
+  { id: 'like_new', label: 'Como nuevo', icon: Star },
+  { id: 'good', label: 'Buen estado', icon: ThumbsUp },
+  { id: 'fair', label: 'Regular', icon: CircleAlert },
+  { id: 'poor', label: 'Para reparar', icon: Wrench },
 ] as const;
 
 type Condition = typeof CONDITIONS[number]['id'];
@@ -207,8 +208,8 @@ export default function PublishScreen() {
 
             <View style={styles.typeRow}>
               {([
-                { id: 'good', label: 'Un bien', emoji: '📦', desc: 'Objeto físico' },
-                { id: 'service', label: 'Un servicio', emoji: '🤝', desc: 'Habilidad o tiempo' },
+                { id: 'good', label: 'Un bien', icon: Package, desc: 'Objeto físico' },
+                { id: 'service', label: 'Un servicio', icon: Handshake, desc: 'Habilidad o tiempo' },
               ] as const).map((t) => (
                 <TouchableOpacity
                   key={t.id}
@@ -223,7 +224,7 @@ export default function PublishScreen() {
                     },
                   ]}
                 >
-                  <Text style={styles.typeEmoji}>{t.emoji}</Text>
+                  <IconTile icon={t.icon} size={48} variant={form.type === t.id ? 'solid' : 'soft'} rounded style={{ marginBottom: SPACING.xs }} />
                   <Text style={[styles.typeLabel, { color: theme.text }]}>{t.label}</Text>
                   <Text style={[styles.typeDesc, { color: theme.textSecondary }]}>{t.desc}</Text>
                 </TouchableOpacity>
@@ -239,21 +240,21 @@ export default function PublishScreen() {
                   style={[
                     styles.categoryItem,
                     {
-                      borderColor: form.category === cat.id ? cat.color : 'transparent',
+                      borderColor: form.category === cat.id ? COLORS.primary : 'transparent',
                       backgroundColor:
                         form.category === cat.id
-                          ? `${cat.color}22`
+                          ? (isDark ? '#0F2D24' : '#E8F5F0')
                           : isDark
                           ? '#252523'
                           : '#F0F2F5',
                     },
                   ]}
                 >
-                  <Text style={styles.categoryEmoji}>{cat.emoji}</Text>
+                  <IconTile icon={cat.icon} size={36} variant={form.category === cat.id ? 'solid' : 'soft'} rounded />
                   <Text
                     style={[
                       styles.categoryLabel,
-                      { color: form.category === cat.id ? cat.color : theme.textSecondary },
+                      { color: form.category === cat.id ? COLORS.primaryDark : theme.textSecondary },
                     ]}
                   >
                     {cat.label}
@@ -314,7 +315,7 @@ export default function PublishScreen() {
                         },
                       ]}
                     >
-                      <Text style={styles.conditionEmoji}>{c.emoji}</Text>
+                      <c.icon size={15} color={form.condition === c.id ? COLORS.primary : theme.textTertiary} strokeWidth={1.75} />
                       <Text
                         style={[
                           styles.conditionLabel,
@@ -331,7 +332,7 @@ export default function PublishScreen() {
 
             <View style={[styles.lookingForContainer, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
               <Text style={[styles.lookingForTitle, { color: COLORS.primaryDark }]}>
-                🔄 ¿Qué buscas a cambio?
+                ¿Qué buscas a cambio?
               </Text>
               <TextInput
                 style={[styles.lookingForInput, { color: COLORS.primaryDark }]}
@@ -420,11 +421,13 @@ export default function PublishScreen() {
             <View style={[styles.previewCard, { backgroundColor: theme.surface }]}>
               <Text style={[styles.previewTitle, { color: theme.text }]}>{form.title}</Text>
               <Text style={[styles.previewCategory, { color: COLORS.primary }]}>
-                {CATEGORIES.find((c) => c.id === form.category)?.emoji}{' '}
                 {CATEGORIES.find((c) => c.id === form.category)?.label}
               </Text>
               <View style={[styles.lookingForPreview, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-                <Text style={{ color: COLORS.primaryDark }}>🔄 Busca: {form.looking_for}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+                  <Repeat size={14} color={COLORS.primaryDark} strokeWidth={2} />
+                  <Text style={{ color: COLORS.primaryDark, flex: 1 }}>Busca: {form.looking_for}</Text>
+                </View>
               </View>
               {form.description.length > 0 && (
                 <Text style={[styles.previewDesc, { color: theme.textSecondary }]}>
@@ -473,7 +476,7 @@ export default function PublishScreen() {
             />
           ) : (
             <Button
-              label={isPending ? 'Subiendo fotos...' : 'Publicar trueque 🤝'}
+              label={isPending ? 'Subiendo fotos...' : 'Publicar trueque'}
               onPress={handlePublish}
               variant="eco"
               size="lg"

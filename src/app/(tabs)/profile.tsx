@@ -12,7 +12,8 @@ import {
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { router } from 'expo-router';
-import { Settings, ChevronRight, Edit3, Shield, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor } from 'lucide-react-native';
+import { Settings, ChevronRight, Edit3, Shield, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor, MapPin, Package, Repeat, Star, Leaf, ArrowLeftRight } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { useThemeStore } from '@stores/themeStore';
 import { useDeleteListing } from '@hooks/useListings';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -151,14 +152,18 @@ export default function ProfileScreen() {
         />
 
         <Text style={styles.profileName}>{profile?.full_name ?? 'Usuario'}</Text>
-        <Text style={styles.profileLocation}>
-          📍 {profile?.city ?? ''} {profile?.state ? `, ${profile.state}` : ''}
-        </Text>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <MapPin size={13} color="rgba(255,255,255,0.85)" strokeWidth={1.75} />
+          <Text style={styles.profileLocation}>
+            {profile?.city ?? ''}{profile?.state ? `, ${profile.state}` : ''}
+          </Text>
+        </View>
 
         <View style={styles.badgesRow}>
           {profile?.is_verified && <Badge label="Verificado" variant="verified" size="sm" />}
           <Badge
-            label={`${levelInfo.emoji} ${levelInfo.label}`}
+            label={levelInfo.label}
+            icon={levelInfo.icon}
             variant="eco"
             size="sm"
           />
@@ -168,7 +173,7 @@ export default function ProfileScreen() {
         <View style={styles.statsRow}>
           {[
             { label: 'Trueques', value: profile?.total_trades ?? 0 },
-            { label: 'Reputación', value: `${(profile?.reputation_score ?? 0).toFixed(1)}⭐` },
+            { label: 'Reputación', value: (profile?.reputation_score ?? 0).toFixed(1) },
             { label: 'Activos', value: profile?.active_listings_count ?? 0 },
             { label: 'EcoPoints', value: profile?.eco_points ?? 0 },
           ].map((stat) => (
@@ -187,7 +192,7 @@ export default function ProfileScreen() {
         activeOpacity={0.8}
       >
         <View style={styles.ecoMiniContent}>
-          <Text style={styles.ecoMiniEmoji}>{levelInfo.emoji}</Text>
+          <IconTile icon={levelInfo.icon} size={44} variant="solid" rounded />
           <View>
             <Text style={[styles.ecoMiniTitle, { color: COLORS.primaryDark }]}>
               {levelInfo.label} · {profile?.eco_points ?? 0} pts
@@ -244,7 +249,7 @@ export default function ProfileScreen() {
             ))}
             {(myListings ?? []).length === 0 && (
               <View style={styles.emptyTab}>
-                <Text style={styles.emptyEmoji}>📦</Text>
+                <IconTile icon={Package} size={64} iconSize={28} rounded style={{ marginBottom: 8 }} />
                 <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                   Aún no tienes publicaciones
                 </Text>
@@ -257,7 +262,7 @@ export default function ProfileScreen() {
           <View style={styles.historialList}>
             {(tradeHistory ?? []).length === 0 ? (
               <View style={styles.emptyTab}>
-                <Text style={styles.emptyEmoji}>🔄</Text>
+                <IconTile icon={Repeat} size={64} iconSize={28} rounded style={{ marginBottom: 8 }} />
                 <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                   Sin historial de trueques aún
                 </Text>
@@ -272,7 +277,7 @@ export default function ProfileScreen() {
                         {trade.offered_listing?.title ?? '—'}
                       </Text>
                     </View>
-                    <Text style={styles.tradeHistoryArrow}>🔄</Text>
+                    <ArrowLeftRight size={20} color={COLORS.primary} strokeWidth={1.75} />
                     <View style={styles.tradeHistoryItem}>
                       <Text style={[styles.tradeHistoryItemLabel, { color: theme.textTertiary }]}>Por</Text>
                       <Text style={[styles.tradeHistoryItemName, { color: theme.text }]} numberOfLines={2}>
@@ -285,9 +290,12 @@ export default function ProfileScreen() {
                       {formatDistanceToNow(new Date(trade.completed_at ?? trade.created_at), { locale: es, addSuffix: true })}
                     </Text>
                     {trade.eco_impact_total?.co2_saved_kg > 0 && (
-                      <Text style={[styles.tradeHistoryEco, { color: COLORS.primary }]}>
-                        🌿 +{trade.eco_impact_total.co2_saved_kg} kg CO₂
-                      </Text>
+                      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+                        <Leaf size={12} color={COLORS.primary} strokeWidth={2} />
+                        <Text style={[styles.tradeHistoryEco, { color: COLORS.primary }]}>
+                          +{trade.eco_impact_total.co2_saved_kg} kg CO₂
+                        </Text>
+                      </View>
                     )}
                   </View>
                 </View>
@@ -300,7 +308,7 @@ export default function ProfileScreen() {
           <View style={styles.reviewsList}>
             {(myReviews ?? []).length === 0 ? (
               <View style={styles.emptyTab}>
-                <Text style={styles.emptyEmoji}>⭐</Text>
+                <IconTile icon={Star} size={64} iconSize={28} rounded style={{ marginBottom: 8 }} />
                 <Text style={[styles.emptyText, { color: theme.textSecondary }]}>
                   Sin reseñas todavía
                 </Text>
@@ -325,7 +333,7 @@ export default function ProfileScreen() {
                     </View>
                     <View style={styles.starsRow}>
                       {[1, 2, 3, 4, 5].map(s => (
-                        <Text key={s} style={{ fontSize: 14 }}>{s <= review.rating ? '⭐' : '☆'}</Text>
+                        <Star key={s} size={14} color={COLORS.primary} fill={s <= review.rating ? COLORS.primary : 'none'} strokeWidth={1.75} />
                       ))}
                     </View>
                   </View>
@@ -352,16 +360,20 @@ export default function ProfileScreen() {
               i < MENU_ITEMS.length - 1 && { borderBottomWidth: 1, borderBottomColor: theme.border },
             ]}
           >
-            <View style={[styles.menuIconBg, { backgroundColor: isDark ? '#252523' : '#F0F2F5' }]}>
+            <View style={[styles.menuIconBg, { backgroundColor: COLORS.primary + '18' }]}>
               <item.icon size={18} color={COLORS.primary} strokeWidth={1.75} />
             </View>
             <Text style={[styles.menuLabel, { color: theme.text, flex: 1 }]}>{item.label}</Text>
             {(item as any).isTheme ? (
               /* Pastilla indicadora del modo activo */
               <View style={[styles.themeBadge, { backgroundColor: isDark ? '#252523' : '#E8F5F0' }]}>
-                <Text style={[styles.themeBadgeText, { color: COLORS.primary }]}>
-                  {themeMode === 'dark' ? '🌙' : themeMode === 'light' ? '☀️' : '⚙️'}
-                </Text>
+                {themeMode === 'dark' ? (
+                  <Moon size={14} color={COLORS.primary} strokeWidth={2} />
+                ) : themeMode === 'light' ? (
+                  <Sun size={14} color={COLORS.primary} strokeWidth={2} />
+                ) : (
+                  <Monitor size={14} color={COLORS.primary} strokeWidth={2} />
+                )}
               </View>
             ) : (
               <ChevronRight size={16} color={theme.textTertiary} strokeWidth={1.75} />

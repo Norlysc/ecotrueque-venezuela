@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Send, Mail, Lock } from 'lucide-react-native';
+import { Send, Mail, Lock, Earth } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -125,7 +126,7 @@ export default function LoginScreen() {
       />
 
       <View style={[styles.ecoCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
-        <Text style={styles.ecoEmoji}>🌍</Text>
+        <IconTile icon={Earth} size={40} variant="solid" rounded />
         <View style={{ flex: 1 }}>
           <Text style={[styles.ecoTitle, { color: COLORS.primaryDark }]}>
             Comunidad EcoTrueque

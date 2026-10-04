@@ -14,7 +14,8 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
-import { MapPin, Bell, Search, X, ChevronRight, List, Grid2x2 } from 'lucide-react-native';
+import { MapPin, Bell, Search, X, ChevronRight, List, Grid2x2, Leaf, Earth, LayoutGrid, SearchX } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@stores/authStore';
 import { useLocationStore } from '@stores/locationStore';
@@ -92,7 +93,7 @@ export default function HomeScreen() {
         <View style={styles.headerTop}>
           <View>
             <Text style={[styles.greeting, { color: theme.textSecondary }]}>
-              {getGreeting()}, 👋
+              {getGreeting()},
             </Text>
             <Text style={[styles.name, { color: theme.text }]}>{firstName}</Text>
             {(displayCity || displayState) && (
@@ -107,9 +108,9 @@ export default function HomeScreen() {
           <View style={styles.headerActions}>
             <TouchableOpacity
               onPress={() => router.push('/eco/dashboard')}
-              style={[styles.iconBtn, { backgroundColor: isDark ? '#252523' : '#F0F2F5' }]}
+              style={[styles.iconBtn, { backgroundColor: COLORS.primary + '18' }]}
             >
-              <Text style={styles.ecoIcon}>🌿</Text>
+              <Leaf size={20} color={COLORS.primary} strokeWidth={1.75} />
             </TouchableOpacity>
 
             {/* Campanita — navega a notificaciones + vibración */}
@@ -180,7 +181,7 @@ export default function HomeScreen() {
           activeOpacity={0.85}
         >
           <View style={styles.ecoBannerContent}>
-            <Text style={styles.ecoBannerEmoji}>🌍</Text>
+            <IconTile icon={Earth} size={44} variant="onDark" rounded />
             <View>
               <Text style={styles.ecoBannerTitle}>Impacto de tu comunidad</Text>
               <Text style={styles.ecoBannerStat}>2,400 kg CO₂ evitados este mes</Text>
@@ -205,7 +206,7 @@ export default function HomeScreen() {
               },
             ]}
           >
-            <Text style={styles.categoryChipEmoji}>✨</Text>
+            <LayoutGrid size={16} color={!selectedCategory ? '#fff' : COLORS.primary} strokeWidth={1.75} />
             <Text
               style={[
                 styles.categoryChipLabel,
@@ -227,7 +228,7 @@ export default function HomeScreen() {
                 },
               ]}
             >
-              <Text style={styles.categoryChipEmoji}>{cat.emoji}</Text>
+              <cat.icon size={16} color={cat.id === selectedCategory ? '#fff' : COLORS.primary} strokeWidth={1.75} />
               <Text
                 style={[
                   styles.categoryChipLabel,
@@ -279,7 +280,7 @@ export default function HomeScreen() {
 
         {!isLoading && (listings ?? []).length === 0 && (
           <View style={styles.emptyState}>
-            <Text style={styles.emptyEmoji}>🔍</Text>
+            <IconTile icon={SearchX} size={80} iconSize={36} rounded style={{ marginBottom: SPACING.base }} />
             <Text style={[styles.emptyTitle, { color: theme.text }]}>Sin resultados</Text>
             <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
               Intenta cambiar los filtros o ampliar el radio de búsqueda

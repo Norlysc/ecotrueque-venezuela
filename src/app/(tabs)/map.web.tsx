@@ -12,7 +12,8 @@ import {
   Dimensions,
 } from 'react-native';
 import { router } from 'expo-router';
-import { ArrowLeft, Search, X, MapPin, ChevronRight, ArrowRight, Crosshair } from 'lucide-react-native';
+import { ArrowLeft, Search, X, MapPin, ChevronRight, ArrowRight, Crosshair, Map as MapIcon, Leaf, Recycle, TriangleAlert, MapPinOff } from 'lucide-react-native';
+import { IconTile, CategoryIcon } from '@components/ui/IconTile';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNearbyListings } from '@hooks/useListings';
 import { useLocationStore } from '@stores/locationStore';
@@ -169,7 +170,7 @@ export default function MapScreenWeb() {
     });
     userMarkerRef.current = L.marker([userLat, userLng], { icon: userIcon })
       .addTo(map)
-      .bindPopup('📍 Tu ubicación');
+      .bindPopup('Tu ubicación');
 
     leafletMapRef.current = map;
     setMapReady(true);
@@ -189,23 +190,21 @@ export default function MapScreenWeb() {
       const cat = getCategoryById(listing.category);
       const isSelected = selectedListing?.id === listing.id;
 
+      // Pin verde con la hoja de la marca (seleccionado: más grande y oscuro)
+      const size = isSelected ? 38 : 30;
       const icon = L.divIcon({
         html: `<div style="
-          background:${isSelected ? cat.color : '#fff'};
-          color:${isSelected ? '#fff' : '#222'};
-          border:2.5px solid ${cat.color};
-          border-radius:10px;
-          padding:3px 7px;
-          font-size:16px;
-          box-shadow:0 2px 8px rgba(0,0,0,0.18);
-          cursor:pointer;
-          display:inline-flex;
-          align-items:center;
-          white-space:nowrap;
-          transition:all .15s;
-        ">${cat.emoji}</div>`,
-        iconSize: [38, 30],
-        iconAnchor: [19, 15],
+          width:${size}px;height:${size}px;border-radius:50% 50% 50% 4px;transform:rotate(-45deg);
+          background:${isSelected ? COLORS.primaryDark : COLORS.primary};
+          border:2.5px solid #fff;box-shadow:0 3px 10px rgba(15,110,86,0.35);
+          display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <svg style="transform:rotate(45deg)" width="${size * 0.5}" height="${size * 0.5}" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>`,
+        iconSize: [size, size],
+        iconAnchor: [size / 2, size],
         className: '',
       });
 
@@ -243,7 +242,8 @@ export default function MapScreenWeb() {
               <ArrowLeft size={20} color={theme.text} strokeWidth={1.75} />
             </TouchableOpacity>
           )}
-          <Text style={[styles.headerTitle, { color: theme.text }]}>🗺️ Mapa de trueques</Text>
+          <MapIcon size={22} color={COLORS.primary} strokeWidth={1.75} />
+          <Text style={[styles.headerTitle, { color: theme.text }]}>Mapa de trueques</Text>
           {locLoading && <ActivityIndicator size="small" color={COLORS.primary} style={{ marginLeft: SPACING.sm }} />}
         </View>
 
@@ -291,7 +291,7 @@ export default function MapScreenWeb() {
             onPress={() => setSelectedCategory(null)}
             style={[
               styles.chip,
-              { backgroundColor: !selectedCategory ? COLORS.secondary : isDark ? '#2A2A28' : '#F0F2F5' },
+              { backgroundColor: !selectedCategory ? COLORS.primary : isDark ? '#2A2A28' : '#F0F2F5' },
             ]}
           >
             <Text style={[styles.chipText, { color: !selectedCategory ? '#fff' : theme.textSecondary }]}>
@@ -307,10 +307,10 @@ export default function MapScreenWeb() {
                 onPress={() => setSelectedCategory(active ? null : cat.id)}
                 style={[
                   styles.chip,
-                  { backgroundColor: active ? cat.color : isDark ? '#2A2A28' : '#F0F2F5' },
+                  { backgroundColor: active ? COLORS.primary : isDark ? '#2A2A28' : '#F0F2F5' },
                 ]}
               >
-                <Text style={styles.chipText}>{cat.emoji}</Text>
+                <cat.icon size={15} color={active ? '#fff' : COLORS.primary} strokeWidth={1.75} />
                 <Text style={[styles.chipText, { color: active ? '#fff' : theme.textSecondary }]}>
                   {cat.label}
                 </Text>
@@ -372,8 +372,8 @@ export default function MapScreenWeb() {
                 {selectedListing.images?.[0]?.url ? (
                   <Image source={{ uri: selectedListing.images[0].url }} style={styles.selectedImg} />
                 ) : (
-                  <View style={[styles.selectedImgPlaceholder, { backgroundColor: getCategoryById(selectedListing.category).color + '22' }]}>
-                    <Text style={{ fontSize: 26 }}>{getCategoryById(selectedListing.category).emoji}</Text>
+                  <View style={[styles.selectedImgPlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+                    <CategoryIcon categoryId={selectedListing.category} size={44} rounded />
                   </View>
                 )}
                 <View style={{ flex: 1 }}>
@@ -381,12 +381,11 @@ export default function MapScreenWeb() {
                     {selectedListing.title}
                   </Text>
                   <Text style={{ color: COLORS.primary, fontSize: TYPOGRAPHY.size.sm, marginTop: 2 }}>
-                    {getCategoryById(selectedListing.category).emoji}{' '}
                     {getCategoryById(selectedListing.category).label}
-                    {selectedListing.city ? `  ·  📍 ${selectedListing.city}` : ''}
+                    {selectedListing.city ? `  ·  ${selectedListing.city}` : ''}
                   </Text>
                   <Text style={{ color: COLORS.primaryDark, fontSize: TYPOGRAPHY.size.xs, marginTop: 2 }}>
-                    🌱 {selectedListing.eco_impact?.co2_saved_kg ?? 0} kg CO₂ evitado
+                    {selectedListing.eco_impact?.co2_saved_kg ?? 0} kg CO₂ evitado
                   </Text>
                 </View>
                 <ChevronRight size={16} color={COLORS.primary} strokeWidth={1.75} />
@@ -412,7 +411,7 @@ export default function MapScreenWeb() {
           {/* Error de RPC */}
           {listingsError && (
             <View style={[styles.emptyState, { backgroundColor: '#FFF0F0' }]}>
-              <Text style={{ fontSize: 32 }}>⚠️</Text>
+              <TriangleAlert size={32} color="#CC0000" strokeWidth={1.75} />
               <Text style={[styles.emptyTitle, { color: '#CC0000' }]}>Error al cargar trueques</Text>
               <Text style={[styles.emptySubtitle, { color: '#666' }]}>
                 {(listingsError as any)?.message ?? 'Error desconocido — abre la consola del navegador (F12) para más detalles'}
@@ -423,7 +422,7 @@ export default function MapScreenWeb() {
           {/* Estado vacío */}
           {!isLoading && !listingsError && listings.length === 0 && (
             <View style={styles.emptyState}>
-              <Text style={{ fontSize: 44 }}>🌿</Text>
+              <IconTile icon={MapPinOff} size={72} iconSize={32} rounded />
               <Text style={[styles.emptyTitle, { color: theme.text }]}>No hay trueques cercanos</Text>
               <Text style={[styles.emptySubtitle, { color: theme.textSecondary }]}>
                 Amplía el radio de búsqueda o cambia los filtros
@@ -458,8 +457,8 @@ export default function MapScreenWeb() {
                     {listing.images?.[0]?.url ? (
                       <Image source={{ uri: listing.images[0].url }} style={styles.cardImg} />
                     ) : (
-                      <View style={[styles.cardImgPlaceholder, { backgroundColor: cat.color + '20' }]}>
-                        <Text style={{ fontSize: 24 }}>{cat.emoji}</Text>
+                      <View style={[styles.cardImgPlaceholder, { backgroundColor: isDark ? '#1C2622' : '#EEF6F2' }]}>
+                        <CategoryIcon categoryId={listing.category} size={40} rounded />
                       </View>
                     )}
 
@@ -469,9 +468,10 @@ export default function MapScreenWeb() {
                       </Text>
 
                       <View style={styles.cardMeta}>
-                        <View style={[styles.catBadge, { backgroundColor: cat.color + '18' }]}>
-                          <Text style={[styles.catBadgeText, { color: cat.color }]}>
-                            {cat.emoji} {cat.label}
+                        <View style={[styles.catBadge, { backgroundColor: COLORS.primary + '18', flexDirection: 'row', alignItems: 'center', gap: 4 }]}>
+                          <cat.icon size={11} color={COLORS.primaryDark} strokeWidth={2} />
+                          <Text style={[styles.catBadgeText, { color: COLORS.primaryDark }]}>
+                            {cat.label}
                           </Text>
                         </View>
                         {listing.distKm !== null && (
@@ -486,17 +486,19 @@ export default function MapScreenWeb() {
 
                       {listing.city && (
                         <Text style={[styles.cardCity, { color: theme.textSecondary }]} numberOfLines={1}>
-                          📍 {listing.city}{listing.state ? `, ${listing.state}` : ''}
+                          {listing.city}{listing.state ? `, ${listing.state}` : ''}
                         </Text>
                       )}
 
                       <View style={styles.ecoRow}>
-                        <Text style={[styles.ecoText, { color: COLORS.primary }]}>
-                          🌱 {listing.eco_impact?.co2_saved_kg ?? 0} kg CO₂
-                        </Text>
-                        <Text style={[styles.ecoText, { color: COLORS.primaryDark }]}>
-                          ♻️ {listing.eco_impact?.waste_reduced_kg ?? 0} kg residuos
-                        </Text>
+                        <View style={styles.ecoItem}>
+                          <Leaf size={11} color={COLORS.primary} strokeWidth={2} />
+                          <Text style={[styles.ecoText, { color: COLORS.primary }]}>{listing.eco_impact?.co2_saved_kg ?? 0} kg CO₂</Text>
+                        </View>
+                        <View style={styles.ecoItem}>
+                          <Recycle size={11} color={COLORS.primaryDark} strokeWidth={2} />
+                          <Text style={[styles.ecoText, { color: COLORS.primaryDark }]}>{listing.eco_impact?.waste_reduced_kg ?? 0} kg residuos</Text>
+                        </View>
                       </View>
                     </View>
 
@@ -520,6 +522,7 @@ export default function MapScreenWeb() {
 }
 
 const styles = StyleSheet.create({
+  ecoItem: { flexDirection: 'row', alignItems: 'center', gap: 3 },
   root: { flex: 1 },
 
   // Header

@@ -20,7 +20,13 @@ import {
   Shield,
   Info,
   AlertTriangle,
+  UserRound,
+  Package,
+  Handshake,
+  Sprout,
+  LifeBuoy,
 } from 'lucide-react-native';
+import { IconTile } from '@components/ui/IconTile';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,14 +39,14 @@ interface Faq {
   a: string;
 }
 
-const FAQ_GROUPS: { emoji: string; title: string; items: Faq[] }[] = [
+const FAQ_GROUPS: { icon: typeof Package; title: string; items: Faq[] }[] = [
   {
-    emoji: '👤',
+    icon: UserRound,
     title: 'Mi cuenta',
     items: [
       {
         q: '¿Cómo creo mi cuenta?',
-        a: 'En la pantalla de inicio toca “Regístrate gratis”, ingresa tu nombre, correo y una contraseña de al menos 6 caracteres. Empiezas en el nivel 🌱 Semilla.',
+        a: 'En la pantalla de inicio toca “Regístrate gratis”, ingresa tu nombre, correo y una contraseña de al menos 6 caracteres. Empiezas en el nivel Semilla.',
       },
       {
         q: 'Olvidé mi contraseña, ¿qué hago?',
@@ -53,7 +59,7 @@ const FAQ_GROUPS: { emoji: string; title: string; items: Faq[] }[] = [
     ],
   },
   {
-    emoji: '📦',
+    icon: Package,
     title: 'Publicaciones',
     items: [
       {
@@ -71,7 +77,7 @@ const FAQ_GROUPS: { emoji: string; title: string; items: Faq[] }[] = [
     ],
   },
   {
-    emoji: '🤝',
+    icon: Handshake,
     title: 'Trueques',
     items: [
       {
@@ -93,7 +99,7 @@ const FAQ_GROUPS: { emoji: string; title: string; items: Faq[] }[] = [
     ],
   },
   {
-    emoji: '🌱',
+    icon: Sprout,
     title: 'EcoPoints y niveles',
     items: [
       {
@@ -102,7 +108,7 @@ const FAQ_GROUPS: { emoji: string; title: string; items: Faq[] }[] = [
       },
       {
         q: '¿Qué niveles existen?',
-        a: '🌱 Semilla (0), 🌿 Brote (100), 🍃 Guardián (300), 🌳 Protector (700), 🦋 Héroe Eco (1.500) y 🌍 Leyenda Verde (3.000 puntos). Puedes ver tu progreso en “Mi Impacto Ecológico”.',
+        a: 'Semilla (0), Brote (100), Guardián (300), Protector (700), Héroe Eco (1.500) y Leyenda Verde (3.000 puntos). Puedes ver tu progreso en “Mi Impacto Ecológico”.',
       },
       {
         q: '¿Cómo se calcula el impacto ecológico?',
@@ -153,7 +159,7 @@ export default function HelpScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
         </TouchableOpacity>
-        <Text style={styles.headerEmoji}>💬</Text>
+        <IconTile icon={LifeBuoy} size={60} iconSize={30} variant="onDark" rounded style={{ marginTop: 8 }} />
         <Text style={styles.headerTitle}>Ayuda y soporte</Text>
         <Text style={styles.headerSub}>Encuentra respuestas o escríbenos</Text>
 
@@ -185,9 +191,10 @@ export default function HelpScreen() {
           )}
           {groups.map((g) => (
             <View key={g.title} style={styles.group}>
-              <Text style={[styles.groupTitle, { color: theme.textSecondary }]}>
-                {g.emoji}  {g.title.toUpperCase()}
-              </Text>
+              <View style={styles.groupTitleRow}>
+                <g.icon size={14} color={COLORS.primary} strokeWidth={2} />
+                <Text style={[styles.groupTitle, { color: theme.textSecondary, marginBottom: 0 }]}>{g.title.toUpperCase()}</Text>
+              </View>
               <View style={[styles.faqCard, { borderColor: theme.border, backgroundColor: isDark ? '#1A1A18' : '#F8FAF9' }]}>
                 {g.items.map((f, i) => {
                   const key = `${g.title}-${f.q}`;
@@ -332,6 +339,7 @@ const styles = StyleSheet.create({
   paragraph: { fontSize: TYPOGRAPHY.size.base, lineHeight: 24 },
 
   group: { marginBottom: SPACING.lg },
+  groupTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 6, marginBottom: SPACING.sm },
   groupTitle: {
     fontSize: TYPOGRAPHY.size.xs,
     fontWeight: TYPOGRAPHY.weight.semibold,
