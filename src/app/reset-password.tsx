@@ -21,6 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
+import { UniversityFooter } from '@components/ui/UniversityFooter';
 import { authService } from '@services/auth.service';
 import { useAuthStore } from '@stores/authStore';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
@@ -176,6 +177,8 @@ export default function ResetPasswordScreen() {
           <View style={[styles.webCard, { backgroundColor: theme.background }]}>
             {renderBody()}
           </View>
+
+          <UniversityFooter />
         </ScrollView>
       </LinearGradient>
     );
@@ -202,6 +205,7 @@ export default function ResetPasswordScreen() {
 
         <View style={[styles.form, { backgroundColor: theme.background }]}>
           {renderBody()}
+          <UniversityFooter onDark={false} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>

@@ -20,6 +20,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Input } from '@components/ui/Input';
 import { Button } from '@components/ui/Button';
 import { Logo } from '@components/ui/LogoSVG';
+import { UniversityFooter } from '@components/ui/UniversityFooter';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { useAuth } from '@hooks/useAuth';
 
@@ -172,6 +173,8 @@ export default function LoginScreen() {
             </Text>
             {formBody}
           </View>
+
+          <UniversityFooter />
         </ScrollView>
       </LinearGradient>
     );
@@ -201,6 +204,7 @@ export default function LoginScreen() {
             Inicia sesión para continuar
           </Text>
           {formBody}
+          <UniversityFooter onDark={false} />
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
