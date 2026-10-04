@@ -9,7 +9,6 @@ import {
   Alert,
   Platform,
   Share,
-  Linking,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 import { router } from 'expo-router';
@@ -108,11 +107,7 @@ export default function ProfileScreen() {
   };
 
   const handleHelp = () => {
-    const email = 'soporte@ecotrueque.ve';
-    const subject = encodeURIComponent('Ayuda y soporte — EcoTrueque');
-    Linking.openURL(`mailto:${email}?subject=${subject}`).catch(() => {
-      Toast.show({ type: 'info', text1: 'Soporte', text2: `Escríbenos a ${email}` });
-    });
+    router.push('/help');
   };
 
   const handleAbout = () => {
