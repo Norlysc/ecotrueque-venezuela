@@ -26,7 +26,7 @@ import { Badge } from '@components/ui/Badge';
 import { Button } from '@components/ui/Button';
 import { ListingCard } from '@components/listing/ListingCard';
 import { ListingCardSkeleton } from '@components/ui/Skeleton';
-import { COLORS, THEME, ECO_LEVELS, getEcoLevel, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
+import { COLORS, THEME, ECO_LEVELS, getEcoLevel, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, WEB_MAX_WIDTH } from '@constants/theme';
 import { CATEGORIES } from '@constants/categories';
 
 const CONDITION_LABELS: Record<string, { label: string; color: string }> = {
@@ -46,7 +46,10 @@ export default function ListingDetailScreen() {
   const scrollY = useRef(new Animated.Value(0)).current;
   const [imageIndex, setImageIndex] = useState(0);
 
-  const { width: screenWidth } = useWindowDimensions();
+  const { width: windowWidth } = useWindowDimensions();
+  // En web el contenido está limitado a WEB_MAX_WIDTH; la galería usa ese ancho
+  const screenWidth = Platform.OS === 'web' ? Math.min(windowWidth, WEB_MAX_WIDTH) : windowWidth;
+  const galleryHeight = screenWidth >= 900 ? 460 : 300;
   const { profile } = useAuthStore();
   const { data: listing, isLoading } = useListingDetail(id);
   const { mutate: toggleFavorite } = useToggleFavorite();
@@ -172,7 +175,7 @@ export default function ListingDetailScreen() {
         scrollEventThrottle={16}
       >
         {/* Galería de imágenes */}
-        <View style={styles.gallery}>
+        <View style={[styles.gallery, { height: galleryHeight }]}>
           <ScrollView
             horizontal
             pagingEnabled
@@ -183,7 +186,7 @@ export default function ListingDetailScreen() {
           >
             {listing.images.length > 0 ? (
               listing.images.map((img: ListingImage, i: number) => (
-                <View key={i} style={{ width: screenWidth, height: 300 }}>
+                <View key={i} style={{ width: screenWidth, height: galleryHeight }}>
                   <Image
                     source={{ uri: img.url }}
                     style={styles.galleryImage}
@@ -192,7 +195,7 @@ export default function ListingDetailScreen() {
                 </View>
               ))
             ) : (
-              <View style={{ width: screenWidth, height: 300, alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#1E1E1C' : '#F0F2F5' }}>
+              <View style={{ width: screenWidth, height: galleryHeight, alignItems: 'center', justifyContent: 'center', backgroundColor: isDark ? '#1E1E1C' : '#F0F2F5' }}>
                 <Text style={{ fontSize: 72 }}>{category?.emoji ?? '📦'}</Text>
                 <Text style={{ fontSize: 14, color: isDark ? '#888' : '#999', marginTop: 8 }}>Sin fotos</Text>
               </View>

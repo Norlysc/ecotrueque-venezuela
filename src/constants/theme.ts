@@ -77,6 +77,9 @@ export const THEME = {
   },
 } as const;
 
+// Ancho máximo del contenido en web/escritorio (la app se centra en pantallas anchas)
+export const WEB_MAX_WIDTH = 1200;
+
 export const TYPOGRAPHY = {
   size: {
     xs: 11,

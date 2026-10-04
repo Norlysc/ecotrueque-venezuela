@@ -1,10 +1,11 @@
 import { useEffect } from 'react';
-import { Stack, router } from 'expo-router';
+import { Stack, router, usePathname } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { QueryClientProvider } from '@tanstack/react-query';
 import Toast from 'react-native-toast-message';
-import { StyleSheet, Platform } from 'react-native';
+import { StyleSheet, Platform, View, useColorScheme } from 'react-native';
+import { THEME, WEB_MAX_WIDTH } from '@constants/theme';
 import * as Haptics from 'expo-haptics';
 import { queryClient } from '@lib/queryClient';
 import { supabase } from '@lib/supabase';
@@ -19,6 +20,8 @@ import type { Notification } from '@/types/app.types';
 export default function RootLayout() {
   const { setSession, setProfile, setLoading, setPasswordRecovery, isPasswordRecovery, user } = useAuthStore();
   const { loadSaved } = useThemeStore();
+  const pathname = usePathname();
+  const isDark = useColorScheme() === 'dark';
   const { addNotification, setUnreadCount, setUnreadMessageCount, incrementUnreadMessageCount } = useNotificationStore();
 
   useEffect(() => {
@@ -134,9 +137,14 @@ export default function RootLayout() {
     }
   }, [isPasswordRecovery]);
 
+  // En escritorio la app se muestra centrada con ancho máximo; las pantallas
+  // de acceso (login, registro, contraseña) conservan su fondo a pantalla completa.
+  const isWebFrame = Platform.OS === 'web' && !FULL_BLEED_ROUTES.includes(pathname);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <GestureHandlerRootView style={styles.root}>
+      <GestureHandlerRootView style={[styles.root, isWebFrame && { backgroundColor: isDark ? '#050505' : '#EEF2F0' }]}>
+        <View style={isWebFrame ? [styles.webFrame, { backgroundColor: isDark ? THEME.dark.background : THEME.light.background }] : styles.root}>
         <BottomSheetProvider>
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="index" />
@@ -191,11 +199,25 @@ export default function RootLayout() {
           <StatusBar style="auto" />
           <Toast config={toastConfig} />
         </BottomSheetProvider>
+        </View>
       </GestureHandlerRootView>
     </QueryClientProvider>
   );
 }
 
+const FULL_BLEED_ROUTES = ['/login', '/register', '/forgot-password', '/reset-password'];
+
 const styles = StyleSheet.create({
   root: { flex: 1 },
+  webFrame: {
+    flex: 1,
+    width: '100%',
+    maxWidth: WEB_MAX_WIDTH,
+    alignSelf: 'center',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 0 },
+    shadowOpacity: 0.08,
+    shadowRadius: 24,
+  },
 });

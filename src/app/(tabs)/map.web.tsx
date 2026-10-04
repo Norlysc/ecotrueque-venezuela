@@ -54,7 +54,7 @@ function useLeaflet(onReady: () => void) {
       if (!document.getElementById('eco-map-css')) {
         const style = document.createElement('style');
         style.id = 'eco-map-css';
-        style.textContent = '#eco-leaflet-map { height: 100%; min-height: 280px; } .leaflet-container { height: 100%; width: 100%; }';
+        style.textContent = '#eco-leaflet-map { position: absolute; top: 0; left: 0; right: 0; bottom: 0; } .leaflet-container { height: 100%; width: 100%; }';
         document.head.appendChild(style);
       }
 
@@ -324,7 +324,7 @@ export default function MapScreenWeb() {
       <View style={[styles.body, IS_WIDE && styles.bodyWide]}>
 
         {/* MAP */}
-        <View style={[styles.mapSection, IS_WIDE && styles.mapSectionWide]}>
+        <View style={IS_WIDE ? styles.mapSectionWide : styles.mapSection}>
           {/* nativeID hace que en web sea: <div id="eco-leaflet-map"> */}
           <View nativeID="eco-leaflet-map" style={styles.mapView} />
 
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
 
   // Map section
   mapSection: { height: 320, position: 'relative' },
-  mapSectionWide: { flex: 3, height: undefined },
+  mapSectionWide: { flex: 3, position: 'relative' },
   mapView: { flex: 1 },
   mapOverlay: {
     ...StyleSheet.absoluteFillObject,

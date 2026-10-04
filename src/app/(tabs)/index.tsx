@@ -8,6 +8,8 @@ import {
   TextInput,
   RefreshControl,
   useColorScheme,
+  useWindowDimensions,
+  Platform,
   Animated,
 } from 'react-native';
 import { router } from 'expo-router';
@@ -22,7 +24,7 @@ import { useLocation } from '@hooks/useLocation';
 import { Avatar } from '@components/ui/Avatar';
 import { ListingCard } from '@components/listing/ListingCard';
 import { ListingCardSkeleton } from '@components/ui/Skeleton';
-import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
+import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS, WEB_MAX_WIDTH } from '@constants/theme';
 import { CATEGORIES } from '@constants/categories';
 import type { CategoryId } from '@constants/categories';
 import type { Listing } from '@/types/app.types';
@@ -39,7 +41,15 @@ export default function HomeScreen() {
   const isDark = colorScheme === 'dark';
   const theme = isDark ? THEME.dark : THEME.light;
   const insets = useSafeAreaInsets();
+  const { width: windowWidth } = useWindowDimensions();
   const { profile } = useAuthStore();
+
+  // Columnas de la cuadrícula según el ancho disponible (2 en móvil, hasta 4 en escritorio)
+  const contentWidth = Platform.OS === 'web' ? Math.min(windowWidth, WEB_MAX_WIDTH) : windowWidth;
+  const gridColumns = contentWidth >= 1000 ? 4 : contentWidth >= 700 ? 3 : 2;
+  const gridCardWidth = Math.floor(
+    (contentWidth - SPACING.sm * 2 - SPACING.sm * (gridColumns - 1)) / gridColumns
+  );
   const { city: gpsCity, state: gpsState } = useLocationStore();
   const { unreadCount } = useNotificationStore();
 
@@ -259,6 +269,7 @@ export default function HomeScreen() {
                 key={listing.id}
                 listing={listing}
                 variant={isGridView ? 'grid' : 'horizontal'}
+                gridWidth={gridCardWidth}
                 onPress={() => router.push(`/listing/${listing.id}`)}
                 isDark={isDark}
               />

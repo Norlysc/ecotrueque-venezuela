@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { TouchableOpacity, View, Text, Image, StyleSheet } from 'react-native';
+import { TouchableOpacity, View, Text, Image, StyleSheet, type DimensionValue } from 'react-native';
 import { Heart, MapPin, Pencil, Trash2 } from 'lucide-react-native';
 import { Avatar } from '@components/ui/Avatar';
 import { Badge } from '@components/ui/Badge';
@@ -19,6 +19,8 @@ interface ListingCardProps {
   isDark?: boolean;
   isSelected?: boolean;
   ownerActions?: { onEdit: () => void; onDelete: () => void };
+  // Ancho de la tarjeta en modo grid (por defecto 47% = 2 columnas)
+  gridWidth?: DimensionValue;
 }
 
 export function ListingCard({
@@ -29,6 +31,7 @@ export function ListingCard({
   isDark = false,
   isSelected = false,
   ownerActions,
+  gridWidth,
 }: ListingCardProps) {
   const theme = isDark ? THEME.dark : THEME.light;
   const category = CATEGORIES.find((c) => c.id === listing.category);
@@ -137,7 +140,7 @@ export function ListingCard({
     // Con acciones de dueño: la card y los botones son componentes hermanos (no anidados)
     if (ownerActions) {
       return (
-        <View style={[styles.gridCardWrapper, { width: '47%' }]}>
+        <View style={[styles.gridCardWrapper, { width: gridWidth ?? '47%' }]}>
           <TouchableOpacity
             onPress={onPress}
             activeOpacity={0.9}
@@ -173,6 +176,7 @@ export function ListingCard({
         style={[
           styles.gridCard,
           { backgroundColor: theme.card, borderColor: isSelected ? COLORS.primary : 'transparent', borderWidth: isSelected ? 2 : 0 },
+          gridWidth !== undefined && { width: gridWidth },
           SHADOWS.sm,
         ]}
       >
