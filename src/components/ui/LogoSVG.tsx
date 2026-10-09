@@ -94,7 +94,7 @@ export function Logo({ iconSize = 64, onDark = true, showTagline = false }: Logo
           <Text style={[styles.nameLight, { color: nameColor }]}>Eco</Text>
           <Text style={[styles.nameBold, { color: nameColor }]}>Trueque</Text>
         </Text>
-        <Text style={[styles.country, { color: subtitleColor }]}>Venezuela</Text>
+        <Text style={[styles.country, { color: subtitleColor }]}>Valera · Trujillo</Text>
       </View>
       {showTagline && (
         <Text style={[styles.tagline, { color: taglineColor }]}>
@@ -111,6 +111,6 @@ const styles = StyleSheet.create({
   nameRow: { fontSize: 36, letterSpacing: -0.5 },
   nameLight: { fontWeight: '300' },
   nameBold: { fontWeight: '800' },
-  country: { fontSize: 11, fontWeight: '600', letterSpacing: 5.5 },
+  country: { fontSize: 11, fontWeight: '600', letterSpacing: 3 },
   tagline: { fontSize: 13, fontStyle: 'italic' },
 });

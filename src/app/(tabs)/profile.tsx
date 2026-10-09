@@ -94,10 +94,10 @@ export default function ProfileScreen() {
   };
 
   const handleShareProfile = async () => {
-    const text = `¡Hola! Únete a EcoTrueque Venezuela y empieza a intercambiar objetos de forma ecológica 🌿\nhttps://ecotrueque.ve`;
+    const text = `¡Hola! Únete a EcoTrueque, la app de trueques ecológicos de Valera, estado Trujillo 🌿\nhttps://ecotrueque-venezuela-ten.vercel.app`;
     if (Platform.OS === 'web') {
       if (typeof navigator !== 'undefined' && navigator.share) {
-        try { await navigator.share({ title: 'EcoTrueque Venezuela', text }); } catch {}
+        try { await navigator.share({ title: 'EcoTrueque · Valera, estado Trujillo', text }); } catch {}
       } else {
         await navigator.clipboard?.writeText(text);
         Toast.show({ type: 'success', text1: 'Enlace copiado', text2: 'Comparte EcoTrueque con tus amigos' });

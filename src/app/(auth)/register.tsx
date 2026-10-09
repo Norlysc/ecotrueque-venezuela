@@ -248,7 +248,7 @@ export default function RegisterScreen() {
                 render={({ field: { onChange, value } }) => (
                   <Input
                     label="Ciudad"
-                    placeholder="Caracas"
+                    placeholder="Valera"
                     value={value}
                     onChangeText={onChange}
                     leftIcon={MapPin}

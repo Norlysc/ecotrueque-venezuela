@@ -3,7 +3,8 @@ import * as Location from 'expo-location';
 import { useLocationStore } from '@stores/locationStore';
 
 // App dirigida al estado Trujillo — Valera como centro predeterminado
-const CARACAS_FALLBACK = { latitude: 9.3200, longitude: -70.6067 };
+// Ubicación por defecto: Valera, estado Trujillo
+const VALERA_FALLBACK = { latitude: 9.3200, longitude: -70.6067 };
 
 export function useLocation() {
   const { setLocation, setAddress, setPermission, setLoading } = useLocationStore();
@@ -19,7 +20,7 @@ export function useLocation() {
 
         if (status !== 'granted') {
           setPermission(false);
-          setLocation(CARACAS_FALLBACK.latitude, CARACAS_FALLBACK.longitude);
+          setLocation(VALERA_FALLBACK.latitude, VALERA_FALLBACK.longitude);
           setAddress('Valera', 'Trujillo');
           setLoading(false);
           return;
@@ -42,11 +43,11 @@ export function useLocation() {
             setAddress(address.city ?? address.district ?? null, address.region ?? null);
           }
         } catch {
-          setAddress('Caracas', 'Distrito Capital');
+          setAddress('Valera', 'Trujillo');
         }
       } catch {
         if (isMounted) {
-          setLocation(CARACAS_FALLBACK.latitude, CARACAS_FALLBACK.longitude);
+          setLocation(VALERA_FALLBACK.latitude, VALERA_FALLBACK.longitude);
           setAddress('Valera', 'Trujillo');
         }
       } finally {

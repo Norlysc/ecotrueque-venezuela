@@ -161,6 +161,26 @@ INSERT INTO public.listings (user_id, title, description, type, category, subcat
 SELECT 'ae465756-8673-43a4-aac7-7d9710877a7a', 'Semillas de hortalizas para huerto en casa', 'Sobres de semillas de tomate, pimentón, cilantro, lechuga y zanahoria. Ideales para empezar un huerto en el patio o en materas.', 'good', 'other', 'Semillas', 'new', '[{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/45/Packets_of_Vegetable_Seeds_at_Menards.jpg/960px-Packets_of_Vegetable_Seeds_at_Menards.jpg","order":0},{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/5/5e/Packets_of_Vegetable_Seeds.jpg/960px-Packets_of_Vegetable_Seeds.jpg","order":1}]'::jsonb, ARRAY['semillas', 'huerto', 'hortalizas']::text[], 'Plantas, abono o herramientas de jardinería', 10, 9.3169, -70.6064, 'Valera', 'Trujillo', 'active', '{"co2_saved_kg":5,"waste_reduced_kg":1,"estimated_value_usd":10}'::jsonb
 WHERE NOT EXISTS (SELECT 1 FROM public.listings WHERE title = 'Semillas de hortalizas para huerto en casa');
 
+-- 4b) Tres productos más en Valera (Libros, Herramientas, Educación)
+INSERT INTO public.listings (user_id, title, description, type, category, subcategory, condition, images, tags, looking_for, estimated_value_usd, latitude, longitude, city, state, status, eco_impact)
+SELECT 'ae465756-8673-43a4-aac7-7d9710877a7a', 'Diccionarios y libros de inglés Oxford y Longman', 'Lote de diccionarios bilingües y libros de estudio de inglés, en buen estado. Útiles para liceo y universidad.', 'good', 'books', 'Libros técnicos', 'good', '[{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/79/English-English_dictionaries_and_thesaurus_books.JPG/960px-English-English_dictionaries_and_thesaurus_books.JPG","order":0},{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6e/Latin_dictionary.jpg/960px-Latin_dictionary.jpg","order":1}]'::jsonb, ARRAY['libros', 'ingles', 'diccionario']::text[], 'Libros de matemáticas, novelas o útiles escolares', 25, 9.3149, -70.6094, 'Valera', 'Trujillo', 'active', '{"co2_saved_kg":2,"waste_reduced_kg":0.3,"estimated_value_usd":25}'::jsonb
+WHERE NOT EXISTS (SELECT 1 FROM public.listings WHERE title = 'Diccionarios y libros de inglés Oxford y Longman');
+
+INSERT INTO public.listings (user_id, title, description, type, category, subcategory, condition, images, tags, looking_for, estimated_value_usd, latitude, longitude, city, state, status, eco_impact)
+SELECT 'ae465756-8673-43a4-aac7-7d9710877a7a', 'Juego de herramientas manuales completo', 'Llaves combinadas, destornilladores, alicates, martillo, nivel y cinta métrica. Todo en su estuche.', 'good', 'tools', 'Herramientas manuales', 'like_new', '[{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/90/Hand-tool_set_with_bits_and_accessories_arranged_on_a_white_surface..jpg/960px-Hand-tool_set_with_bits_and_accessories_arranged_on_a_white_surface..jpg","order":0},{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/f6/Socket_set_with_two_ratchets_in_metal_box.jpeg/960px-Socket_set_with_two_ratchets_in_metal_box.jpeg","order":1}]'::jsonb, ARRAY['herramientas', 'llaves', 'hogar']::text[], 'Taladro, materiales de construcción o electrodomésticos', 45, 9.3219, -70.6044, 'Valera', 'Trujillo', 'active', '{"co2_saved_kg":10,"waste_reduced_kg":3,"estimated_value_usd":45}'::jsonb
+WHERE NOT EXISTS (SELECT 1 FROM public.listings WHERE title = 'Juego de herramientas manuales completo');
+
+INSERT INTO public.listings (user_id, title, description, type, category, subcategory, condition, images, tags, looking_for, estimated_value_usd, latitude, longitude, city, state, status, eco_impact)
+SELECT 'ae465756-8673-43a4-aac7-7d9710877a7a', 'Clases de matemáticas y física para bachillerato', 'Clases personalizadas para 4to y 5to año y preparación para pruebas de ingreso universitario. Presencial en Valera.', 'service', 'education', 'Secundaria', NULL, '[{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/c2/CMAP_-_Centre_de_Math%C3%A9matiques_Appliqu%C3%A9es_de_l%27Ecole_polytechnique.jpg/960px-CMAP_-_Centre_de_Math%C3%A9matiques_Appliqu%C3%A9es_de_l%27Ecole_polytechnique.jpg","order":0}]'::jsonb, ARRAY['clases', 'matematicas', 'bachillerato']::text[], 'Alimentos, útiles escolares o clases de inglés', 15, 9.3179, -70.6084, 'Valera', 'Trujillo', 'active', '{"co2_saved_kg":5,"waste_reduced_kg":1,"estimated_value_usd":15}'::jsonb
+WHERE NOT EXISTS (SELECT 1 FROM public.listings WHERE title = 'Clases de matemáticas y física para bachillerato');
+
+-- 4c) OPCIONAL (desactivado): mover a Valera las publicaciones que están en la ciudad de Trujillo
+--     (son de otro usuario). Para activarlo, borra los dos guiones "--" del inicio de las 4 líneas siguientes.
+-- UPDATE public.listings
+-- SET city = 'Valera', state = 'Trujillo',
+--     latitude = 9.3199 + (random() - 0.5) * 0.02, longitude = -70.6054 + (random() - 0.5) * 0.02
+-- WHERE city = 'Trujillo' AND status = 'active';
+
 -- 5) Recalcular publicaciones activas de cada usuario
 UPDATE public.profiles p SET active_listings_count = (
   SELECT COUNT(*) FROM public.listings l WHERE l.user_id = p.id AND l.status = 'active'
@@ -168,6 +188,6 @@ UPDATE public.profiles p SET active_listings_count = (
 
 COMMIT;
 
--- Verificación: publicaciones activas con foto por categoría
+-- Verificación: publicaciones activas con foto por categoría en Valera
 SELECT category, COUNT(*) FILTER (WHERE jsonb_array_length(images) > 0) AS con_foto, COUNT(*) AS total
-FROM public.listings WHERE status = 'active' GROUP BY category ORDER BY category;
+FROM public.listings WHERE status = 'active' AND city = 'Valera' GROUP BY category ORDER BY category;

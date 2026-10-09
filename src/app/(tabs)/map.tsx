@@ -46,8 +46,8 @@ export default function MapScreen() {
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
-  const lat = latitude ?? 10.4806;
-  const lng = longitude ?? -66.9036;
+  const lat = latitude ?? 9.3199; // Valera, estado Trujillo
+  const lng = longitude ?? -70.6054;
 
   const { data: listings } = useNearbyListings({
     radius_km: selectedRadius,

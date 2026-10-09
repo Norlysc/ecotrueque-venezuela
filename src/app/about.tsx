@@ -53,7 +53,7 @@ const STEPS = [
 ];
 
 const FEATURES = [
-  { icon: MapPin,        label: 'Mapa interactivo',      desc: 'Visualiza trueques en tiempo real cerca de ti en todo Venezuela.' },
+  { icon: MapPin,        label: 'Mapa interactivo',      desc: 'Visualiza trueques en tiempo real cerca de ti en Valera, estado Trujillo.' },
   { icon: Shield,        label: 'Sitios seguros',         desc: 'Puntos de intercambio verificados como centros comerciales y metros.' },
   { icon: Star,          label: 'Sistema de reseñas',     desc: 'Califica y lee opiniones sobre otros usuarios para intercambios confiables.' },
   { icon: Award,         label: 'Niveles ecológicos',     desc: 'Desde Semilla hasta Leyenda Verde — sube de nivel con cada trueque.' },
@@ -91,7 +91,8 @@ export default function AboutScreen() {
           <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
         </TouchableOpacity>
         <View style={{ marginTop: 8 }}><LogoMark size={56} onDark /></View>
-        <Text style={styles.headerTitle}>EcoTrueque Venezuela</Text>
+        <Text style={styles.headerTitle}>EcoTrueque</Text>
+        <Text style={styles.headerSub}>Valera, estado Trujillo</Text>
         <Text style={styles.headerSub}>Versión {VERSION} · Intercambia. Recicla. Cuida el planeta.</Text>
       </LinearGradient>
 
@@ -100,7 +101,7 @@ export default function AboutScreen() {
         {/* ── ¿QUÉ ES? ─────────────────────────────── */}
         <Section title="¿Qué es EcoTrueque?" isDark={isDark} theme={theme}>
           <Text style={[styles.paragraph, { color: theme.textSecondary }]}>
-            EcoTrueque es una plataforma de intercambio de objetos entre venezolanos.
+            EcoTrueque es una plataforma de intercambio de objetos entre vecinos de Valera, estado Trujillo.
             En lugar de comprar o tirar cosas, puedes{' '}
             <Text style={{ color: COLORS.primary, fontWeight: TYPOGRAPHY.weight.semibold }}>
               intercambiarlas por lo que realmente necesitas
@@ -214,10 +215,10 @@ export default function AboutScreen() {
         {/* ── PIE ───────────────────────────────────── */}
         <View style={styles.footer}>
           <Text style={[styles.footerText, { color: theme.textTertiary }]}>
-            EcoTrueque Venezuela · v{VERSION}
+            EcoTrueque · Valera, estado Trujillo · v{VERSION}
           </Text>
           <Text style={[styles.footerText, { color: theme.textTertiary }]}>
-            © 2025 · Hecho en Venezuela
+            © 2026 · Hecho en Valera, estado Trujillo
           </Text>
         </View>
 

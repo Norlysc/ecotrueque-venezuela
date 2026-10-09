@@ -199,7 +199,7 @@ export default function HomeScreen() {
           <View style={{ flex: 1 }}>
             <Text style={[styles.uvmTitle, { color: theme.text }]}>Universidad Valle del Momboy</Text>
             <Text style={[styles.uvmSubtitle, { color: theme.textSecondary }]}>
-              Trabajo de grado · Facultad de Ingeniería · Trujillo, Venezuela
+              Trabajo de grado · Facultad de Ingeniería · Valera, estado Trujillo
             </Text>
           </View>
         </View>

@@ -26,8 +26,9 @@ const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const IS_WIDE = SCREEN_WIDTH >= 768;
 
 const RADII = [5, 10, 20, 50];
-const DEFAULT_LAT = 10.4806;
-const DEFAULT_LNG = -66.9036;
+// Valera, estado Trujillo
+const DEFAULT_LAT = 9.3199;
+const DEFAULT_LNG = -70.6054;
 
 function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const R = 6371;

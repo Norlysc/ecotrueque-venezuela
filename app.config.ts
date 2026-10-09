@@ -68,9 +68,9 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   ],
   web: {
     favicon: './assets/favicon.png',
-    name: 'EcoTrueque Venezuela',
+    name: 'EcoTrueque · Valera, estado Trujillo',
     shortName: 'EcoTrueque',
-    description: 'Plataforma de trueques ecológicos de Venezuela',
+    description: 'Plataforma de trueques ecológicos de Valera, estado Trujillo',
     themeColor: '#0F6E56',
     backgroundColor: '#0F6E56',
   },

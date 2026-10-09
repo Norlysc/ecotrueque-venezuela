@@ -243,7 +243,7 @@ export default function EditProfileScreen() {
                 style={[styles.textInput, { color: theme.text }]}
                 value={city}
                 onChangeText={setCity}
-                placeholder="Ej. Caracas"
+                placeholder="Ej. Valera"
                 placeholderTextColor={theme.textTertiary}
                 maxLength={60}
               />
