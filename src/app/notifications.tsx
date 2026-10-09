@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
   StyleSheet, useColorScheme, RefreshControl,
@@ -14,12 +14,12 @@ import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/
 import type { Notification } from '@/types/app.types';
 
 const NOTIF_ICONS: Record<string, { icon: any; color: string; bg: string }> = {
-  trade_request:  { icon: Repeat2,        color: '#378ADD', bg: '#EEF4FF' },
+  trade_request:  { icon: Repeat2,        color: '#1D9E75', bg: '#E8F5F0' },
   trade_accepted: { icon: CheckCheck,     color: '#1D9E75', bg: '#E8F5F0' },
   trade_rejected: { icon: Check,          color: '#9CA3AF', bg: '#F3F4F6' },
-  new_message:    { icon: MessageCircle,  color: '#F59E0B', bg: '#FEF3C7' },
-  new_review:     { icon: Star,           color: '#EF4444', bg: '#FEE2E2' },
-  listing_offer:  { icon: ShoppingBag,    color: '#8B5CF6', bg: '#EDE9FE' },
+  new_message:    { icon: MessageCircle,  color: '#1D9E75', bg: '#E8F5F0' },
+  new_review:     { icon: Star,           color: '#1D9E75', bg: '#E8F5F0' },
+  listing_offer:  { icon: ShoppingBag,    color: '#1D9E75', bg: '#E8F5F0' },
   default:        { icon: Bell,           color: COLORS.primary, bg: '#E8F5F0' },
 };
 
@@ -84,25 +84,47 @@ export default function NotificationsScreen() {
     },
   });
 
-  // Marcar como leídas al abrir la pantalla (todas las visibles)
+  // Al abrir la pantalla se marcan como leídas en la base de datos (la campana vuelve a 0),
+  // pero se conservan resaltadas mientras el usuario está en esta pantalla.
+  const autoMarked = useRef(false);
   useEffect(() => {
-    const unread = notifications.filter((n) => !n.is_read);
-    if (unread.length > 0) {
-      markAllMutation.mutate();
+    if (autoMarked.current || !user?.id) return;
+    if (notifications.some((n) => !n.is_read)) {
+      autoMarked.current = true;
+      supabase
+        .from('notifications')
+        .update({ is_read: true })
+        .eq('user_id', user.id)
+        .eq('is_read', false)
+        .then(() => markAllAsRead());
     }
-  }, [notifications.length]);
+  }, [notifications, user?.id]);
 
-  const handlePress = useCallback((notif: Notification) => {
+  const handlePress = useCallback(async (notif: Notification) => {
     if (!notif.is_read) markReadMutation.mutate(notif.id);
 
     // Navegar según el tipo de notificación
     const d = notif.data as any;
-    if (d?.listing_id) {
-      router.push(`/listing/${d.listing_id}`);
-    } else if (d?.conversation_id) {
+    if (d?.conversation_id) {
       router.push(`/chat/${d.conversation_id}`);
-    } else if (d?.trade_request_id) {
+    } else if (notif.type === 'trade_request' && d?.trade_request_id) {
+      // Propuesta recibida: se acepta o rechaza en Solicitudes de trueque
       router.push('/trade-requests');
+    } else if (d?.trade_request_id) {
+      // Trueque aceptado/rechazado: abrir el chat de ese trueque
+      const { data: conv } = await supabase
+        .from('conversations')
+        .select('id')
+        .eq('trade_request_id', d.trade_request_id)
+        .limit(1)
+        .maybeSingle();
+      router.push(conv?.id ? `/chat/${conv.id}` : '/trade-requests');
+    } else if (notif.type === 'new_review' || d?.trade_id) {
+      router.push({ pathname: '/(tabs)/profile', params: { tab: 'Reseñas' } });
+    } else if (notif.type === 'achievement_unlocked') {
+      router.push('/eco/dashboard');
+    } else if (d?.listing_id) {
+      router.push(`/listing/${d.listing_id}`);
     }
   }, [markReadMutation]);
 
@@ -213,7 +235,7 @@ export default function NotificationsScreen() {
                       ]}
                       numberOfLines={1}
                     >
-                      {notif.title}
+                      {notif.title.replace(/^[^p{L}p{N}¡¿]+/u, '')}
                     </Text>
                     <Text
                       style={[styles.notifBody, { color: theme.textSecondary }]}

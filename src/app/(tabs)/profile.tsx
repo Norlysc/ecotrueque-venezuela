@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -11,7 +11,7 @@ import {
   Share,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Settings, ChevronRight, Edit3, Shield, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor, MapPin, Package, Repeat, Star, Leaf, ArrowLeftRight } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';
 import { useThemeStore } from '@stores/themeStore';
@@ -40,7 +40,11 @@ export default function ProfileScreen() {
   const insets = useSafeAreaInsets();
   const { profile } = useAuthStore();
   const { signOut } = useAuth();
+  const { tab } = useLocalSearchParams<{ tab?: string }>();
   const [activeTab, setActiveTab] = useState<TabId>('Publicaciones');
+  useEffect(() => {
+    if (tab && (TABS as readonly string[]).includes(tab)) setActiveTab(tab as TabId);
+  }, [tab]);
 
   const { data: myListings } = useUserListings();
   const { data: tradeHistory } = useTradeHistory();
