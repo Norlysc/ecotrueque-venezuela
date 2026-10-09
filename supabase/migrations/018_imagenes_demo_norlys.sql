@@ -5,7 +5,8 @@
 -- - Pasa tus publicaciones de music/home a categorías que existen en la app
 -- - Crea publicaciones de demo para que cada categoría tenga al menos 4 con foto
 -- Fotos: Wikimedia Commons (licencias libres)
--- Todo queda a nombre de Norlys Castañeda; no modifica publicaciones de otros usuarios.
+-- Las publicaciones nuevas y las fotos nuevas quedan a nombre de Norlys Castañeda.
+-- De otros usuarios solo se quitan las 3 fotos rotas (404); nada más.
 -- Se puede ejecutar más de una vez sin duplicar datos.
 -- ============================================================
 BEGIN;
@@ -14,7 +15,8 @@ BEGIN;
 UPDATE public.listings SET category = 'art', subcategory = 'Música' WHERE category = 'music' AND user_id = 'ae465756-8673-43a4-aac7-7d9710877a7a';
 UPDATE public.listings SET category = 'electronics', subcategory = 'Electrodomésticos' WHERE category = 'home' AND user_id = 'ae465756-8673-43a4-aac7-7d9710877a7a';
 
--- 2) Imágenes rotas (404)
+-- 2) Imágenes rotas (404): se quitan de cualquier publicación que las tenga.
+--    Solo elimina el enlace muerto; las demás fotos de esas publicaciones se conservan.
 UPDATE public.listings l
 SET images = COALESCE((
   SELECT jsonb_agg(e ORDER BY (e->>'order')::int)
@@ -23,9 +25,9 @@ SET images = COALESCE((
     AND e->>'url' NOT LIKE '%1576435728678-68d0fbf94946%'
     AND e->>'url' NOT LIKE '%1531722569936-825d4eaa6617%'
 ), '[]'::jsonb)
-WHERE l.user_id = 'ae465756-8673-43a4-aac7-7d9710877a7a' AND (l.images::text LIKE '%1556906781-9a414e2a7735%'
+WHERE l.images::text LIKE '%1556906781-9a414e2a7735%'
    OR l.images::text LIKE '%1576435728678-68d0fbf94946%'
-   OR l.images::text LIKE '%1531722569936-825d4eaa6617%');
+   OR l.images::text LIKE '%1531722569936-825d4eaa6617%';
 
 -- 3) Fotos para publicaciones que no tenían
 UPDATE public.listings SET images = '[{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/96/Dell_Inspiron_2200%261300.jpg/960px-Dell_Inspiron_2200%261300.jpg","order":0},{"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a8/Dell_inspiron_700m.jpg/960px-Dell_inspiron_700m.jpg","order":1}]'::jsonb WHERE title = 'Laptop Dell Inspiron' AND user_id = 'ae465756-8673-43a4-aac7-7d9710877a7a' AND images = '[]'::jsonb;
