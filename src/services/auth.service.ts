@@ -83,17 +83,25 @@ export const authService = {
   async uploadAvatar(userId: string, uri: string): Promise<string> {
     // Detect extension from URI (strip query params first)
     const cleanUri = uri.split('?')[0];
-    const rawExt = cleanUri.split('.').pop()?.toLowerCase() ?? 'jpg';
-    const ext = ['jpg', 'jpeg', 'png', 'webp'].includes(rawExt) ? rawExt : 'jpg';
-    const contentType = ext === 'png' ? 'image/png' : 'image/jpeg';
+    let rawExt = cleanUri.split('.').pop()?.toLowerCase() ?? 'jpg';
+    let webBlob: Blob | null = null;
+
+    if (Platform.OS === 'web') {
+      // En web, la URI es un blob:// o data: URL sin extensión — el tipo real viene del Blob
+      const response = await fetch(uri);
+      webBlob = await response.blob();
+      const fromType = webBlob.type.split('/')[1];
+      if (fromType) rawExt = fromType;
+    }
+
+    const ext = rawExt === 'jpeg' ? 'jpg' : ['jpg', 'png', 'webp'].includes(rawExt) ? rawExt : 'jpg';
+    const contentType = ext === 'png' ? 'image/png' : ext === 'webp' ? 'image/webp' : 'image/jpeg';
     const path = `${userId}/avatar.${ext}`;
 
     let uploadPayload: Blob | FormData;
 
-    if (Platform.OS === 'web') {
-      // En web, la URI es un blob:// o data: URL — fetch la convierte a Blob
-      const response = await fetch(uri);
-      uploadPayload = await response.blob();
+    if (webBlob) {
+      uploadPayload = webBlob;
     } else {
       // En nativo, usar FormData con la URI del filesystem local
       const formData = new FormData();
@@ -111,6 +119,8 @@ export const authService = {
       .from('avatars')
       .getPublicUrl(path);
 
-    return publicUrl;
+    // El archivo se sobrescribe con el mismo nombre: la versión en la URL obliga a
+    // la app y al navegador a mostrar la foto nueva en lugar de la que tenían guardada
+    return `${publicUrl}?v=${Date.now()}`;
   },
 };

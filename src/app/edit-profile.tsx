@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -53,6 +53,18 @@ export default function EditProfileScreen() {
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
   const [showStatePicker, setShowStatePicker] = useState(false);
+
+  // Si el perfil termina de cargar después de abrir la pantalla, llenar el formulario
+  const filledFor = useRef<string | null>(profile?.id ?? null);
+  useEffect(() => {
+    if (!profile || filledFor.current === profile.id) return;
+    filledFor.current = profile.id;
+    setFullName(profile.full_name ?? '');
+    setBio(profile.bio ?? '');
+    setPhone(profile.phone ?? '');
+    setCity(profile.city ?? '');
+    setState(profile.state ?? '');
+  }, [profile]);
 
   const hasChanges =
     fullName !== (profile?.full_name ?? '') ||
