@@ -24,9 +24,8 @@ import {
   Package,
   Handshake,
   Sprout,
-  LifeBuoy,
 } from 'lucide-react-native';
-import { IconTile } from '@components/ui/IconTile';
+import { LogoMark } from '@components/ui/LogoSVG';
 import Toast from 'react-native-toast-message';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -159,7 +158,7 @@ export default function HelpScreen() {
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
           <ArrowLeft size={22} color="#fff" strokeWidth={1.75} />
         </TouchableOpacity>
-        <IconTile icon={LifeBuoy} size={60} iconSize={30} variant="onDark" rounded style={{ marginTop: 8 }} />
+        <View style={{ marginTop: 8 }}><LogoMark size={60} onDark /></View>
         <Text style={styles.headerTitle}>Ayuda y soporte</Text>
         <Text style={styles.headerSub}>Encuentra respuestas o escríbenos</Text>
 

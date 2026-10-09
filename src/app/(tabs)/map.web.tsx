@@ -126,9 +126,14 @@ export default function MapScreenWeb() {
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => {
-        setUserLat(pos.coords.latitude);
-        setUserLng(pos.coords.longitude);
-        storeLocation.setLocation(pos.coords.latitude, pos.coords.longitude);
+        // Fuera del área de Valera (más de 40 km): explorar desde Valera, estado Trujillo
+        const far = haversineKm(pos.coords.latitude, pos.coords.longitude, DEFAULT_LAT, DEFAULT_LNG) > 40;
+        const lat = far ? DEFAULT_LAT : pos.coords.latitude;
+        const lng = far ? DEFAULT_LNG : pos.coords.longitude;
+        setUserLat(lat);
+        setUserLng(lng);
+        storeLocation.setLocation(lat, lng);
+        if (far) storeLocation.setAddress('Valera', 'Trujillo');
         setLocLoading(false);
       },
       () => setLocLoading(false),
