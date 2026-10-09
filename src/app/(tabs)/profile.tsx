@@ -143,7 +143,13 @@ export default function ProfileScreen() {
         colors={['#085041', '#0F6E56', '#1D9E75']}
         style={[styles.header, { paddingTop: insets.top + 8 }]}
       >
-        <TouchableOpacity style={styles.settingsBtn}>
+        <TouchableOpacity
+          style={styles.settingsBtn}
+          onPress={() => router.push('/edit-profile')}
+          hitSlop={{ top: 10, right: 10, bottom: 10, left: 10 }}
+          accessibilityRole="button"
+          accessibilityLabel="Configuración del perfil"
+        >
           <Settings size={22} color="rgba(255,255,255,0.8)" strokeWidth={1.75} />
         </TouchableOpacity>
 

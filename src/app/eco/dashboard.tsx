@@ -9,6 +9,7 @@ import {
 import { router } from 'expo-router';
 import { ArrowLeft, Check, Sprout, Repeat, Camera, Star, Map as MapIcon, Recycle, Leaf, Earth, PiggyBank, Handshake, TreePine, Car, Droplets, Heart, ChartColumn, Trophy } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';
+import { BottomNav } from '@components/ui/BottomNav';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuthStore } from '@stores/authStore';
@@ -61,11 +62,18 @@ export default function EcoDashboardScreen() {
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       {/* Header */}
       <View style={[styles.header, { paddingTop: insets.top + 8, backgroundColor: theme.surface }]}>
-        <TouchableOpacity onPress={() => router.back()}>
-          <ArrowLeft size={22} color={theme.text} strokeWidth={1.75} />
+        <TouchableOpacity
+          onPress={() => (router.canGoBack() ? router.back() : router.replace('/(tabs)'))}
+          style={styles.backPill}
+          hitSlop={{ top: 8, right: 8, bottom: 8, left: 8 }}
+          accessibilityRole="button"
+          accessibilityLabel="Volver"
+        >
+          <ArrowLeft size={20} color="#FFFFFF" strokeWidth={2.2} />
+          <Text style={styles.backPillText}>Volver</Text>
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: theme.text }]}>Mi Impacto Ecológico</Text>
-        <View style={{ width: 22 }} />
+        <View style={{ width: 96 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -323,11 +331,23 @@ export default function EcoDashboardScreen() {
 
         <View style={{ height: SPACING['3xl'] + insets.bottom }} />
       </ScrollView>
+      <BottomNav />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  backPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    backgroundColor: COLORS.primary,
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    width: 96,
+  },
+  backPillText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
   sectionTitleRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: SPACING.base, marginTop: SPACING.xl, marginBottom: SPACING.md },
   sectionTitleInRow: { marginTop: 0, marginBottom: 0, paddingHorizontal: 0, marginLeft: 0 },
   container: { flex: 1 },

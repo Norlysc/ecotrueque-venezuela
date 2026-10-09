@@ -1,19 +1,10 @@
 import { TouchableOpacity, View, Text, StyleSheet, useColorScheme } from 'react-native';
 import { Tabs, router } from 'expo-router';
-import { Plus, Home, Map, MessageCircle, User } from 'lucide-react-native';
+import { Home, Map, MessageCircle, User } from 'lucide-react-native';
+import { NavIcon, PublishButton, NAV_HEIGHT, NAV_INACTIVE_LIGHT, NAV_INACTIVE_DARK } from '@components/ui/BottomNav';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotificationStore } from '@stores/notificationStore';
 import { COLORS, THEME, SHADOWS } from '@constants/theme';
-
-function PublishButton({ onPress }: { onPress: () => void }) {
-  return (
-    <TouchableOpacity onPress={onPress} style={styles.publishBtn} activeOpacity={0.85}>
-      <View style={styles.publishBtnInner}>
-        <Plus size={28} color="#fff" strokeWidth={1.5} />
-      </View>
-    </TouchableOpacity>
-  );
-}
 
 function BadgeCount({ count }: { count: number }) {
   if (count <= 0) return null;
@@ -40,27 +31,28 @@ export default function TabsLayout() {
           backgroundColor: theme.tabBar,
           borderTopColor: theme.tabBarBorder,
           borderTopWidth: 1,
-          height: 56 + insets.bottom,
+          height: NAV_HEIGHT + insets.bottom,
           paddingBottom: insets.bottom,
+          paddingTop: 6,
           ...SHADOWS.sm,
         },
         tabBarActiveTintColor: COLORS.primary,
-        tabBarInactiveTintColor: isDark ? '#6B7280' : '#9CA3AF',
-        tabBarLabelStyle: { fontSize: 11, fontWeight: '600' },
+        tabBarInactiveTintColor: isDark ? NAV_INACTIVE_DARK : NAV_INACTIVE_LIGHT,
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '700' },
       }}
     >
       <Tabs.Screen
         name="index"
         options={{
           title: 'Inicio',
-          tabBarIcon: ({ color, size }) => <Home size={size} color={color} strokeWidth={1.5} />,
+          tabBarIcon: ({ color, focused }) => <NavIcon icon={Home} color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
         name="map"
         options={{
           title: 'Mapa',
-          tabBarIcon: ({ color, size }) => <Map size={size} color={color} strokeWidth={1.5} />,
+          tabBarIcon: ({ color, focused }) => <NavIcon icon={Map} color={color} focused={focused} />,
         }}
       />
       <Tabs.Screen
@@ -77,9 +69,9 @@ export default function TabsLayout() {
         name="chat"
         options={{
           title: 'Chat',
-          tabBarIcon: ({ color, size }) => (
+          tabBarIcon: ({ color, focused }) => (
             <View style={styles.iconWrap}>
-              <MessageCircle size={size} color={color} strokeWidth={1.5} />
+              <NavIcon icon={MessageCircle} color={color} focused={focused} />
               <BadgeCount count={unreadMessageCount} />
             </View>
           ),
@@ -89,7 +81,7 @@ export default function TabsLayout() {
         name="profile"
         options={{
           title: 'Perfil',
-          tabBarIcon: ({ color, size }) => <User size={size} color={color} strokeWidth={1.5} />,
+          tabBarIcon: ({ color, focused }) => <NavIcon icon={User} color={color} focused={focused} />,
         }}
       />
     </Tabs>
@@ -97,28 +89,13 @@ export default function TabsLayout() {
 }
 
 const styles = StyleSheet.create({
-  publishBtn: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 20,
-  },
-  publishBtnInner: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...SHADOWS.green,
-  },
   iconWrap: {
     position: 'relative',
   },
   badge: {
     position: 'absolute',
-    top: -6,
-    right: -8,
+    top: -4,
+    right: 4,
     minWidth: 17,
     height: 17,
     borderRadius: 9,
