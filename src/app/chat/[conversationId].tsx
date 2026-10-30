@@ -102,13 +102,18 @@ export default function ChatScreen() {
     }
   };
 
+  // En web abre la cámara trasera del teléfono (input con capture); en computadoras sin
+  // cámara el navegador muestra el selector de archivos.
   const handleCamera = async () => {
-    if (Platform.OS === 'web') {
-      Toast.show({ type: 'info', text1: 'Solo en móvil', text2: 'La cámara solo está disponible en la app móvil' });
-      return;
+    if (Platform.OS !== 'web') {
+      const { status } = await ImagePicker.requestCameraPermissionsAsync();
+      if (status !== 'granted') {
+        Toast.show({ type: 'error', text1: 'Sin permiso', text2: 'Necesitamos acceso a tu cámara' });
+        return;
+      }
     }
     try {
-      const r = await ImagePicker.launchCameraAsync({ quality: 0.8 });
+      const r = await ImagePicker.launchCameraAsync({ quality: 0.8, cameraType: ImagePicker.CameraType.back });
       if (!r.canceled && r.assets[0]) {
         sendPhoto(r.assets[0].uri);
       }
