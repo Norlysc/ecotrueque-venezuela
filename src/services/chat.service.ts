@@ -1,5 +1,42 @@
-﻿import { supabase, uploadImage } from '@lib/supabase';
+﻿import { supabase } from '@lib/supabase';
 import type { Conversation, Message } from '@/types/app.types';
+
+// El bucket "messages" es privado, así que las fotos del chat no tienen URL pública:
+// en image_url se guarda la ruta del archivo y al leer se genera un enlace firmado temporal.
+const CHAT_PHOTOS_BUCKET = 'messages';
+const SIGNED_URL_TTL_SECONDS = 60 * 60;
+const PHOTO_EXTENSIONS: Record<string, string> = { 'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp' };
+
+// Acepta la ruta o la URL pública que guardaban los mensajes enviados antes de este cambio
+function photoPath(imageUrl: string): string | null {
+  if (!imageUrl.startsWith('http')) return imageUrl;
+  const marker = `/storage/v1/object/public/${CHAT_PHOTOS_BUCKET}/`;
+  const i = imageUrl.indexOf(marker);
+  return i >= 0 ? decodeURIComponent(imageUrl.slice(i + marker.length)) : null;
+}
+
+async function signPhotoUrls(messages: Message[]): Promise<Message[]> {
+  const paths = messages.map((m) => (m.image_url ? photoPath(m.image_url) : null));
+  const toSign = paths.filter((p): p is string => !!p);
+  if (!toSign.length) return messages;
+
+  const { data } = await supabase.storage.from(CHAT_PHOTOS_BUCKET).createSignedUrls(toSign, SIGNED_URL_TTL_SECONDS);
+  const signed = new Map((data ?? []).map((d) => [d.path, d.signedUrl]));
+  return messages.map((m, i) => {
+    const url = paths[i] ? signed.get(paths[i]) : null;
+    return url ? { ...m, image_url: url } : m;
+  });
+}
+
+async function uploadChatPhoto(senderId: string, uri: string): Promise<string> {
+  const blob = await (await fetch(uri)).blob();
+  const contentType = PHOTO_EXTENSIONS[blob.type] ? blob.type : 'image/jpeg';
+  const path = `${senderId}/${Date.now()}.${PHOTO_EXTENSIONS[contentType]}`;
+  const arrayBuffer = await new Response(blob).arrayBuffer();
+  const { error } = await supabase.storage.from(CHAT_PHOTOS_BUCKET).upload(path, arrayBuffer, { contentType });
+  if (error) throw error;
+  return path;
+}
 
 export const chatService = {
   async getConversations(userId: string): Promise<Conversation[]> {
@@ -61,7 +98,7 @@ export const chatService = {
 
     const { data, error } = await query;
     if (error) throw error;
-    return (data ?? []) as Message[];
+    return signPhotoUrls((data ?? []) as Message[]);
   },
 
   async sendMessage(data: {
@@ -74,8 +111,7 @@ export const chatService = {
     let image_url: string | null = null;
 
     if (data.imageUri) {
-      const path = `${data.senderId}/${Date.now()}.jpg`;
-      image_url = await uploadImage('messages', path, data.imageUri);
+      image_url = await uploadChatPhoto(data.senderId, data.imageUri);
     }
 
     const { data: message, error } = await supabase
@@ -98,7 +134,8 @@ export const chatService = {
       .update({ last_message_at: new Date().toISOString() })
       .eq('id', data.conversationId);
 
-    return message as Message;
+    const [signed] = await signPhotoUrls([message as Message]);
+    return signed;
   },
 
   async markAsRead(conversationId: string, userId: string): Promise<void> {
@@ -124,7 +161,9 @@ export const chatService = {
           table: 'messages',
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => onMessage(payload.new as Message)
+        (payload) => {
+          signPhotoUrls([payload.new as Message]).then(([m]) => onMessage(m));
+        }
       )
       .subscribe();
   },

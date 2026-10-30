@@ -80,6 +80,13 @@ export default function ChatScreen() {
     setText('');
   }, [text, conversationId, sendMessage]);
 
+  const sendPhoto = (imageUri: string) => {
+    sendMessage(
+      { conversationId, imageUri, type: 'image' },
+      { onError: () => Toast.show({ type: 'error', text1: 'No se envió la foto', text2: 'Revisa tu conexión e inténtalo de nuevo' }) }
+    );
+  };
+
   const handleImagePick = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== 'granted') {
@@ -91,7 +98,7 @@ export default function ChatScreen() {
       quality: 0.8,
     });
     if (!result.canceled && result.assets[0]) {
-      sendMessage({ conversationId, imageUri: result.assets[0].uri, type: 'image' });
+      sendPhoto(result.assets[0].uri);
     }
   };
 
@@ -103,7 +110,7 @@ export default function ChatScreen() {
     try {
       const r = await ImagePicker.launchCameraAsync({ quality: 0.8 });
       if (!r.canceled && r.assets[0]) {
-        sendMessage({ conversationId, imageUri: r.assets[0].uri, type: 'image' });
+        sendPhoto(r.assets[0].uri);
       }
     } catch {
       Toast.show({ type: 'error', text1: 'Error de cámara', text2: 'No se pudo acceder a la cámara' });
