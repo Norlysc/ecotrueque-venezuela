@@ -25,6 +25,7 @@ import { useRespondToRequest, useConfirmMeeting, useHasReviewed } from '@hooks/u
 import { useAuthStore } from '@stores/authStore';
 import { Avatar } from '@components/ui/Avatar';
 import { Button } from '@components/ui/Button';
+import { ChatOptionsMenu } from '@components/chat/ChatOptionsMenu';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
 import type { Message } from '@/types/app.types';
 
@@ -48,6 +49,7 @@ export default function ChatScreen() {
   const { profile } = useAuthStore();
   const [text, setText] = useState('');
   const [selectedMessageId, setSelectedMessageId] = useState<string | null>(null);
+  const [showOptions, setShowOptions] = useState(false);
 
   const { data: messages, isLoading } = useMessages(conversationId);
   const { mutate: sendMessage, isPending: isSending } = useSendMessage();
@@ -302,10 +304,23 @@ export default function ChatScreen() {
             )}
           </View>
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => setShowOptions(true)} hitSlop={10} accessibilityLabel="Opciones del chat">
           <EllipsisVertical size={22} color={theme.text} strokeWidth={1.75} />
         </TouchableOpacity>
       </View>
+
+      <ChatOptionsMenu
+        visible={showOptions}
+        onClose={() => setShowOptions(false)}
+        reporterId={profile?.id}
+        otherUser={otherUser}
+        listing={
+          conversation?.listing
+            ?? (conversation?.trade_request?.requested_listing_id
+              ? { id: conversation.trade_request.requested_listing_id, title: 'Artículo de este trueque' }
+              : null)
+        }
+      />
 
       {/* Confirm meeting banner */}
       {tradeStatus === 'accepted' && (
