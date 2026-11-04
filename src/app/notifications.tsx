@@ -1,8 +1,9 @@
 import { useEffect, useCallback, useRef } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity,
-  StyleSheet, useColorScheme, RefreshControl,
+  StyleSheet, RefreshControl,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { ArrowLeft, Bell, Check, CheckCheck, ShoppingBag, MessageCircle, Star, Repeat2 } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

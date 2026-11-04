@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   View, Text, FlatList, TouchableOpacity, StyleSheet,
-  Image, useColorScheme, ActivityIndicator,
+  Image, ActivityIndicator,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { ArrowLeft, ChevronRight, RefreshCw, Hourglass, CircleCheck, CircleX, Ban, PartyPopper, ArrowLeftRight, MessageCircle, Check, Star, Inbox } from 'lucide-react-native';
 import { IconTile, CategoryIcon } from '@components/ui/IconTile';

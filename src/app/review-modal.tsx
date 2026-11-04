@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   View, Text, TextInput, TouchableOpacity, StyleSheet,
-  useColorScheme, KeyboardAvoidingView, Platform, ScrollView,
+  KeyboardAvoidingView, Platform, ScrollView,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { X, Star } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

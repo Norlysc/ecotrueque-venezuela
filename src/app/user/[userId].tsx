@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import {
   View, Text, ScrollView, TouchableOpacity, StyleSheet,
-  useColorScheme, ActivityIndicator,
+  ActivityIndicator,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ArrowLeft, Star, Package, MessageCircle, Flag, MapPin, BadgeCheck } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';

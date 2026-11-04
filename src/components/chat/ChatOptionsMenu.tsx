@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput, useColorScheme } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { UserRound, Package, Flag, X, ChevronLeft, Check, ChevronRight } from 'lucide-react-native';

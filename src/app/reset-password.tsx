@@ -7,8 +7,8 @@ import {
   KeyboardAvoidingView,
   Platform,
   ActivityIndicator,
-  useColorScheme,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Lock, Check, RefreshCw, LockKeyhole } from 'lucide-react-native';

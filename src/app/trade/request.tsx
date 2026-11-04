@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  useColorScheme,
   Image,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { useLocalSearchParams, router } from 'expo-router';
 import { X, Repeat, CheckCircle, Shield, ChevronRight, Plus, Package, Earth, Send } from 'lucide-react-native';
 import { IconTile, CategoryIcon } from '@components/ui/IconTile';

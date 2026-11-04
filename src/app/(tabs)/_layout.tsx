@@ -1,4 +1,5 @@
-import { TouchableOpacity, View, Text, StyleSheet, useColorScheme } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { Tabs, router } from 'expo-router';
 import { Home, Map, MessageCircle, User } from 'lucide-react-native';
 import { NavIcon, PublishButton, NAV_HEIGHT, NAV_INACTIVE_LIGHT, NAV_INACTIVE_DARK } from '@components/ui/BottomNav';

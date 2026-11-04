@@ -7,12 +7,12 @@ import {
   StyleSheet,
   TextInput,
   RefreshControl,
-  useColorScheme,
   useWindowDimensions,
   Platform,
   Animated,
   Image,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { MapPin, Bell, Search, X, ChevronRight, List, Grid2x2, Leaf, Earth, LayoutGrid, SearchX } from 'lucide-react-native';

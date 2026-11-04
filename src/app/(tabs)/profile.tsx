@@ -5,11 +5,11 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  useColorScheme,
   Alert,
   Platform,
   Share,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Settings, ChevronRight, Edit3, Shield, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor, MapPin, Package, Repeat, Star, Leaf, ArrowLeftRight } from 'lucide-react-native';

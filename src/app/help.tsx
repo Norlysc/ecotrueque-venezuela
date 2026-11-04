@@ -6,9 +6,9 @@ import {
   TouchableOpacity,
   StyleSheet,
   TextInput,
-  useColorScheme,
   Linking,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import {
   ArrowLeft,

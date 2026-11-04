@@ -5,11 +5,11 @@ import {
   TouchableOpacity,
   StyleSheet,
   ScrollView,
-  useColorScheme,
   Platform,
   Dimensions,
   TextInput,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Shield, Search, Crosshair, Package } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

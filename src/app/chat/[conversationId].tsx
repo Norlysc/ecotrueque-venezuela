@@ -8,10 +8,10 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
   Image,
   Alert,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ArrowLeft, EllipsisVertical, Image as ImageIcon, Camera, Send, CheckCircle, Check, Handshake, Package, Hourglass, CircleCheck } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

@@ -7,8 +7,8 @@ import {
   ScrollView,
   KeyboardAvoidingView,
   Platform,
-  useColorScheme,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { ArrowLeft, Check, CheckCircle, ArrowRight, UserPlus, User, Mail, Phone, MapPin, Lock, Shield } from 'lucide-react-native';

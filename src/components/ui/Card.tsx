@@ -1,4 +1,5 @@
-import { TouchableOpacity, View, StyleSheet, ViewStyle, useColorScheme } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, ViewStyle } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { THEME, RADIUS, SHADOWS } from '@constants/theme';
 
 type CardVariant = 'elevated' | 'outlined' | 'filled' | 'ghost';

@@ -7,10 +7,10 @@ import {
   ScrollView,
   TextInput,
   Image,
-  useColorScheme,
   Alert,
   Platform,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import Toast from 'react-native-toast-message';
 import { X, Check, Image as ImageIcon, Camera, CheckCircle, ArrowRight, Tag, DollarSign, Sparkles, Star, ThumbsUp, CircleAlert, Wrench, Package, Handshake, Repeat } from 'lucide-react-native';

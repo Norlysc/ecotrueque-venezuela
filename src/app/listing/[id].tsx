@@ -8,10 +8,10 @@ import {
   Animated,
   Share,
   Platform,
-  useColorScheme,
   Image,
   useWindowDimensions,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { useLocalSearchParams, router } from 'expo-router';
 import { ArrowLeft, Share2, Heart, MapPin, ChevronRight, Edit2, Pause, Play, MessageCircle, Sparkles, Star, ThumbsUp, CircleAlert, Wrench, Package, Handshake, Repeat, Leaf, Recycle, Banknote, Target, BadgeCheck, type LucideIcon } from 'lucide-react-native';
 import { IconTile, CategoryIcon } from '@components/ui/IconTile';
@@ -248,10 +248,10 @@ export default function ListingDetailScreen() {
           {/* Busca a cambio */}
           <View style={[styles.lookingForCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-              <Repeat size={15} color={COLORS.primaryDark} strokeWidth={2} />
-              <Text style={[styles.lookingForLabel, { color: COLORS.primaryDark }]}>Busca a cambio:</Text>
+              <Repeat size={15} color={isDark ? COLORS.primaryLight : COLORS.primaryDark} strokeWidth={2} />
+              <Text style={[styles.lookingForLabel, { color: isDark ? COLORS.primaryLight : COLORS.primaryDark }]}>Busca a cambio:</Text>
             </View>
-            <Text style={[styles.lookingForText, { color: COLORS.primaryDarker }]}>
+            <Text style={[styles.lookingForText, { color: isDark ? '#E8F5F0' : COLORS.primaryDarker }]}>
               {listing.looking_for}
             </Text>
           </View>

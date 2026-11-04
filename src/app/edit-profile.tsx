@@ -8,12 +8,12 @@ import {
   Modal,
   FlatList,
   StyleSheet,
-  useColorScheme,
   Image,
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import * as ImagePicker from 'expo-image-picker';
 import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';

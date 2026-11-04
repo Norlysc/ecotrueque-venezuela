@@ -4,8 +4,8 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  useColorScheme,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { ArrowLeft, Check, Sprout, Repeat, Camera, Star, Map as MapIcon, Recycle, Leaf, Earth, PiggyBank, Handshake, TreePine, Car, Droplets, Heart, ChartColumn, Trophy } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';

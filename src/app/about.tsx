@@ -4,10 +4,10 @@ import {
   ScrollView,
   TouchableOpacity,
   StyleSheet,
-  useColorScheme,
   Linking,
   Platform,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { ArrowLeft, MapPin, Shield, Star, Award, Wind, MessageCircle, Mail, UserPlus, Camera, Map as MapIcon, Handshake, Leaf } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';

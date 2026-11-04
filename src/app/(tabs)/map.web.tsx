@@ -8,9 +8,9 @@ import {
   TextInput,
   Image,
   ActivityIndicator,
-  useColorScheme,
   Dimensions,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { ArrowLeft, Search, X, MapPin, ChevronRight, ArrowRight, Crosshair, Map as MapIcon, Leaf, Recycle, TriangleAlert, MapPinOff } from 'lucide-react-native';
 import { IconTile, CategoryIcon } from '@components/ui/IconTile';

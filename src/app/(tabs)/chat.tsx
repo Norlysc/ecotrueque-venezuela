@@ -8,8 +8,8 @@ import {
   StyleSheet,
   TextInput,
   RefreshControl,
-  useColorScheme,
 } from 'react-native';
+import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { Pencil, Search, X, ChevronRight, Bell, Package, MessagesSquare } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';

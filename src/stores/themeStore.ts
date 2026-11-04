@@ -1,10 +1,16 @@
 import { create } from 'zustand';
-import { Appearance } from 'react-native';
+import { Appearance, Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export type ThemeMode = 'system' | 'light' | 'dark';
 
 const STORAGE_KEY = '@ecotrueque/theme';
+
+// En móvil también se ajustan los componentes nativos (teclado, alertas). En la web
+// Appearance.setColorScheme no existe y lanzaría un error; ahí basta con hooks/useColorScheme.
+const aplicarAlSistema = (mode: ThemeMode) => {
+  if (Platform.OS !== 'web') Appearance.setColorScheme(mode === 'system' ? null : mode);
+};
 
 interface ThemeState {
   mode: ThemeMode;
@@ -20,9 +26,8 @@ export const useThemeStore = create<ThemeState & ThemeActions>((set) => ({
 
   setMode: async (mode) => {
     set({ mode });
-    // Afecta todos los useColorScheme() de la app sin tocar cada archivo
-    Appearance.setColorScheme(mode === 'system' ? null : mode);
     await AsyncStorage.setItem(STORAGE_KEY, mode);
+    aplicarAlSistema(mode);
   },
 
   loadSaved: async () => {
@@ -30,7 +35,7 @@ export const useThemeStore = create<ThemeState & ThemeActions>((set) => ({
       const saved = (await AsyncStorage.getItem(STORAGE_KEY)) as ThemeMode | null;
       if (saved) {
         set({ mode: saved });
-        Appearance.setColorScheme(saved === 'system' ? null : saved);
+        aplicarAlSistema(saved);
       }
     } catch {
       // primera vez: usa el sistema
