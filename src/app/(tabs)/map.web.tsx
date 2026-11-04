@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
+import { approximateCoords, formatApproxDistance } from '@utils/location';
 import {
   View,
   Text,
@@ -40,10 +41,6 @@ function haversineKm(lat1: number, lng1: number, lat2: number, lng2: number): nu
       Math.cos((lat2 * Math.PI) / 180) *
       Math.sin(dLng / 2) ** 2;
   return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-}
-
-function formatDist(km: number): string {
-  return km < 1 ? `${Math.round(km * 1000)} m` : `${km.toFixed(1)} km`;
 }
 
 // Inyecta Leaflet CSS y JS una sola vez
@@ -214,7 +211,8 @@ export default function MapScreenWeb() {
         className: '',
       });
 
-      const marker = L.marker([listing.latitude, listing.longitude], { icon })
+      const pos = approximateCoords(listing.latitude, listing.longitude);
+      const marker = L.marker([pos.latitude, pos.longitude], { icon })
         .addTo(leafletMapRef.current)
         .on('click', () => setSelectedListing(listing));
 
@@ -225,7 +223,8 @@ export default function MapScreenWeb() {
   // Centrar mapa en listing seleccionado
   const flyTo = useCallback((listing: Listing) => {
     if (listing.latitude && listing.longitude && leafletMapRef.current) {
-      leafletMapRef.current.flyTo([listing.latitude, listing.longitude], 15, { duration: 0.7 });
+      const pos = approximateCoords(listing.latitude, listing.longitude);
+      leafletMapRef.current.flyTo([pos.latitude, pos.longitude], 15, { duration: 0.7 });
     }
     setSelectedListing(listing);
   }, []);
@@ -234,7 +233,7 @@ export default function MapScreenWeb() {
     ...l,
     distKm:
       l.latitude && l.longitude
-        ? haversineKm(userLat, userLng, l.latitude, l.longitude)
+        ? haversineKm(userLat, userLng, approximateCoords(l.latitude, l.longitude).latitude, approximateCoords(l.latitude, l.longitude).longitude)
         : null,
   }));
 
@@ -484,7 +483,7 @@ export default function MapScreenWeb() {
                           <View style={[styles.distBadge, { backgroundColor: isDark ? '#2A2A28' : '#F0F2F5' }]}>
                             <MapPin size={10} color={theme.textTertiary} strokeWidth={1.75} />
                             <Text style={[styles.distText, { color: theme.textTertiary }]}>
-                              {formatDist(listing.distKm)}
+                              {formatApproxDistance(listing.distKm)}
                             </Text>
                           </View>
                         )}

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { formatApproxDistance } from '@utils/location';
 import { TouchableOpacity, View, Text, Image, StyleSheet, type DimensionValue } from 'react-native';
 import { Heart, MapPin, Pencil, Trash2, Repeat, Leaf, Package, Handshake } from 'lucide-react-native';
 import { Avatar } from '@components/ui/Avatar';
@@ -106,7 +107,7 @@ export function ListingCard({
             <View style={styles.distanceRow}>
               <MapPin size={10} color={theme.textTertiary} strokeWidth={1.75} />
               <Text style={[styles.distanceText, { color: theme.textTertiary }]}>
-                {listing.distance_km.toFixed(1)} km
+                {formatApproxDistance(listing.distance_km)}
               </Text>
             </View>
           )}
@@ -271,7 +272,7 @@ export function ListingCard({
           <View style={styles.distanceRow}>
             <MapPin size={10} color={theme.textTertiary} strokeWidth={1.75} />
             <Text style={[styles.distanceText, { color: theme.textTertiary }]}>
-              {listing.distance_km.toFixed(1)} km
+              {formatApproxDistance(listing.distance_km)}
             </Text>
           </View>
         )}

@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { formatApproxDistance } from '@utils/location';
 import {
   View,
   Text,
@@ -75,7 +76,7 @@ export default function ListingDetailScreen() {
     if (router.canGoBack()) {
       router.back();
     } else {
-      router.push('/(tabs)/');
+      router.push('/(tabs)');
     }
   };
 
@@ -316,7 +317,7 @@ export default function ListingDetailScreen() {
                 </Text>
                 {listing.distance_km !== undefined && (
                   <Text style={[styles.distanceText, { color: COLORS.primary }]}>
-                    A {listing.distance_km.toFixed(1)} km de ti
+                    A {formatApproxDistance(listing.distance_km).toLowerCase()} de ti
                   </Text>
                 )}
               </View>
@@ -369,7 +370,7 @@ export default function ListingDetailScreen() {
               </Text>
               <ScrollView horizontal showsHorizontalScrollIndicator={false}>
                 <View style={styles.matchesRow}>
-                  {(matches ?? []).filter((m) => m?.listing != null).map((match: TradeMatch) => (
+                  {(matches ?? []).filter((m: TradeMatch) => m?.listing != null).map((match: TradeMatch) => (
                     <View
                       key={match.listing.id}
                       style={[styles.matchCard, { backgroundColor: isDark ? '#252523' : '#F8F9FA' }]}

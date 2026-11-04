@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { approximateCoords } from '@utils/location';
 import {
   View,
   Text,
@@ -67,8 +68,7 @@ export default function MapScreen() {
     setSelectedListing(listing);
     if (listing.latitude && listing.longitude) {
       mapRef.current?.animateToRegion({
-        latitude: listing.latitude,
-        longitude: listing.longitude,
+        ...approximateCoords(listing.latitude, listing.longitude),
         latitudeDelta: 0.02,
         longitudeDelta: 0.02,
       }, 400);
@@ -106,7 +106,7 @@ export default function MapScreen() {
           listing.latitude && listing.longitude ? (
             <Marker
               key={listing.id}
-              coordinate={{ latitude: listing.latitude, longitude: listing.longitude }}
+              coordinate={approximateCoords(listing.latitude, listing.longitude)}
               onPress={() => handleMarkerPress(listing)}
             >
               <View
