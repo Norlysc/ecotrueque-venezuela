@@ -54,7 +54,7 @@ const STEPS = [
 
 const FEATURES = [
   { icon: MapPin,        label: 'Mapa interactivo',      desc: 'Visualiza trueques en tiempo real cerca de ti en Valera, estado Trujillo.' },
-  { icon: Shield,        label: 'Sitios seguros',         desc: 'Puntos de intercambio verificados como centros comerciales y metros.' },
+  { icon: Shield,        label: 'Sitios seguros',         desc: 'Lugares públicos sugeridos (plazas, alcaldía, cuerpos de seguridad y centros comerciales); el punto final lo acuerdan las dos personas.' },
   { icon: Star,          label: 'Sistema de reseñas',     desc: 'Califica y lee opiniones sobre otros usuarios para intercambios confiables.' },
   { icon: Award,         label: 'Niveles ecológicos',     desc: 'Desde Semilla hasta Leyenda Verde — sube de nivel con cada trueque.' },
   { icon: Wind,          label: 'Impacto CO₂',            desc: 'Cada trueque calcula cuántos kg de CO₂ evitaste enviar al planeta.' },
@@ -183,11 +183,12 @@ export default function AboutScreen() {
         {/* ── SITIOS SEGUROS ────────────────────────── */}
         <Section title="Sitios seguros de intercambio" isDark={isDark} theme={theme}>
           <Text style={[styles.paragraph, { color: theme.textSecondary }]}>
-            Para tu seguridad, EcoTrueque incluye un mapa de sitios verificados donde puedes
-            realizar tus intercambios con confianza:{' '}
+            Para tu seguridad, el mapa sugiere lugares públicos de Valera donde puedes realizar tus
+            intercambios:{' '}
             <Text style={{ color: theme.text, fontWeight: TYPOGRAPHY.weight.medium }}>
-              centros comerciales, estaciones del metro, comisarías y más.
-            </Text>
+              plazas, la alcaldía, cuerpos de seguridad y centros comerciales.
+            </Text>{' '}
+            Son referencias: el punto de encuentro lo acuerdan las dos personas por el chat.
           </Text>
           <View style={[styles.tipBox, { backgroundColor: COLORS.primary + '12', borderColor: COLORS.primary + '30' }]}>
             <Shield size={16} color={COLORS.primary} strokeWidth={1.75} />

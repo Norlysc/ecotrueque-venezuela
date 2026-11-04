@@ -12,11 +12,13 @@ import {
   Dimensions,
 } from 'react-native';
 import { useColorScheme } from '@hooks/useColorScheme';
-import { router } from 'expo-router';
-import { ArrowLeft, Search, X, MapPin, ChevronRight, ArrowRight, Crosshair, Map as MapIcon, Leaf, Recycle, TriangleAlert, MapPinOff } from 'lucide-react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import { ArrowLeft, Search, X, MapPin, ChevronRight, ArrowRight, Crosshair, Map as MapIcon, Leaf, Recycle, TriangleAlert, MapPinOff, Shield } from 'lucide-react-native';
 import { IconTile, CategoryIcon } from '@components/ui/IconTile';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNearbyListings } from '@hooks/useListings';
+import { useSafeSpots } from '@hooks/useSafeSpots';
+import { SAFE_SPOT_TYPE_LABEL } from '@services/safeSpots.service';
 import { useLocationStore } from '@stores/locationStore';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
 import { CATEGORIES, getCategoryById } from '@constants/categories';
@@ -96,9 +98,12 @@ export default function MapScreenWeb() {
   const [selectedCategory, setSelectedCategory] = useState<CategoryId | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
+  const { seguros } = useLocalSearchParams<{ seguros?: string }>();
+  const [showSafeSpots, setShowSafeSpots] = useState(seguros === '1');
 
   const leafletMapRef = useRef<any>(null);
   const markersRef = useRef<any[]>([]);
+  const safeMarkersRef = useRef<any[]>([]);
   const userMarkerRef = useRef<any>(null);
 
   const { data: listings = [], isLoading, error: listingsError } = useNearbyListings({
@@ -106,6 +111,34 @@ export default function MapScreenWeb() {
     category: selectedCategory ?? undefined,
     search_query: searchQuery || undefined,
   });
+
+  const { data: safeSpots = [] } = useSafeSpots(userLat, userLng, 50, showSafeSpots);
+
+  // Marcadores de sitios seguros sugeridos (escudo azul) con nombre y dirección
+  useEffect(() => {
+    if (!mapReady || !leafletMapRef.current) return;
+    const L = (window as any).L;
+    safeMarkersRef.current.forEach((m) => m.remove());
+    safeMarkersRef.current = [];
+    if (!showSafeSpots) return;
+    safeSpots.forEach((spot) => {
+      const icon = L.divIcon({
+        html: `<div style="width:30px;height:30px;border-radius:50%;background:${COLORS.info};border:2.5px solid #fff;
+          box-shadow:0 3px 10px rgba(0,0,0,0.25);display:flex;align-items:center;justify-content:center;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/>
+          </svg></div>`,
+        iconSize: [30, 30],
+        iconAnchor: [15, 15],
+        className: '',
+      });
+      const texto = (t: string) => t.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' } as Record<string, string>)[c]);
+      const marker = L.marker([spot.latitude, spot.longitude], { icon })
+        .addTo(leafletMapRef.current)
+        .bindPopup(`<b>${texto(spot.name)}</b><br>${SAFE_SPOT_TYPE_LABEL[spot.type] ?? ''} · ${texto(spot.address)}<br><i>Sugerencia: acuerden el lugar en el chat</i>`);
+      safeMarkersRef.current.push(marker);
+    });
+  }, [safeSpots, showSafeSpots, mapReady]);
 
   // Log RPC errors in development so they're visible in the browser console
   useEffect(() => {
@@ -289,6 +322,20 @@ export default function MapScreenWeb() {
               </Text>
             </TouchableOpacity>
           ))}
+
+          <TouchableOpacity
+            onPress={() => setShowSafeSpots((v) => !v)}
+            accessibilityLabel="Mostrar sitios seguros sugeridos"
+            style={[
+              styles.chip,
+              { flexDirection: 'row', alignItems: 'center', gap: 4, backgroundColor: showSafeSpots ? COLORS.info : isDark ? '#2A2A28' : '#F0F2F5' },
+            ]}
+          >
+            <Shield size={12} color={showSafeSpots ? '#fff' : theme.textSecondary} strokeWidth={1.75} />
+            <Text style={[styles.chipText, { color: showSafeSpots ? '#fff' : theme.textSecondary }]}>
+              Sitios seguros{showSafeSpots ? ` (${safeSpots.length})` : ''}
+            </Text>
+          </TouchableOpacity>
 
           <View style={[styles.chipSep, { backgroundColor: theme.border }]} />
 

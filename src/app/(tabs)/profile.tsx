@@ -125,7 +125,7 @@ export default function ProfileScreen() {
 
   const MENU_ITEMS = [
     { icon: Edit3,       label: 'Editar perfil',          onPress: () => router.push('/edit-profile') },
-    { icon: Shield,      label: 'Sitios seguros',          onPress: () => router.push('/(tabs)/map') },
+    { icon: Shield,      label: 'Sitios seguros',          onPress: () => router.push('/(tabs)/map?seguros=1') },
     { icon: Bell,        label: 'Notificaciones',          onPress: () => router.push('/notifications') },
     { icon: ThemeIcon,   label: themeLabel,                onPress: cycleTheme, isTheme: true },
     { icon: Share2,      label: 'Compartir perfil',        onPress: handleShareProfile },

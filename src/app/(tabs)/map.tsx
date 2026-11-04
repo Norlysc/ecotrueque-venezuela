@@ -14,9 +14,10 @@ import { useColorScheme } from '@hooks/useColorScheme';
 import MapView, { Marker, Circle, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Shield, Search, Crosshair, Package } from 'lucide-react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useLocationStore } from '@stores/locationStore';
 import { useNearbyListings } from '@hooks/useListings';
+import { useSafeSpots } from '@hooks/useSafeSpots';
 import { ListingCard } from '@components/listing/ListingCard';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
 import { CATEGORIES } from '@constants/categories';
@@ -43,13 +44,15 @@ export default function MapScreen() {
   const mapRef = useRef<MapView>(null);
   const { latitude, longitude } = useLocationStore();
   const [selectedRadius, setSelectedRadius] = useState(10);
-  const [showSafeSpots, setShowSafeSpots] = useState(false);
+  const { seguros } = useLocalSearchParams<{ seguros?: string }>();
+  const [showSafeSpots, setShowSafeSpots] = useState(seguros === '1');
   const [selectedListing, setSelectedListing] = useState<Listing | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
 
   const lat = latitude ?? 9.3199; // Valera, estado Trujillo
   const lng = longitude ?? -70.6054;
 
+  const { data: safeSpots = [] } = useSafeSpots(lat, lng, 50, showSafeSpots);
   const { data: listings } = useNearbyListings({
     radius_km: selectedRadius,
     search_query: searchQuery || undefined,
@@ -130,14 +133,19 @@ export default function MapScreen() {
           ) : null
         )}
 
-        {/* Marcador de sitios seguros (simulado) */}
-        {showSafeSpots && (
-          <Marker coordinate={{ latitude: lat + 0.01, longitude: lng + 0.01 }}>
+        {/* Sitios seguros sugeridos (tabla safe_spots) */}
+        {showSafeSpots && safeSpots.map((spot) => (
+          <Marker
+            key={spot.id}
+            coordinate={{ latitude: spot.latitude, longitude: spot.longitude }}
+            title={spot.name}
+            description={`${spot.address} · Sugerencia: acuerden el lugar en el chat`}
+          >
             <View style={styles.safeSpotMarker}>
               <Shield size={14} color="#fff" strokeWidth={1.75} />
             </View>
           </Marker>
-        )}
+        ))}
       </MapView>
 
       {/* Header flotante */}

@@ -367,7 +367,7 @@ export default function RegisterScreen() {
                 {[
                   '100 EcoPoints de bienvenida',
                   'Acceso al mapa de trueques',
-                  'Sitios seguros verificados',
+                  'Sitios seguros sugeridos',
                   'Impacto ecológico real',
                 ].map((b) => (
                   <View key={b} style={styles.benefitRow}>

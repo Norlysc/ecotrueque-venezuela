@@ -202,7 +202,7 @@ export default function TradeRequestScreen() {
         {/* Card sitios seguros */}
         <TouchableOpacity
           style={[styles.safeCard, { backgroundColor: isDark ? '#0F2D24' : '#E8F5F0' }]}
-          onPress={() => router.push('/(tabs)/map')}
+          onPress={() => router.push('/(tabs)/map?seguros=1')}
         >
           <Shield size={20} color={COLORS.primary} strokeWidth={1.75} />
           <View style={{ flex: 1 }}>
@@ -210,7 +210,7 @@ export default function TradeRequestScreen() {
               Realiza el intercambio en un sitio seguro
             </Text>
             <Text style={[styles.safeSubtitle, { color: COLORS.primary }]}>
-              Ver sitios seguros verificados en el mapa
+              Ver lugares públicos sugeridos; el punto lo acuerdan ustedes
             </Text>
           </View>
           <ChevronRight size={16} color={COLORS.primary} strokeWidth={1.75} />

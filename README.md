@@ -118,11 +118,12 @@ npm install
 | 6 | `supabase/migrations/017_fix_reputation_score.sql` | Corrección del cálculo de reputación |
 | 7 | `supabase/migrations/020_politicas_seguridad.sql` | Correo privado y políticas de notificaciones, logros y fotos del chat |
 | 8 | `supabase/migrations/021_bloqueo_usuarios.sql` | Bloqueo de usuarios |
+| 9 | `supabase/migrations/022_sitios_seguros_valera.sql` | Sitios seguros sugeridos en Valera (datos de OpenStreetMap) |
 
 Los archivos 007–009, 011–013, 018 y 019 cargan publicaciones de ejemplo para cuentas de prueba
 concretas; no son necesarios para que la app funcione. Si la base de datos ya existe y solo faltan
 las mejoras de noviembre de 2026, basta con ejecutar `supabase/aplicar_mejoras_2026-11.sql`
-(015, 020 y 021 juntos). `supabase/historico/` guarda el consolidado que se aplicó antes; no
+(015, 020, 021 y 022 juntos). `supabase/historico/` guarda el consolidado que se aplicó antes; no
 hay que volver a ejecutarlo.
 
 ### 3. Variables de entorno
@@ -207,8 +208,8 @@ ecotrueque/
 │   └── types/                   # Tipos TypeScript del dominio
 ├── supabase/
 │   ├── all_migrations.sql       # Esquema completo para crear la base de datos
-│   ├── migrations/              # Migraciones numeradas (001–021) y datos de ejemplo
-│   ├── aplicar_mejoras_2026-11.sql # Mejoras 015, 020 y 021 en un solo archivo
+│   ├── migrations/              # Migraciones numeradas (001–022) y datos de ejemplo
+│   ├── aplicar_mejoras_2026-11.sql # Mejoras 015, 020, 021 y 022 en un solo archivo
 │   ├── historico/               # Consolidado aplicado anteriormente (referencia)
 │   └── diagnostics/             # Consultas de diagnóstico del mapa y RPC
 ├── assets/                      # Íconos, logos y splash
