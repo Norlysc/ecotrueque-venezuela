@@ -56,6 +56,7 @@ modificar lo que le corresponde aunque manipule el cliente.
 | `update_user_reputation` | Trigger que recalcula la reputación (promedio de estrellas) al recibir una reseña |
 | `delete_own_listing` | Elimina (borrado lógico) una publicación propia |
 | `get_unread_message_count` | Cuenta los mensajes sin leer del usuario |
+| `admin_update_report` / `admin_pause_listing` | Acciones del panel de administración; comprueban en el servidor que quien llama es administrador |
 | `is_blocked_between` | Indica si dos personas se bloquearon; lo usan las políticas de mensajes y propuestas |
 
 ## Cómo funciona
@@ -119,6 +120,7 @@ npm install
 | 7 | `supabase/migrations/020_politicas_seguridad.sql` | Correo privado y políticas de notificaciones, logros y fotos del chat |
 | 8 | `supabase/migrations/021_bloqueo_usuarios.sql` | Bloqueo de usuarios |
 | 9 | `supabase/migrations/022_sitios_seguros_valera.sql` | Sitios seguros sugeridos en Valera (datos de OpenStreetMap) |
+| 10 | `supabase/migrations/024_panel_administracion.sql` | Rol de administrador y panel de reportes |
 
 Los archivos 007–009, 011–013, 018 y 019 cargan publicaciones de ejemplo para cuentas de prueba
 concretas; no son necesarios para que la app funcione. Si la base de datos ya existe y solo faltan
@@ -208,7 +210,7 @@ ecotrueque/
 │   └── types/                   # Tipos TypeScript del dominio
 ├── supabase/
 │   ├── all_migrations.sql       # Esquema completo para crear la base de datos
-│   ├── migrations/              # Migraciones numeradas (001–022) y datos de ejemplo
+│   ├── migrations/              # Migraciones numeradas (001–024) y datos de ejemplo
 │   ├── aplicar_mejoras_2026-11.sql # Mejoras 015, 020, 021 y 022 en un solo archivo
 │   ├── historico/               # Consolidado aplicado anteriormente (referencia)
 │   └── diagnostics/             # Consultas de diagnóstico del mapa y RPC
@@ -222,6 +224,18 @@ ecotrueque/
 ## Limitaciones conocidas
 
 - Las cifras de CO₂ y residuos son estimaciones por categoría, no mediciones certificadas.
-- No hay notificaciones push (solo avisos dentro de la app) ni panel de administración.
+- No hay notificaciones push (solo avisos dentro de la app).
+- El panel de administración atiende reportes y pausa publicaciones; la suspensión de cuentas queda para una etapa posterior.
 - Los sitios seguros son sugerencias; el lugar del encuentro lo acuerdan las dos personas por el chat.
 - El mapa muestra una ubicación aproximada (cuadrícula de unos 550 m); la distancia exacta solo se usa en el servidor para ordenar.
+
+## Administración
+
+Las cuentas con `profiles.is_admin = true` ven **Panel de administración** en su perfil (`/admin`): revisan los
+reportes enviados desde el chat, les cambian el estado (pendiente, en revisión, resuelto) con una nota y pueden
+pausar la publicación reportada. Quien envió el reporte recibe una notificación. El rol solo se asigna desde el
+SQL Editor de Supabase; un trigger impide que un usuario se lo otorgue desde la app:
+
+```sql
+UPDATE public.profiles SET is_admin = TRUE WHERE id = '<id del usuario>';
+```
