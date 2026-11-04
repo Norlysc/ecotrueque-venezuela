@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { APPROX_GRID_DEG, approximateCoords, formatApproxDistance } from '../utils/location';
 import { formatKg, formatThousands } from '../utils/format';
 

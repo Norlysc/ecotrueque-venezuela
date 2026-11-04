@@ -1,3 +1,4 @@
+import { describe, expect, it } from '@jest/globals';
 import { achievementProgress, communityTotals, ecoPointsForTrade, equivalences, isAchievementUnlocked } from '../utils/eco';
 import type { AchievementStats } from '../utils/eco';
 import { getEcoLevel } from '../constants/theme';
