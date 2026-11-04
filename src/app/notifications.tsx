@@ -236,7 +236,7 @@ export default function NotificationsScreen() {
                       ]}
                       numberOfLines={1}
                     >
-                      {notif.title.replace(/^[^p{L}p{N}¡¿]+/u, '')}
+                      {notif.title.replace(/^[^\p{L}\p{N}¡¿]+/u, '')}
                     </Text>
                     <Text
                       style={[styles.notifBody, { color: theme.textSecondary }]}
