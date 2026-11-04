@@ -3,11 +3,12 @@ import { View, Text, TouchableOpacity, StyleSheet, Modal, TextInput } from 'reac
 import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { UserRound, Package, Flag, X, ChevronLeft, Check, ChevronRight } from 'lucide-react-native';
+import { UserRound, Package, Flag, Ban, X, ChevronLeft, Check, ChevronRight } from 'lucide-react-native';
 import type { LucideIcon } from 'lucide-react-native';
 import Toast from 'react-native-toast-message';
 import { Button } from '@components/ui/Button';
 import { REPORT_REASONS, reportsService } from '@services/reports.service';
+import { useBlockedIds, useToggleBlock } from '@hooks/useBlocks';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 
 interface ChatOptionsMenuProps {
@@ -18,16 +19,19 @@ interface ChatOptionsMenuProps {
   listing?: { id: string; title: string } | null;
 }
 
-// Menú de los tres puntos del chat: ver perfil, ver la publicación y reportar a la otra persona
+// Menú de los tres puntos del chat: ver perfil, ver la publicación, reportar y bloquear a la otra persona
 export function ChatOptionsMenu({ visible, onClose, reporterId, otherUser, listing }: ChatOptionsMenuProps) {
   const isDark = useColorScheme() === 'dark';
   const theme = isDark ? THEME.dark : THEME.light;
   const insets = useSafeAreaInsets();
-  const [view, setView] = useState<'menu' | 'report'>('menu');
+  const [view, setView] = useState<'menu' | 'report' | 'block'>('menu');
   const [reason, setReason] = useState<string | null>(null);
   const [details, setDetails] = useState('');
   const [isSending, setIsSending] = useState(false);
   const name = otherUser?.full_name ?? 'esta persona';
+  const { data: blockedIds = [] } = useBlockedIds();
+  const { mutate: toggleBlock, isPending: isBlocking } = useToggleBlock();
+  const isBlocked = !!otherUser?.id && blockedIds.includes(otherUser.id);
 
   const close = () => {
     onClose();
@@ -84,13 +88,13 @@ export function ChatOptionsMenu({ visible, onClose, reporterId, otherUser, listi
           style={[styles.sheet, { backgroundColor: theme.surface, paddingBottom: insets.bottom + SPACING.base }]}
         >
           <View style={[styles.header, { borderBottomColor: theme.border }]}>
-            {view === 'report' ? (
+            {view !== 'menu' ? (
               <TouchableOpacity onPress={() => setView('menu')} style={styles.headerSide}>
                 <ChevronLeft size={22} color={theme.text} strokeWidth={1.75} />
               </TouchableOpacity>
             ) : <View style={styles.headerSide} />}
             <Text style={[styles.title, { color: theme.text }]}>
-              {view === 'menu' ? 'Opciones del chat' : `Reportar a ${name}`}
+              {view === 'menu' ? 'Opciones del chat' : view === 'report' ? `Reportar a ${name}` : `Bloquear a ${name}`}
             </Text>
             <TouchableOpacity onPress={close} style={[styles.headerSide, { alignItems: 'flex-end' }]}>
               <X size={22} color={theme.textSecondary} strokeWidth={1.75} />
@@ -108,6 +112,30 @@ export function ChatOptionsMenu({ visible, onClose, reporterId, otherUser, listi
               {otherUser?.id && (
                 <Option icon={Flag} label="Reportar usuario" sub="Avísanos si algo no está bien" color={COLORS.error} onPress={() => setView('report')} />
               )}
+              {otherUser?.id && (isBlocked ? (
+                <Option
+                  icon={Ban}
+                  label="Desbloquear usuario"
+                  sub="Volverás a ver sus publicaciones y podrán escribirse"
+                  onPress={() => toggleBlock({ userId: otherUser.id, block: false }, { onSuccess: close })}
+                />
+              ) : (
+                <Option icon={Ban} label="Bloquear usuario" sub="Deja de ver sus publicaciones y mensajes" color={COLORS.error} onPress={() => setView('block')} />
+              ))}
+            </View>
+          ) : view === 'block' ? (
+            <View style={styles.reportBody}>
+              <Text style={[styles.reportHint, { color: theme.textSecondary }]}>
+                Al bloquear a {name} dejarás de ver sus publicaciones y ninguno de los dos podrá enviar mensajes ni
+                propuestas de trueque al otro. Puedes desbloquearlo cuando quieras desde este mismo menú.
+              </Text>
+              <Button
+                label="Bloquear"
+                variant="danger"
+                fullWidth
+                isLoading={isBlocking}
+                onPress={() => otherUser?.id && toggleBlock({ userId: otherUser.id, block: true }, { onSuccess: close })}
+              />
             </View>
           ) : (
             <View style={styles.reportBody}>

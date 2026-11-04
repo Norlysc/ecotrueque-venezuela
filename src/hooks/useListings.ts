@@ -3,13 +3,14 @@ import Toast from 'react-native-toast-message';
 import { listingsService } from '@services/listings.service';
 import { useLocationStore } from '@stores/locationStore';
 import { useAuthStore } from '@stores/authStore';
+import { useBlockedIds } from '@hooks/useBlocks';
 import { supabase } from '@lib/supabase';
 import type { NearbyFilter, Listing } from '@/types/app.types';
 import type { CategoryId } from '@constants/categories';
 
 export const LISTING_KEYS = {
   all: ['listings'] as const,
-  nearby: (filter: Partial<NearbyFilter>) => ['listings', 'nearby', filter] as const,
+  nearby: (filter: Partial<NearbyFilter> & { userId?: string }) => ['listings', 'nearby', filter] as const,
   detail: (id: string) => ['listings', 'detail', id] as const,
   user: (userId: string) => ['listings', 'user', userId] as const,
   favorites: (userId: string) => ['listings', 'favorites', userId] as const,
@@ -28,9 +29,10 @@ export function useNearbyListings(filter?: {
   const lng = longitude ?? -70.6067;
   // Sin permiso GPS usamos radio amplio para mostrar todo el estado
   const radius = filter?.radius_km ?? (hasPermission ? 50 : 500);
+  const { data: blockedIds = [] } = useBlockedIds();
 
   return useQuery({
-    queryKey: LISTING_KEYS.nearby({ ...filter, latitude: lat, longitude: lng, radius, userId: user?.id }),
+    queryKey: LISTING_KEYS.nearby({ ...filter, latitude: lat, longitude: lng, radius_km: radius, userId: user?.id }),
     queryFn: () =>
       listingsService.getNearby({
         latitude: lat,
@@ -40,6 +42,8 @@ export function useNearbyListings(filter?: {
         listing_type: filter?.listing_type,
         search_query: filter?.search_query,
       }, user?.id),
+    // Oculta las publicaciones de las personas bloqueadas
+    select: (rows: Listing[]) => (blockedIds.length ? rows.filter((l) => !blockedIds.includes(l.user_id)) : rows),
     staleTime: 1000 * 60 * 3,
   });
 }

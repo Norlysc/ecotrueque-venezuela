@@ -26,6 +26,7 @@ import { useAuthStore } from '@stores/authStore';
 import { Avatar } from '@components/ui/Avatar';
 import { Button } from '@components/ui/Button';
 import { ChatOptionsMenu } from '@components/chat/ChatOptionsMenu';
+import { useBlockedIds } from '@hooks/useBlocks';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
 import type { Message } from '@/types/app.types';
 
@@ -57,6 +58,8 @@ export default function ChatScreen() {
   const { mutate: respondToRequest, isPending: isResponding } = useRespondToRequest();
   const { mutate: confirmMeeting, isPending: isConfirming } = useConfirmMeeting();
   const otherUser = conversation?.other_user;
+  const { data: blockedIds = [] } = useBlockedIds();
+  const isBlocked = !!otherUser?.id && blockedIds.includes(otherUser.id);
   const tradeStatus = conversation?.trade_request?.status;
   const tradeRequestId = conversation?.trade_request_id;
   const listingTitle = conversation?.listing?.title ?? null;
@@ -422,7 +425,14 @@ export default function ChatScreen() {
         onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: false })}
       />
 
-      {/* Input bar */}
+      {/* Input bar (oculta si la otra persona está bloqueada) */}
+      {isBlocked ? (
+        <View style={[styles.blockedBar, { backgroundColor: theme.surface, borderTopColor: theme.border, paddingBottom: insets.bottom + 12 }]}>
+          <Text style={[styles.blockedText, { color: theme.textSecondary }]}>
+            Bloqueaste a {otherUser?.full_name ?? 'esta persona'}. Desbloquéala desde el menú ⋮ para volver a escribir.
+          </Text>
+        </View>
+      ) : (
       <View
         style={[
           styles.inputBar,
@@ -458,12 +468,15 @@ export default function ChatScreen() {
           <Send size={18} color="#fff" strokeWidth={1.75} />
         </TouchableOpacity>
       </View>
+      )}
     </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  blockedBar: { borderTopWidth: StyleSheet.hairlineWidth, paddingHorizontal: SPACING.base, paddingTop: 12 },
+  blockedText: { fontSize: TYPOGRAPHY.size.sm, textAlign: 'center' },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
