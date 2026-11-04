@@ -32,7 +32,7 @@ Autores: Br. Rhonny Jaimes y Br. Norlys Castañeda. Tutora: Prof. Caryuly Rosale
 ```
 ┌──────────────────────┐      ┌──────────────────────────┐      ┌──────────────────────────┐
 │  App EcoTrueque       │      │  Supabase                 │      │  PostgreSQL + PostGIS     │
-│  React Native + Expo  │ ───► │  Auth · REST/RPC          │ ───► │  13 tablas + RLS          │
+│  React Native + Expo  │ ───► │  Auth · REST/RPC          │ ───► │  14 tablas + RLS          │
 │  Android · iOS · Web  │ ◄─── │  Realtime · Storage       │ ◄─── │  Funciones y triggers     │
 └──────────────────────┘      └──────────────────────────┘      └──────────────────────────┘
 ```
@@ -42,7 +42,8 @@ datos (funciones PL/pgSQL, triggers y políticas RLS), de modo que un usuario so
 modificar lo que le corresponde aunque manipule el cliente.
 
 **Tablas:** `profiles`, `listings`, `favorites`, `trade_requests`, `trades`, `conversations`,
-`messages`, `reviews`, `achievements`, `user_achievements`, `safe_spots`, `notifications`, `reports`.
+`messages`, `reviews`, `achievements`, `user_achievements`, `safe_spots`, `notifications`, `reports`,
+`user_blocks`.
 
 **Funciones principales del servidor**
 
@@ -55,6 +56,7 @@ modificar lo que le corresponde aunque manipule el cliente.
 | `update_user_reputation` | Trigger que recalcula la reputación (promedio de estrellas) al recibir una reseña |
 | `delete_own_listing` | Elimina (borrado lógico) una publicación propia |
 | `get_unread_message_count` | Cuenta los mensajes sin leer del usuario |
+| `is_blocked_between` | Indica si dos personas se bloquearon; lo usan las políticas de mensajes y propuestas |
 
 ## Cómo funciona
 
@@ -108,12 +110,20 @@ npm install
 
 | Orden | Archivo | Contenido |
 |---|---|---|
-| 1 | `supabase/all_migrations.sql` | Extensiones, tablas, índices, funciones, políticas RLS, buckets de Storage y datos base |
-| 2 | `todas_las_migraciones.txt` | Ajustes posteriores: borrado de publicaciones, favoritos, conteo de mensajes sin leer y `listing_id` en conversaciones (incluye además datos de ejemplo de Valera) |
-| 3 | `017_fix_reputation_score.txt` | Corrección del cálculo de reputación |
+| 1 | `supabase/all_migrations.sql` | Extensiones, tablas, índices, funciones, políticas RLS, buckets de Storage y datos base (equivale a 001–006) |
+| 2 | `supabase/migrations/010_soft_delete_listing.sql` | Borrado lógico de publicaciones |
+| 3 | `supabase/migrations/014_fix_favorites_is_favorited.sql` | Búsqueda cercana con datos del autor y «Me gusta» |
+| 4 | `supabase/migrations/015_unread_message_count.sql` | Conteo de mensajes sin leer |
+| 5 | `supabase/migrations/016_conversations_listing_id.sql` | Publicación asociada a cada conversación |
+| 6 | `supabase/migrations/017_fix_reputation_score.sql` | Corrección del cálculo de reputación |
+| 7 | `supabase/migrations/020_politicas_seguridad.sql` | Correo privado y políticas de notificaciones, logros y fotos del chat |
+| 8 | `supabase/migrations/021_bloqueo_usuarios.sql` | Bloqueo de usuarios |
 
-Los demás archivos `0xx_*.txt` y `supabase/migrations/007…019` cargan publicaciones de ejemplo para
-cuentas de prueba concretas; no son necesarios para que la app funcione.
+Los archivos 007–009, 011–013, 018 y 019 cargan publicaciones de ejemplo para cuentas de prueba
+concretas; no son necesarios para que la app funcione. Si la base de datos ya existe y solo faltan
+las mejoras de noviembre de 2026, basta con ejecutar `supabase/aplicar_mejoras_2026-11.sql`
+(015, 020 y 021 juntos). `supabase/historico/` guarda el consolidado que se aplicó antes; no
+hay que volver a ejecutarlo.
 
 ### 3. Variables de entorno
 
@@ -153,7 +163,7 @@ npx expo start --web
 |---|---|
 | `npm run lint` | Revisa el código con ESLint |
 | `npm run type-check` | Verifica los tipos de TypeScript |
-| `npm test` | Ejecuta Jest (configurado; todavía no hay pruebas automatizadas) |
+| `npm test` | Ejecuta las pruebas de Jest (`src/tests/`) con informe de cobertura |
 | `npx expo export --platform web` | Genera la versión web estática en `dist/` |
 
 ## Despliegue
@@ -187,15 +197,19 @@ ecotrueque/
 │   │   ├── user/[userId].tsx    # Perfil público
 │   │   └── notifications, help, about, edit-profile, reset-password
 │   ├── components/              # chat/, listing/, ui/ (componentes reutilizables)
-│   ├── services/                # Acceso a Supabase: auth, listings, trades, chat, eco, reports
+│   ├── services/                # Acceso a Supabase: auth, listings, trades, chat, eco, reports, blocks
 │   ├── hooks/                   # Hooks de React Query y ubicación
 │   ├── stores/                  # Estado global con Zustand (sesión, ubicación, tema, avisos)
 │   ├── constants/               # Tema, colores, niveles y categorías
 │   ├── lib/                     # Cliente de Supabase y React Query
+│   ├── utils/                   # Cálculos puros: EcoPoints, logros, ubicación aproximada, formatos
+│   ├── tests/                   # Pruebas automatizadas (Jest)
 │   └── types/                   # Tipos TypeScript del dominio
 ├── supabase/
 │   ├── all_migrations.sql       # Esquema completo para crear la base de datos
-│   ├── migrations/              # Migraciones por archivo y datos de ejemplo
+│   ├── migrations/              # Migraciones numeradas (001–021) y datos de ejemplo
+│   ├── aplicar_mejoras_2026-11.sql # Mejoras 015, 020 y 021 en un solo archivo
+│   ├── historico/               # Consolidado aplicado anteriormente (referencia)
 │   └── diagnostics/             # Consultas de diagnóstico del mapa y RPC
 ├── assets/                      # Íconos, logos y splash
 ├── scripts/                     # setup.sh, publish-update.sh
@@ -206,6 +220,7 @@ ecotrueque/
 
 ## Limitaciones conocidas
 
-- El texto «2,400 kg CO₂ evitados» de las pantallas de acceso e inicio está escrito fijo en el código y no proviene de datos.
-- Bloquear usuarios no está implementado; reportar sí.
-- El mapa muestra la posición guardada de cada publicación; no aplica un difuminado de la ubicación.
+- Las cifras de CO₂ y residuos son estimaciones por categoría, no mediciones certificadas.
+- No hay notificaciones push (solo avisos dentro de la app) ni panel de administración.
+- Los sitios seguros son sugerencias; el lugar del encuentro lo acuerdan las dos personas por el chat.
+- El mapa muestra una ubicación aproximada (cuadrícula de unos 550 m); la distancia exacta solo se usa en el servidor para ordenar.
