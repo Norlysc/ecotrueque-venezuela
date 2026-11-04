@@ -12,7 +12,7 @@ import {
 import { useColorScheme } from '@hooks/useColorScheme';
 import Toast from 'react-native-toast-message';
 import { router, useLocalSearchParams } from 'expo-router';
-import { Settings, ChevronRight, Edit3, Shield, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor, MapPin, Package, Repeat, Star, Leaf, ArrowLeftRight } from 'lucide-react-native';
+import { Settings, ChevronRight, Edit3, Shield, ShieldCheck, Bell, Share2, HelpCircle, Info, LogOut, Moon, Sun, Monitor, MapPin, Package, Repeat, Star, Leaf, ArrowLeftRight } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';
 import { useThemeStore } from '@stores/themeStore';
 import { useDeleteListing } from '@hooks/useListings';
@@ -131,6 +131,8 @@ export default function ProfileScreen() {
     { icon: Share2,      label: 'Compartir perfil',        onPress: handleShareProfile },
     { icon: HelpCircle,  label: 'Ayuda y soporte',         onPress: handleHelp },
     { icon: Info,        label: 'Acerca de EcoTrueque',    onPress: handleAbout },
+    // Solo cuentas con profiles.is_admin (migración 024)
+    ...(profile?.is_admin ? [{ icon: ShieldCheck, label: 'Panel de administración', onPress: () => router.push('/admin') }] : []),
   ];
 
   return (

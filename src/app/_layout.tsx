@@ -200,6 +200,10 @@ export default function RootLayout() {
               name="notifications"
               options={{ presentation: 'card', animation: 'slide_from_right' }}
             />
+            <Stack.Screen
+              name="admin/index"
+              options={{ presentation: 'card', animation: 'slide_from_right' }}
+            />
           </Stack>
           <StatusBar style="auto" />
           <Toast config={toastConfig} />

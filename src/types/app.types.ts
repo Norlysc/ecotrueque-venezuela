@@ -38,6 +38,8 @@ export interface UserProfile {
   co2_saved_kg: number;
   waste_reduced_kg: number;
   push_token: string | null;
+  /** Rol de administrador (migración 024); solo se asigna desde Supabase */
+  is_admin?: boolean;
   created_at: string;
   updated_at: string;
 }
