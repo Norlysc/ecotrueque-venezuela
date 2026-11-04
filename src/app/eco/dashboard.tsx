@@ -7,7 +7,7 @@ import {
 } from 'react-native';
 import { useColorScheme } from '@hooks/useColorScheme';
 import { router } from 'expo-router';
-import { ArrowLeft, Check, Sprout, Repeat, Camera, Star, Map as MapIcon, Recycle, Leaf, Earth, PiggyBank, Handshake, TreePine, Car, Droplets, Heart, ChartColumn, Trophy } from 'lucide-react-native';
+import { ArrowLeft, Check, Sprout, Repeat, Star, Recycle, Leaf, Earth, Wind, Users, PiggyBank, Handshake, TreePine, Car, Droplets, Heart, ChartColumn, Trophy } from 'lucide-react-native';
 import { IconTile } from '@components/ui/IconTile';
 import { BottomNav } from '@components/ui/BottomNav';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,6 +17,7 @@ import { useEcoMetrics } from '@hooks/useTrades';
 import { useTotalFavorites } from '@hooks/useListings';
 import { RingChart, DonutChart, AnimatedBar } from '@components/ui/Charts';
 import { ECO_LEVELS, getEcoLevel, COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS, SHADOWS } from '@constants/theme';
+import { achievementProgress } from '@utils/eco';
 import type { EcoLevel } from '@/types/app.types';
 
 const LEVEL_ORDER: EcoLevel[] = ['seedling', 'sprout', 'guardian', 'protector', 'hero', 'legend'];
@@ -47,16 +48,28 @@ export default function EcoDashboardScreen() {
   const kmWithoutCar = Math.floor(co2Saved * 6);
   const litersWaterSaved = Math.floor(wasteReduced * 200);
 
-  const ACHIEVEMENTS = [
-    { icon: Sprout, title: 'Primera semilla', desc: 'Completa tu primer trueque', pts: 50, progress: Math.min(totalTrades / 1, 1), unlocked: totalTrades >= 1 },
-    { icon: Repeat, title: 'Cinco trueques', desc: 'Realiza 5 trueques ecológicos', pts: 100, progress: Math.min(totalTrades / 5, 1), unlocked: totalTrades >= 5 },
-    { icon: Camera, title: 'Fotógrafo', desc: 'Publica con 5 fotos', pts: 30, progress: 0, unlocked: false },
-    { icon: Star, title: 'Calificación perfecta', desc: 'Recibe 5 estrellas', pts: 80, progress: 0, unlocked: false },
-    { icon: MapIcon, title: 'Explorador', desc: 'Realiza trueques en 3 estados', pts: 120, progress: 0, unlocked: false },
-    { icon: Recycle, title: 'Reciclador', desc: 'Ahorra 10 kg de residuos', pts: 150, progress: Math.min(wasteReduced / 10, 1), unlocked: wasteReduced >= 10 },
-    { icon: Leaf, title: 'Guardián verde', desc: 'Alcanza nivel Guardián', pts: 200, progress: Math.min(ecoPoints / 300, 1), unlocked: ecoPoints >= 300 },
-    { icon: Earth, title: 'Leyenda verde', desc: 'Alcanza 3000 EcoPoints', pts: 500, progress: Math.min(ecoPoints / 3000, 1), unlocked: ecoPoints >= 3000 },
-  ];
+  // Logros del catálogo (tabla achievements); los desbloqueados vienen de user_achievements
+  const ICONO_LOGRO: Record<string, typeof Sprout> = {
+    trades_count: Repeat, eco_points: Leaf, co2_saved_kg: Wind, waste_reduced_kg: Recycle,
+    reviews_given: Star, reputation_stars: Star, reviews_received: Users,
+  };
+  const unlockedIds = new Set((metrics?.achievements ?? []).map((ua) => ua.achievement_id));
+  const stats = {
+    total_trades: totalTrades, eco_points: ecoPoints, co2_saved_kg: Number(co2Saved) || 0,
+    waste_reduced_kg: Number(wasteReduced) || 0, reviews_given: 0, reviews_received: 0,
+    reputation_score: Number(profile?.reputation_score) || 0,
+  };
+  const ACHIEVEMENTS = (metrics?.achievement_catalog ?? []).map((a) => {
+    const unlocked = unlockedIds.has(a.id);
+    return {
+      icon: a.key === 'first_trade' ? Sprout : a.key === 'legend_level' ? Earth : ICONO_LOGRO[a.requirement_type] ?? Star,
+      title: a.title,
+      desc: a.description,
+      pts: a.points_reward,
+      unlocked,
+      progress: unlocked ? 1 : Math.min(achievementProgress(a.requirement_type, stats) / a.requirement_value, 1),
+    };
+  });
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>

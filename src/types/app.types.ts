@@ -196,6 +196,7 @@ export interface EcoMetrics {
   km_without_car: number;
   liters_water_saved: number;
   achievements: UserAchievement[];
+  achievement_catalog: Achievement[];
   recent_trades: Trade[];
 }
 

@@ -24,6 +24,8 @@ import { UniversityBadge } from '@components/ui/UniversityBadge';
 import { BrandBackground } from '@components/ui/BrandBackground';
 import { COLORS, THEME, TYPOGRAPHY, SPACING, RADIUS } from '@constants/theme';
 import { useAuth } from '@hooks/useAuth';
+import { useCommunityImpact } from '@hooks/useTrades';
+import { formatKg } from '@utils/format';
 
 const loginSchema = z.object({
   email: z.string().email('Ingresa un email válido'),
@@ -39,6 +41,7 @@ export default function LoginScreen() {
   const insets = useSafeAreaInsets();
   const { signIn, signInWithMagicLink, isLoading } = useAuth();
   const [magicLinkSent, setMagicLinkSent] = useState(false);
+  const { data: community } = useCommunityImpact();
 
   const { control, handleSubmit, getValues, formState: { errors } } = useForm<LoginForm>({
     resolver: zodResolver(loginSchema),
@@ -134,7 +137,9 @@ export default function LoginScreen() {
             Comunidad EcoTrueque
           </Text>
           <Text style={[styles.ecoText, { color: COLORS.primary }]}>
-            2,400 kg de CO₂ evitados juntos
+            {community
+              ? `${formatKg(community.total_co2)} de CO₂ estimados evitados juntos`
+              : 'Cada trueque suma al impacto de la comunidad'}
           </Text>
         </View>
       </View>

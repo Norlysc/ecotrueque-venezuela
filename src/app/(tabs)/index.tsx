@@ -23,6 +23,8 @@ import { useLocationStore } from '@stores/locationStore';
 import { useNotificationStore } from '@stores/notificationStore';
 import { useNearbyListings } from '@hooks/useListings';
 import { useLocation } from '@hooks/useLocation';
+import { useCommunityImpact } from '@hooks/useTrades';
+import { formatKg } from '@utils/format';
 import { Avatar } from '@components/ui/Avatar';
 import { ListingCard } from '@components/listing/ListingCard';
 import { ListingCardSkeleton } from '@components/ui/Skeleton';
@@ -45,6 +47,7 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const { width: windowWidth } = useWindowDimensions();
   const { profile } = useAuthStore();
+  const { data: community } = useCommunityImpact();
 
   // Columnas de la cuadrícula según el ancho disponible (2 en móvil, hasta 4 en escritorio)
   const contentWidth = Platform.OS === 'web' ? Math.min(windowWidth, WEB_MAX_WIDTH) : windowWidth;
@@ -185,7 +188,9 @@ export default function HomeScreen() {
             <IconTile icon={Earth} size={44} variant="onDark" rounded />
             <View>
               <Text style={styles.ecoBannerTitle}>Impacto de tu comunidad</Text>
-              <Text style={styles.ecoBannerStat}>2,400 kg CO₂ evitados este mes</Text>
+              <Text style={styles.ecoBannerStat}>
+                {community ? `${formatKg(community.total_co2)} CO₂ estimados evitados` : 'Mira el impacto de los trueques'}
+              </Text>
             </View>
           </View>
           <ChevronRight size={18} color="rgba(255,255,255,0.8)" strokeWidth={1.75} />

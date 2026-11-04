@@ -111,6 +111,7 @@ export function useConfirmMeeting() {
       qc.invalidateQueries({ queryKey: ['chat'] });
       // Refresh profile stats from DB (complete_trade may have updated them)
       if (user?.id) {
+        await ecoService.checkAndUnlockAchievements(user.id).catch(() => null);
         const { authService } = await import('@services/auth.service');
         const freshProfile = await authService.getProfile(user.id);
         if (freshProfile) setProfile(freshProfile);
@@ -162,13 +163,27 @@ export function useCreateReview() {
 }
 
 export function useEcoMetrics() {
-  const { user } = useAuthStore();
+  const { user, profile, setProfile } = useAuthStore();
   const uid = user?.id ?? '';
   return useQuery({
     queryKey: TRADE_KEYS.metrics(uid),
-    queryFn: () => ecoService.getMetrics(uid),
+    queryFn: async () => {
+      // Registra los logros alcanzados antes de leer las métricas
+      const points = await ecoService.checkAndUnlockAchievements(uid).catch(() => null);
+      if (points !== null && profile) setProfile({ ...profile, eco_points: points });
+      return ecoService.getMetrics(uid);
+    },
     enabled: !!uid,
     staleTime: 1000 * 60 * 5,
+  });
+}
+
+// Impacto acumulado de toda la comunidad (suma de los perfiles); visible también sin sesión
+export function useCommunityImpact() {
+  return useQuery({
+    queryKey: ['eco', 'community'] as const,
+    queryFn: () => ecoService.getGlobalStats(),
+    staleTime: 1000 * 60 * 10,
   });
 }
 
