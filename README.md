@@ -1,113 +1,211 @@
-# 🌿 EcoTrueque Venezuela
+# EcoTrueque Venezuela
 
-> Aplicación móvil de trueque ecológico para Venezuela.
-> Intercambia bienes y servicios sin dinero. Cuida el planeta.
+Aplicación móvil y web para el trueque de bienes y servicios en el estado Trujillo, Venezuela.
+Permite publicar ofertas, encontrar intercambios cercanos mediante geolocalización, proponer
+trueques, conversar en tiempo real, valorar a otros usuarios y consultar indicadores de consumo
+responsable.
 
-## Stack tecnológico
+Trabajo de grado de Ingeniería en Computación — Universidad Valle del Momboy.
+Autores: Br. Rhonny Jaimes y Br. Norlys Castañeda. Tutora: Prof. Caryuly Rosales.
 
-- **Frontend**: React Native + Expo + TypeScript
-- **Backend**: Supabase (PostgreSQL + Auth + Realtime + Storage)
-- **Mapas**: Google Maps
-- **Notificaciones**: Expo Push Notifications
-- **Estado**: Zustand + React Query
-- **Formularios**: React Hook Form + Zod
+**Versión web:** https://ecotrueque-venezuela-ten.vercel.app/
 
-## Inicio rápido
+---
 
-### 1. Prerrequisitos
-- Node.js 18+
-- Expo CLI: `npm install -g expo-cli eas-cli`
-- Cuenta Supabase (supabase.com)
-- Cuenta Expo (expo.dev)
+## Tecnologías
 
-### 2. Instalar dependencias
+| Capa | Herramientas |
+|---|---|
+| Lenguaje | TypeScript 5.6, SQL y PL/pgSQL |
+| Interfaz | React 19.1, React Native 0.81, Expo SDK 54 |
+| Navegación | Expo Router 6 (rutas por archivos), React Native Web |
+| Datos y estado | TanStack Query 5 (caché de consultas), Zustand 4 (estado global) |
+| Formularios | React Hook Form, Zod |
+| Mapas | Leaflet + OpenStreetMap en la web; `react-native-maps` en Android/iOS |
+| Backend | Supabase: Auth, API REST/RPC, Realtime y Storage |
+| Base de datos | PostgreSQL + PostGIS, `pg_trgm`, `unaccent` |
+| Seguridad | Políticas Row Level Security (RLS) en todas las tablas |
+| Despliegue | Vercel (web), EAS Build (Android/iOS) |
+
+## Arquitectura
+
+```
+┌──────────────────────┐      ┌──────────────────────────┐      ┌──────────────────────────┐
+│  App EcoTrueque       │      │  Supabase                 │      │  PostgreSQL + PostGIS     │
+│  React Native + Expo  │ ───► │  Auth · REST/RPC          │ ───► │  13 tablas + RLS          │
+│  Android · iOS · Web  │ ◄─── │  Realtime · Storage       │ ◄─── │  Funciones y triggers     │
+└──────────────────────┘      └──────────────────────────┘      └──────────────────────────┘
+```
+
+La app es un cliente que habla directamente con Supabase. La lógica sensible vive en la base de
+datos (funciones PL/pgSQL, triggers y políticas RLS), de modo que un usuario solo puede leer o
+modificar lo que le corresponde aunque manipule el cliente.
+
+**Tablas:** `profiles`, `listings`, `favorites`, `trade_requests`, `trades`, `conversations`,
+`messages`, `reviews`, `achievements`, `user_achievements`, `safe_spots`, `notifications`, `reports`.
+
+**Funciones principales del servidor**
+
+| Función | Qué hace |
+|---|---|
+| `get_nearby_listings` | Devuelve publicaciones dentro de un radio (`ST_DWithin`), ordenadas por distancia, con filtros de categoría, tipo y texto |
+| `get_trade_matches` | Sugiere publicaciones compatibles con una puntuación por reglas (misma categoría, lo que se busca, tipo y estado) |
+| `complete_trade` | Cierra un trueque, marca ambas publicaciones como intercambiadas y suma CO₂, residuos y EcoPoints a los dos usuarios |
+| `update_eco_level` | Recalcula el nivel según los EcoPoints |
+| `update_user_reputation` | Trigger que recalcula la reputación (promedio de estrellas) al recibir una reseña |
+| `delete_own_listing` | Elimina (borrado lógico) una publicación propia |
+| `get_unread_message_count` | Cuenta los mensajes sin leer del usuario |
+
+## Cómo funciona
+
+1. **Acceso.** Registro e inicio de sesión con correo y contraseña o enlace mágico (Supabase Auth). La sesión se conserva en el dispositivo.
+2. **Publicar.** Asistente de 4 pasos: tipo (bien o servicio), una de 15 categorías, título, qué se busca a cambio y fotos (Supabase Storage).
+3. **Explorar.** Lista y mapa de ofertas cercanas, con búsqueda por texto, filtros por categoría y radio de 5, 10, 20 o 50 km. Si el GPS está lejos de Trujillo, la exploración parte de Valera.
+4. **Proponer.** Desde una publicación ajena se elige qué ofrecer a cambio y se envía un mensaje. El dueño acepta o rechaza la solicitud.
+5. **Conversar.** Cada propuesta abre un chat en tiempo real (Supabase Realtime) con envío de fotos. Las fotos del chat se guardan en un bucket privado y se muestran con enlaces firmados temporales. El menú del chat permite ver el perfil, ver la publicación o reportar al usuario.
+6. **Cerrar y valorar.** Ambas partes confirman el encuentro; entonces `complete_trade` cierra el trueque y cada uno puede dejar una reseña de 1 a 5 estrellas.
+7. **Impacto.** Panel con nivel, EcoPoints, metas, analogías y logros (ver la sección siguiente).
+
+### Indicadores y EcoPoints
+
+Cada categoría tiene factores promedio de CO₂ y residuos (`src/services/listings.service.ts`).
+Al completarse un trueque se suman los factores de los dos artículos y se calculan los EcoPoints
+para cada usuario:
+
+```
+EcoPoints = (CO₂ estimado × 2) + (residuos estimados × 3) + 20
+```
+
+Niveles: Semilla (0), Brote (100), Guardián (300), Protector (700), Héroe Eco (1.500) y Leyenda Verde (3.000).
+
+> Los valores de CO₂, residuos y sus analogías (árboles, kilómetros, botellas, litros de agua) son
+> **estimaciones orientativas configuradas por categoría**. La app no mide físicamente los
+> artículos ni realiza análisis de ciclo de vida. EcoPoints es un mecanismo de gamificación, no una
+> unidad de impacto ambiental.
+
+## Requisitos
+
+- **Node.js 20 LTS o superior** (probado con Node 22) y npm.
+- **Git**.
+- Una cuenta gratuita en **Supabase** (https://supabase.com).
+- Para probar en el teléfono: la app **Expo Go** (Android/iOS) o un emulador de Android / simulador de iOS.
+- Opcional: una clave de **Google Maps** para el mapa en Android y una cuenta de **Expo** para compilar con EAS.
+
+## Instalación
+
+### 1. Descargar el código
+
 ```bash
+git clone https://github.com/Norlysc/ecotrueque-venezuela.git
+cd ecotrueque-venezuela
 npm install
 ```
 
-### 3. Configurar variables de entorno
+### 2. Crear la base de datos en Supabase
+
+1. Crea un proyecto en Supabase y copia la **Project URL** y la **anon key** (Settings → API).
+2. En **SQL Editor**, ejecuta estos archivos en este orden:
+
+| Orden | Archivo | Contenido |
+|---|---|---|
+| 1 | `supabase/all_migrations.sql` | Extensiones, tablas, índices, funciones, políticas RLS, buckets de Storage y datos base |
+| 2 | `todas_las_migraciones.txt` | Ajustes posteriores: borrado de publicaciones, favoritos, conteo de mensajes sin leer y `listing_id` en conversaciones (incluye además datos de ejemplo de Valera) |
+| 3 | `017_fix_reputation_score.txt` | Corrección del cálculo de reputación |
+
+Los demás archivos `0xx_*.txt` y `supabase/migrations/007…019` cargan publicaciones de ejemplo para
+cuentas de prueba concretas; no son necesarios para que la app funcione.
+
+### 3. Variables de entorno
+
 ```bash
 cp .env.example .env
-# Editar .env con tus credenciales
 ```
 
-### 4. Configurar Supabase
-```bash
-# Opción A: Supabase CLI
-npx supabase login
-npx supabase db push
+Edita `.env`:
 
-# Opción B: Dashboard manual
-# Ejecutar archivos en supabase/migrations/ en orden
+```env
+EXPO_PUBLIC_SUPABASE_URL=https://TU_PROYECTO.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=tu_anon_key
+EXPO_PUBLIC_GOOGLE_MAPS_KEY=          # opcional: mapa nativo en Android
 ```
 
-### 5. Iniciar la app
+## Ejecutar
+
 ```bash
 npx expo start
 ```
+
+En la terminal aparece un código QR y un menú:
+
+- Escanea el QR con **Expo Go** para abrirla en tu teléfono (misma red Wi-Fi).
+- Pulsa **`w`** para abrir la versión web en el navegador.
+- Pulsa **`a`** para el emulador de Android o **`i`** para el simulador de iOS (solo macOS).
+
+Atajo directo a la web:
+
+```bash
+npx expo start --web
+```
+
+### Otros comandos
+
+| Comando | Para qué |
+|---|---|
+| `npm run lint` | Revisa el código con ESLint |
+| `npm run type-check` | Verifica los tipos de TypeScript |
+| `npm test` | Ejecuta Jest (configurado; todavía no hay pruebas automatizadas) |
+| `npx expo export --platform web` | Genera la versión web estática en `dist/` |
+
+## Despliegue
+
+- **Web (Vercel):** `vercel.json` ya define el build (`npx expo export --platform web`) y la carpeta `dist`. Basta con conectar el repositorio a Vercel y configurar las mismas variables `EXPO_PUBLIC_*`. Cada push a `main` publica una nueva versión.
+- **Android / iOS (EAS):**
+
+```bash
+npm install -g eas-cli
+eas login
+eas build --platform android   # o ios
+```
+
+Para enviar actualizaciones sin pasar por las tiendas: `scripts/publish-update.sh`.
 
 ## Estructura del proyecto
 
 ```
 ecotrueque/
 ├── src/
-│   ├── app/              # Expo Router (pantallas)
-│   │   ├── auth/         # Login, registro, recuperación
-│   │   ├── tabs/         # Tabs principales
-│   │   ├── listing/      # Detalle y creación de listings
-│   │   ├── trade/        # Solicitudes de trueque
-│   │   ├── chat/         # Conversaciones
-│   │   ├── profile/      # Perfil y configuración
-│   │   ├── eco/          # Dashboard ecológico
-│   │   └── admin/        # Panel administrativo
-│   ├── components/       # Componentes reutilizables
-│   ├── hooks/            # Custom hooks
-│   ├── stores/           # Estado global (Zustand)
-│   ├── services/         # Lógica de negocio
-│   ├── types/            # Tipos TypeScript
-│   ├── constants/        # Tema, categorías, etc.
-│   ├── utils/            # Utilidades
-│   └── lib/              # Configuración Supabase, etc.
+│   ├── app/                     # Pantallas (Expo Router: cada archivo es una ruta)
+│   │   ├── (auth)/              # Inicio de sesión, registro, recuperar contraseña
+│   │   ├── (tabs)/              # Inicio, Mapa, Publicar, Chat, Perfil
+│   │   ├── listing/[id].tsx     # Detalle de una publicación
+│   │   ├── edit-listing/[id].tsx
+│   │   ├── trade/request.tsx    # Proponer un trueque
+│   │   ├── trade-requests.tsx   # Solicitudes recibidas
+│   │   ├── chat/[conversationId].tsx
+│   │   ├── review-modal.tsx     # Reseña con estrellas
+│   │   ├── eco/dashboard.tsx    # Panel de impacto
+│   │   ├── user/[userId].tsx    # Perfil público
+│   │   └── notifications, help, about, edit-profile, reset-password
+│   ├── components/              # chat/, listing/, ui/ (componentes reutilizables)
+│   ├── services/                # Acceso a Supabase: auth, listings, trades, chat, eco, reports
+│   ├── hooks/                   # Hooks de React Query y ubicación
+│   ├── stores/                  # Estado global con Zustand (sesión, ubicación, tema, avisos)
+│   ├── constants/               # Tema, colores, niveles y categorías
+│   ├── lib/                     # Cliente de Supabase y React Query
+│   └── types/                   # Tipos TypeScript del dominio
 ├── supabase/
-│   ├── migrations/       # Esquema SQL
-│   └── functions/        # Edge Functions
-└── assets/               # Imágenes, íconos
+│   ├── all_migrations.sql       # Esquema completo para crear la base de datos
+│   ├── migrations/              # Migraciones por archivo y datos de ejemplo
+│   └── diagnostics/             # Consultas de diagnóstico del mapa y RPC
+├── assets/                      # Íconos, logos y splash
+├── scripts/                     # setup.sh, publish-update.sh
+├── app.config.ts                # Configuración de Expo
+├── eas.json                     # Perfiles de compilación EAS
+└── vercel.json                  # Despliegue web
 ```
 
-## Características
+## Limitaciones conocidas
 
-- 🗺️ Mapa interactivo estilo Airbnb
-- 🤖 Motor de matching inteligente (IA)
-- 💬 Chat en tiempo real
-- 🌿 Dashboard ecológico gamificado
-- 🏆 16 logros desbloqueables
-- 6 niveles eco (Semilla → Leyenda Verde)
-- 🛡️ Sitios seguros para encuentros
-- 🌙 Modo oscuro nativo
-- 📱 Android + iOS
-
-## Variables de entorno
-
-| Variable | Descripción |
-|----------|-------------|
-| `EXPO_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
-| `EXPO_PUBLIC_SUPABASE_ANON_KEY` | Clave anónima Supabase |
-| `EXPO_PUBLIC_GOOGLE_MAPS_KEY` | API Key de Google Maps |
-| `EAS_PROJECT_ID` | ID del proyecto en EAS |
-
-## Deploy
-
-```bash
-# Android (APK de prueba)
-eas build --platform android --profile preview
-
-# Android (Play Store)
-eas build --platform android --profile production
-
-# iOS (TestFlight)
-eas build --platform ios --profile production
-```
-
-## Licencia
-
-MIT © EcoTrueque Venezuela 2024
+- El texto «2,400 kg CO₂ evitados» de las pantallas de acceso e inicio está escrito fijo en el código y no proviene de datos.
+- Bloquear usuarios no está implementado; reportar sí.
+- El mapa muestra la posición guardada de cada publicación; no aplica un difuminado de la ubicación.
