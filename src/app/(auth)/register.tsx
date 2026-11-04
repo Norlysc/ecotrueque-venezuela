@@ -455,8 +455,9 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.base,
   },
   label: { fontSize: TYPOGRAPHY.size.sm, fontWeight: TYPOGRAPHY.weight.medium, marginBottom: SPACING.xs },
-  statesScroll: { marginBottom: SPACING.base },
-  statesContent: { gap: SPACING.xs, paddingRight: SPACING.md },
+  // En la web el ScrollView horizontal estiraba los chips a todo el alto disponible
+  statesScroll: { marginBottom: SPACING.base, flexGrow: 0 },
+  statesContent: { gap: SPACING.xs, paddingRight: SPACING.md, alignItems: 'center' },
   stateChip: {
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.xs,
