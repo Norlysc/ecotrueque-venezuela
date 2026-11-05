@@ -99,7 +99,7 @@ Los valores de CO₂, residuos y sus analogías (árboles, kilómetros, botellas
 ### 1. Descargar el código
 
 ```bash
-git clone [https://github.com/Norlysc/ecotrueque-venezuela.git](https://github.com/Norlysc/ecotrueque-venezuela.git)
+git clone https://github.com/Norlysc/ecotrueque-venezuela.git
 cd ecotrueque-venezuela
 npm install
 ```
