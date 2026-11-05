@@ -1,35 +1,31 @@
 # EcoTrueque Venezuela
 
-Aplicación móvil y web para el trueque de bienes y servicios en el estado Trujillo, Venezuela.
-Permite publicar ofertas, encontrar intercambios cercanos mediante geolocalización, proponer
-trueques, conversar en tiempo real, valorar a otros usuarios y consultar indicadores de consumo
-responsable.
+Aplicación móvil y web para el trueque de bienes y servicios en el estado Trujillo, Venezuela. Permite publicar ofertas, encontrar intercambios cercanos mediante geolocalización, proponer trueques, conversar en tiempo real, valorar a otros usuarios y consultar indicadores de consumo responsable.
 
-Trabajo de grado de Ingeniería en Computación — Universidad Valle del Momboy.
-Autores: Br. Rhonny Jaimes y Br. Norlys Castañeda. Tutora: Prof. Caryuly Rosales.
+Trabajo de grado de Ingeniería en Computación — Universidad Valle del Momboy. Autores: Br. Rhonny Jaimes y Br. Norlys Castañeda. Tutora: Prof. Caryuly Rosales.
 
 **Versión web:** https://ecotrueque-venezuela-ten.vercel.app/
 
----
+![EcoTrueque Venezuela - Intercambia, Recicla, Cuida el planeta](./assets/0003.jpeg)
 
 ## Tecnologías
 
 | Capa | Herramientas |
-|---|---|
-| Lenguaje | TypeScript 5.6, SQL y PL/pgSQL |
-| Interfaz | React 19.1, React Native 0.81, Expo SDK 54 |
-| Navegación | Expo Router 6 (rutas por archivos), React Native Web |
-| Datos y estado | TanStack Query 5 (caché de consultas), Zustand 4 (estado global) |
-| Formularios | React Hook Form, Zod |
-| Mapas | Leaflet + OpenStreetMap en la web; `react-native-maps` en Android/iOS |
-| Backend | Supabase: Auth, API REST/RPC, Realtime y Storage |
-| Base de datos | PostgreSQL + PostGIS, `pg_trgm`, `unaccent` |
-| Seguridad | Políticas Row Level Security (RLS) en todas las tablas |
-| Despliegue | Vercel (web), EAS Build (Android/iOS) |
+| :--- | :--- |
+| **Lenguaje** | TypeScript 5.6, SQL y PL/pgSQL |
+| **Interfaz** | React 19.1, React Native 0.81, Expo SDK 54 |
+| **Navegación** | Expo Router 6 (rutas por archivos), React Native Web |
+| **Datos y estado** | TanStack Query 5 (caché de consultas), Zustand 4 (estado global) |
+| **Formularios** | React Hook Form, Zod |
+| **Mapas** | Leaflet + OpenStreetMap en la web; react-native-maps en Android/iOS |
+| **Backend** | Supabase: Auth, API REST/RPC, Realtime y Storage |
+| **Base de datos** | PostgreSQL + PostGIS, pg_trgm, unaccent |
+| **Seguridad** | Políticas Row Level Security (RLS) en todas las tablas |
+| **Despliegue** | Vercel (web), EAS Build (Android/iOS) |
 
 ## Arquitectura
 
-```
+```text
 ┌──────────────────────┐      ┌──────────────────────────┐      ┌──────────────────────────┐
 │  App EcoTrueque       │      │  Supabase                 │      │  PostgreSQL + PostGIS     │
 │  React Native + Expo  │ ───► │  Auth · REST/RPC          │ ───► │  14 tablas + RLS          │
@@ -37,18 +33,14 @@ Autores: Br. Rhonny Jaimes y Br. Norlys Castañeda. Tutora: Prof. Caryuly Rosale
 └──────────────────────┘      └──────────────────────────┘      └──────────────────────────┘
 ```
 
-La app es un cliente que habla directamente con Supabase. La lógica sensible vive en la base de
-datos (funciones PL/pgSQL, triggers y políticas RLS), de modo que un usuario solo puede leer o
-modificar lo que le corresponde aunque manipule el cliente.
+La app es un cliente que habla directamente con Supabase. La lógica sensible vive en la base de datos (funciones PL/pgSQL, triggers y políticas RLS), de modo que un usuario solo puede leer o modificar lo que le corresponde aunque manipule el cliente.
 
-**Tablas:** `profiles`, `listings`, `favorites`, `trade_requests`, `trades`, `conversations`,
-`messages`, `reviews`, `achievements`, `user_achievements`, `safe_spots`, `notifications`, `reports`,
-`user_blocks`.
+**Tablas:** `profiles`, `listings`, `favorites`, `trade_requests`, `trades`, `conversations`, `messages`, `reviews`, `achievements`, `user_achievements`, `safe_spots`, `notifications`, `reports`, `user_blocks`.
 
-**Funciones principales del servidor**
+### Funciones principales del servidor
 
 | Función | Qué hace |
-|---|---|
+| :--- | :--- |
 | `get_nearby_listings` | Devuelve publicaciones dentro de un radio (`ST_DWithin`), ordenadas por distancia, con filtros de categoría, tipo y texto |
 | `get_trade_matches` | Sugiere publicaciones compatibles con una puntuación por reglas (misma categoría, lo que se busca, tipo y estado) |
 | `complete_trade` | Cierra un trueque, marca ambas publicaciones como intercambiadas y suma CO₂, residuos y EcoPoints a los dos usuarios |
@@ -69,48 +61,54 @@ modificar lo que le corresponde aunque manipule el cliente.
 6. **Cerrar y valorar.** Ambas partes confirman el encuentro; entonces `complete_trade` cierra el trueque y cada uno puede dejar una reseña de 1 a 5 estrellas.
 7. **Impacto.** Panel con nivel, EcoPoints, metas, analogías y logros (ver la sección siguiente).
 
-### Indicadores y EcoPoints
+### Vista previa de la plataforma
 
-Cada categoría tiene factores promedio de CO₂ y residuos (`src/services/listings.service.ts`).
-Al completarse un trueque se suman los factores de los dos artículos y se calculan los EcoPoints
-para cada usuario:
+**Del registro al trueque, en pocos pasos (Interfaz móvil React Native + Expo):**
+![Del registro al trueque en pocos pasos](./assets/0004.jpeg)
 
-```
+**Publicar, medir el impacto y recibir ayuda (Gamificación con EcoPoints, niveles ecológicos y centro de ayuda):**
+![Publicar, medir el impacto y recibir ayuda](./assets/0001.jpeg)
+
+**También en la web (Despliegue en Vercel con mapa interactivo Leaflet + OpenStreetMap):**
+![Versión web en Vercel](./assets/00002.jpeg)
+
+## Indicadores y EcoPoints
+
+Cada categoría tiene factores promedio de CO₂ y residuos (`src/services/listings.service.ts`). Al completarse un trueque se suman los factores de los dos artículos y se calculan los EcoPoints para cada usuario:
+
+```text
 EcoPoints = (CO₂ estimado × 2) + (residuos estimados × 3) + 20
 ```
 
-Niveles: Semilla (0), Brote (100), Guardián (300), Protector (700), Héroe Eco (1.500) y Leyenda Verde (3.000).
+**Niveles:** Semilla (0), Brote (100), Guardián (300), Protector (700), Héroe Eco (1.500) y Leyenda Verde (3.000).
 
-> Los valores de CO₂, residuos y sus analogías (árboles, kilómetros, botellas, litros de agua) son
-> **estimaciones orientativas configuradas por categoría**. La app no mide físicamente los
-> artículos ni realiza análisis de ciclo de vida. EcoPoints es un mecanismo de gamificación, no una
-> unidad de impacto ambiental.
+Los valores de CO₂, residuos y sus analogías (árboles, kilómetros, botellas, litros de agua) son estimaciones orientativas configuradas por categoría. La app no mide físicamente los artículos ni realiza análisis de ciclo de vida. EcoPoints es un mecanismo de gamificación, no una unidad de impacto ambiental.
 
 ## Requisitos
 
-- **Node.js 20 LTS o superior** (probado con Node 22) y npm.
-- **Git**.
-- Una cuenta gratuita en **Supabase** (https://supabase.com).
-- Para probar en el teléfono: la app **Expo Go** (Android/iOS) o un emulador de Android / simulador de iOS.
-- Opcional: una clave de **Google Maps** para el mapa en Android y una cuenta de **Expo** para compilar con EAS.
+- Node.js 20 LTS o superior (probado con Node 22) y npm.
+- Git.
+- Una cuenta gratuita en Supabase (https://supabase.com).
+- Para probar en el teléfono: la app Expo Go (Android/iOS) o un emulador de Android / simulador de iOS.
+- Opcional: una clave de Google Maps para el mapa en Android y una cuenta de Expo para compilar con EAS.
 
 ## Instalación
 
 ### 1. Descargar el código
 
 ```bash
-git clone https://github.com/Norlysc/ecotrueque-venezuela.git
+git clone [https://github.com/Norlysc/ecotrueque-venezuela.git](https://github.com/Norlysc/ecotrueque-venezuela.git)
 cd ecotrueque-venezuela
 npm install
 ```
 
 ### 2. Crear la base de datos en Supabase
 
-1. Crea un proyecto en Supabase y copia la **Project URL** y la **anon key** (Settings → API).
+1. Crea un proyecto en Supabase y copia la **Project URL** y la **anon key** (*Settings → API*).
 2. En **SQL Editor**, ejecuta estos archivos en este orden:
 
 | Orden | Archivo | Contenido |
-|---|---|---|
+| :---: | :--- | :--- |
 | 1 | `supabase/all_migrations.sql` | Extensiones, tablas, índices, funciones, políticas RLS, buckets de Storage y datos base (equivale a 001–006) |
 | 2 | `supabase/migrations/010_soft_delete_listing.sql` | Borrado lógico de publicaciones |
 | 3 | `supabase/migrations/014_fix_favorites_is_favorited.sql` | Búsqueda cercana con datos del autor y «Me gusta» |
@@ -122,11 +120,7 @@ npm install
 | 9 | `supabase/migrations/022_sitios_seguros_valera.sql` | Sitios seguros sugeridos en Valera (datos de OpenStreetMap) |
 | 10 | `supabase/migrations/024_panel_administracion.sql` | Rol de administrador y panel de reportes |
 
-Los archivos 007–009, 011–013, 018 y 019 cargan publicaciones de ejemplo para cuentas de prueba
-concretas; no son necesarios para que la app funcione. Si la base de datos ya existe y solo faltan
-las mejoras de noviembre de 2026, basta con ejecutar `supabase/aplicar_mejoras_2026-11.sql`
-(015, 020, 021 y 022 juntos). `supabase/historico/` guarda el consolidado que se aplicó antes; no
-hay que volver a ejecutarlo.
+Los archivos `007–009`, `011–013`, `018` y `019` cargan publicaciones de ejemplo para cuentas de prueba concretas; no son necesarios para que la app funcione. Si la base de datos ya existe y solo faltan las mejoras de noviembre de 2026, basta con ejecutar `supabase/aplicar_mejoras_2026-11.sql` (`015`, `020`, `021` y `022` juntos). `supabase/historico/` guarda el consolidado que se aplicó antes; no hay que volver a ejecutarlo.
 
 ### 3. Variables de entorno
 
@@ -149,10 +143,9 @@ npx expo start
 ```
 
 En la terminal aparece un código QR y un menú:
-
 - Escanea el QR con **Expo Go** para abrirla en tu teléfono (misma red Wi-Fi).
-- Pulsa **`w`** para abrir la versión web en el navegador.
-- Pulsa **`a`** para el emulador de Android o **`i`** para el simulador de iOS (solo macOS).
+- Pulsa `w` para abrir la versión web en el navegador.
+- Pulsa `a` para el emulador de Android o `i` para el simulador de iOS (solo macOS).
 
 Atajo directo a la web:
 
@@ -163,7 +156,7 @@ npx expo start --web
 ### Otros comandos
 
 | Comando | Para qué |
-|---|---|
+| :--- | :--- |
 | `npm run lint` | Revisa el código con ESLint |
 | `npm run type-check` | Verifica los tipos de TypeScript |
 | `npm test` | Ejecuta las pruebas de Jest (`src/tests/`) con informe de cobertura |
@@ -184,7 +177,7 @@ Para enviar actualizaciones sin pasar por las tiendas: `scripts/publish-update.s
 
 ## Estructura del proyecto
 
-```
+```text
 ecotrueque/
 ├── src/
 │   ├── app/                     # Pantallas (Expo Router: cada archivo es una ruta)
@@ -214,7 +207,7 @@ ecotrueque/
 │   ├── aplicar_mejoras_2026-11.sql # Mejoras 015, 020, 021 y 022 en un solo archivo
 │   ├── historico/               # Consolidado aplicado anteriormente (referencia)
 │   └── diagnostics/             # Consultas de diagnóstico del mapa y RPC
-├── assets/                      # Íconos, logos y splash
+├── assets/                      # Íconos, logos, splash y capturas del README
 ├── scripts/                     # setup.sh, publish-update.sh
 ├── app.config.ts                # Configuración de Expo
 ├── eas.json                     # Perfiles de compilación EAS
@@ -231,10 +224,7 @@ ecotrueque/
 
 ## Administración
 
-Las cuentas con `profiles.is_admin = true` ven **Panel de administración** en su perfil (`/admin`): revisan los
-reportes enviados desde el chat, les cambian el estado (pendiente, en revisión, resuelto) con una nota y pueden
-pausar la publicación reportada. Quien envió el reporte recibe una notificación. El rol solo se asigna desde el
-SQL Editor de Supabase; un trigger impide que un usuario se lo otorgue desde la app:
+Las cuentas con `profiles.is_admin = true` ven **Panel de administración** en su perfil (`/admin`): revisan los reportes enviados desde el chat, les cambian el estado (*pendiente*, *en revisión*, *resuelto*) con una nota y pueden pausar la publicación reportada. Quien envió el reporte recibe una notificación. El rol solo se asigna desde el SQL Editor de Supabase; un trigger impide que un usuario se lo otorgue desde la app:
 
 ```sql
 UPDATE public.profiles SET is_admin = TRUE WHERE id = '<id del usuario>';
