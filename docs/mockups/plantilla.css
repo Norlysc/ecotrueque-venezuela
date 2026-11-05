@@ -1,0 +1,69 @@
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1920px; height: 1080px; overflow: hidden; }
+body {
+  font-family: 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+  background: radial-gradient(1200px 700px at 15% 10%, #2EC786 0%, transparent 60%),
+              linear-gradient(135deg, #0A5C43 0%, #0F6E56 45%, #1D9E75 100%);
+  color: #fff;
+  position: relative;
+}
+body.light {
+  background: radial-gradient(900px 600px at 85% 15%, #CFEFE2 0%, transparent 60%),
+              linear-gradient(160deg, #F4FBF8 0%, #E6F5EE 100%);
+  color: #0A5C43;
+}
+.deco { position: absolute; border-radius: 50%; background: rgba(255,255,255,0.06); }
+.light .deco { background: rgba(29,158,117,0.07); }
+
+/* Marca */
+.brand { display: flex; align-items: center; gap: 16px; }
+.brand svg { width: 64px; height: 64px; filter: drop-shadow(0 6px 16px rgba(0,0,0,.18)); }
+.brand .name { font-size: 34px; font-weight: 300; letter-spacing: -0.5px; }
+.brand .name b { font-weight: 800; }
+.brand .tag { font-size: 13px; letter-spacing: 6px; opacity: .75; font-weight: 600; }
+
+h1 { font-size: 64px; line-height: 1.05; font-weight: 800; letter-spacing: -1.5px; }
+h2 { font-size: 44px; font-weight: 800; letter-spacing: -1px; }
+.lead { font-size: 22px; line-height: 1.5; opacity: .88; max-width: 560px; }
+.pill { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 999px;
+        background: rgba(255,255,255,.14); font-size: 15px; font-weight: 600; }
+.light .pill { background: rgba(29,158,117,.12); }
+
+/* Teléfono */
+.phone {
+  position: relative; width: 300px; aspect-ratio: 500 / 1083;
+  border-radius: 46px; padding: 11px; background: #101412;
+  box-shadow: 0 40px 80px -20px rgba(0,0,0,.45), 0 0 0 2px #2b302e inset, 0 0 0 1px rgba(255,255,255,.08);
+}
+.phone::before { /* isla dinámica */
+  content: ''; position: absolute; top: 22px; left: 50%; transform: translateX(-50%);
+  width: 80px; height: 22px; border-radius: 20px; background: #101412; z-index: 2;
+}
+.phone .screen { width: 100%; height: 100%; border-radius: 36px; overflow: hidden; background: #fff; display: flex; flex-direction: column; }
+.statusbar { flex: 0 0 46px; display: flex; align-items: center; justify-content: space-between; padding: 6px 26px 0 30px; font-size: 14px; font-weight: 700; }
+.sb-icons { display: flex; gap: 6px; align-items: center; }
+.phone .screen img { width: 100%; flex: 1; min-height: 0; object-fit: cover; object-position: top; display: block; }
+.phone.lg { width: 360px; border-radius: 54px; padding: 13px; }
+.phone.lg .screen { border-radius: 42px; }
+.caption { text-align: center; margin-top: 26px; }
+.caption b { display: block; font-size: 22px; font-weight: 700; }
+.caption span { font-size: 15px; opacity: .75; }
+
+/* Laptop */
+.laptop { position: relative; width: 1040px; }
+.laptop .lid {
+  background: #101412; border-radius: 22px 22px 0 0; padding: 18px 18px 22px;
+  box-shadow: 0 0 0 2px #2b302e inset, 0 50px 90px -30px rgba(0,0,0,.5);
+}
+.laptop .lid .screen { aspect-ratio: 16 / 10; overflow: hidden; border-radius: 4px; background: #fff; }
+.laptop .lid .screen img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+.laptop .base {
+  height: 26px; margin: 0 -70px; border-radius: 0 0 26px 26px;
+  background: linear-gradient(#d9dedc, #a9b1ae); position: relative;
+}
+.laptop .base::after { content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 160px; height: 10px; border-radius: 0 0 10px 10px; background: #8e9693; }
+.browserbar { display: flex; align-items: center; gap: 8px; height: 30px; padding: 0 12px; background: #eef1f0; }
+.browserbar i { width: 11px; height: 11px; border-radius: 50%; background: #d0d5d3; display: block; }
+.browserbar .url { margin-left: 14px; flex: 1; height: 18px; border-radius: 9px; background: #fff;
+  font-size: 11px; color: #5b6b65; display: flex; align-items: center; padding-left: 10px; }

@@ -8,6 +8,8 @@ Trabajo de grado de Ingeniería en Computación — Universidad Valle del Momboy
 
 ![EcoTrueque Venezuela - Intercambia, Recicla, Cuida el planeta](./assets/0003.jpeg)
 
+**Documentación del trabajo de grado:** documentación técnica, presentación de la defensa, mockups, diagramas y evidencias de pruebas en la carpeta [`docs/`](docs/README.md). El video de presentación está en la versión [v1.0.0](https://github.com/Norlysc/ecotrueque-venezuela/releases/tag/v1.0.0).
+
 ## Tecnologías
 
 | Capa | Herramientas |

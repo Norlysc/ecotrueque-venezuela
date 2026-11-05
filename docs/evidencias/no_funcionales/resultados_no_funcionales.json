@@ -1,0 +1,430 @@
+{
+  "fecha": "2026-11-04T23:17:47.646Z",
+  "url": "https://ecotrueque-venezuela-ten.vercel.app",
+  "rendimiento": {
+    "cargas": [
+      {
+        "pantalla": "Inicio de sesión",
+        "ruta": "/login",
+        "sesion": false,
+        "ttfb": 100,
+        "fcp": 728,
+        "lcp": 844,
+        "load": 620,
+        "jsKB": 1032
+      },
+      {
+        "pantalla": "Pantalla principal",
+        "ruta": "/",
+        "sesion": true,
+        "ttfb": 90,
+        "fcp": 552,
+        "lcp": 1076,
+        "load": 479,
+        "jsKB": 1032
+      },
+      {
+        "pantalla": "Detalle de publicación",
+        "ruta": "/listing/1e566dc3-9f20-4310-aa75-16a467704acd",
+        "sesion": true,
+        "ttfb": 90,
+        "fcp": 688,
+        "lcp": 1052,
+        "load": 577,
+        "jsKB": 1032
+      },
+      {
+        "pantalla": "Mapa",
+        "ruta": "/map",
+        "sesion": true,
+        "ttfb": 91,
+        "fcp": 648,
+        "lcp": 928,
+        "load": 502,
+        "jsKB": 1032
+      },
+      {
+        "pantalla": "Panel de impacto",
+        "ruta": "/eco/dashboard",
+        "sesion": true,
+        "ttfb": 89,
+        "fcp": 600,
+        "lcp": 600,
+        "load": 458,
+        "jsKB": 1032
+      }
+    ],
+    "redLenta": [
+      {
+        "pantalla": "Inicio de sesión",
+        "ruta": "/login",
+        "fcp": 5804,
+        "lcp": 8068,
+        "load": 5688
+      },
+      {
+        "pantalla": "Pantalla principal",
+        "ruta": "/",
+        "fcp": 5760,
+        "lcp": 8028,
+        "load": 5663
+      }
+    ],
+    "api": [
+      {
+        "operacion": "RPC get_nearby_listings (20 km, Valera)",
+        "n": 20,
+        "media": 219,
+        "mediana": 205,
+        "p95": 286,
+        "max": 506
+      },
+      {
+        "operacion": "RPC get_nearby_safe_spots (10 km)",
+        "n": 20,
+        "media": 199,
+        "mediana": 204,
+        "p95": 219,
+        "max": 236
+      },
+      {
+        "operacion": "REST mensajes de una conversación",
+        "n": 20,
+        "media": 205,
+        "mediana": 205,
+        "p95": 243,
+        "max": 284
+      },
+      {
+        "operacion": "REST perfil propio",
+        "n": 20,
+        "media": 205,
+        "mediana": 203,
+        "p95": 251,
+        "max": 269
+      }
+    ]
+  },
+  "compatibilidad": [
+    {
+      "navegador": "Google Chrome 156.0.8078.74",
+      "dispositivo": "Teléfono pequeño",
+      "resolucion": "360 × 740",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Google Chrome 156.0.8078.74",
+      "dispositivo": "Teléfono estándar",
+      "resolucion": "412 × 892",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Google Chrome 156.0.8078.74",
+      "dispositivo": "Tableta",
+      "resolucion": "768 × 1024",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Google Chrome 156.0.8078.74",
+      "dispositivo": "Portátil",
+      "resolucion": "1366 × 768",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Google Chrome 156.0.8078.74",
+      "dispositivo": "Escritorio",
+      "resolucion": "1920 × 1080",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Microsoft Edge 156.0.4314.58",
+      "dispositivo": "Teléfono pequeño",
+      "resolucion": "360 × 740",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Microsoft Edge 156.0.4314.58",
+      "dispositivo": "Teléfono estándar",
+      "resolucion": "412 × 892",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Microsoft Edge 156.0.4314.58",
+      "dispositivo": "Tableta",
+      "resolucion": "768 × 1024",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Microsoft Edge 156.0.4314.58",
+      "dispositivo": "Portátil",
+      "resolucion": "1366 × 768",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    },
+    {
+      "navegador": "Microsoft Edge 156.0.4314.58",
+      "dispositivo": "Escritorio",
+      "resolucion": "1920 × 1080",
+      "resultado": "Aprobado",
+      "detalle": "Principal: contenido visible; Mapa: contenido visible; Chat: contenido visible"
+    }
+  ],
+  "accesibilidad": [
+    {
+      "pantalla": "Inicio de sesión",
+      "ruta": "/login",
+      "reglasAprobadas": 10,
+      "criticas": 0,
+      "graves": 1,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 1
+        }
+      ]
+    },
+    {
+      "pantalla": "Pantalla principal",
+      "ruta": "/",
+      "reglasAprobadas": 22,
+      "criticas": 1,
+      "graves": 1,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "aria-required-children",
+          "impacto": "critical",
+          "descripcion": "Certain ARIA roles must contain particular children",
+          "nodos": 1
+        },
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 8
+        }
+      ]
+    },
+    {
+      "pantalla": "Detalle de publicación",
+      "ruta": "/listing/1e566dc3-9f20-4310-aa75-16a467704acd",
+      "reglasAprobadas": 8,
+      "criticas": 0,
+      "graves": 2,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 7
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impacto": "serious",
+          "descripcion": "Scrollable region must have keyboard access",
+          "nodos": 1
+        }
+      ]
+    },
+    {
+      "pantalla": "Chat",
+      "ruta": "/chat/718559b9-7ab7-400b-b885-9552fa48b2d6",
+      "reglasAprobadas": 15,
+      "criticas": 0,
+      "graves": 2,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "aria-prohibited-attr",
+          "impacto": "serious",
+          "descripcion": "Elements must only use permitted ARIA attributes",
+          "nodos": 1
+        },
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 6
+        }
+      ]
+    },
+    {
+      "pantalla": "Perfil",
+      "ruta": "/profile",
+      "reglasAprobadas": 20,
+      "criticas": 1,
+      "graves": 1,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "aria-required-children",
+          "impacto": "critical",
+          "descripcion": "Certain ARIA roles must contain particular children",
+          "nodos": 1
+        },
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 11
+        }
+      ]
+    },
+    {
+      "pantalla": "Panel de impacto",
+      "ruta": "/eco/dashboard",
+      "reglasAprobadas": 16,
+      "criticas": 0,
+      "graves": 2,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 5
+        },
+        {
+          "id": "scrollable-region-focusable",
+          "impacto": "serious",
+          "descripcion": "Scrollable region must have keyboard access",
+          "nodos": 1
+        }
+      ]
+    },
+    {
+      "pantalla": "Panel de administración",
+      "ruta": "/admin",
+      "reglasAprobadas": 11,
+      "criticas": 0,
+      "graves": 2,
+      "moderadas": 0,
+      "menores": 0,
+      "violaciones": [
+        {
+          "id": "aria-prohibited-attr",
+          "impacto": "serious",
+          "descripcion": "Elements must only use permitted ARIA attributes",
+          "nodos": 1
+        },
+        {
+          "id": "color-contrast",
+          "impacto": "serious",
+          "descripcion": "Elements must meet minimum color contrast ratio thresholds",
+          "nodos": 1
+        }
+      ]
+    }
+  ],
+  "seguridad": [
+    {
+      "id": "SEG-01",
+      "prueba": "Lectura de mensajes sin sesión",
+      "esperado": "Ningún mensaje (RLS)",
+      "obtenido": "HTTP 200, 0 filas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-02",
+      "prueba": "Lectura de conversaciones sin sesión",
+      "esperado": "Ninguna conversación",
+      "obtenido": "HTTP 200, 0 filas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-03",
+      "prueba": "Lectura de notificaciones sin sesión",
+      "esperado": "Ninguna notificación",
+      "obtenido": "HTTP 200, 0 filas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-04",
+      "prueba": "Lectura de reportes sin sesión",
+      "esperado": "Ningún reporte",
+      "obtenido": "HTTP 200, 0 filas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-05",
+      "prueba": "Correos en perfiles públicos",
+      "esperado": "Ningún correo visible (migración 020)",
+      "obtenido": "10 perfiles, 0 con correo",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-06",
+      "prueba": "Rol de administrador sin sesión",
+      "esperado": "is_admin() = false",
+      "obtenido": "HTTP 200, false",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-07",
+      "prueba": "Solicitud con token inválido",
+      "esperado": "Rechazo 401",
+      "obtenido": "HTTP 401",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-08",
+      "prueba": "Notificaciones de otros usuarios con sesión",
+      "esperado": "Ninguna (solo las propias)",
+      "obtenido": "0 filas ajenas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-09",
+      "prueba": "Bloqueos hechos por otros usuarios",
+      "esperado": "Ninguno visible",
+      "obtenido": "0 filas ajenas",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-10",
+      "prueba": "Foto del chat por URL pública",
+      "esperado": "Rechazo (bucket privado)",
+      "obtenido": "HTTP 400",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-11",
+      "prueba": "Acceso por HTTP sin cifrar",
+      "esperado": "Redirección a HTTPS",
+      "obtenido": "HTTP 308 → https://ecotrueque-venezuela-ten.vercel.app/",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-12",
+      "prueba": "Cabecera HSTS en el sitio",
+      "esperado": "Presente",
+      "obtenido": "max-age=63072000; includeSubDomains; preload",
+      "resultado": "Aprobado"
+    },
+    {
+      "id": "SEG-13",
+      "prueba": "Credenciales fuera del repositorio",
+      "esperado": ".env excluido en .gitignore",
+      "obtenido": ".env incluido en .gitignore",
+      "resultado": "Aprobado"
+    }
+  ]
+}

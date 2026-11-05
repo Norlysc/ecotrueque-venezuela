@@ -1,0 +1,51 @@
+erDiagram
+  PROFILES ||--o{ LISTINGS : "publica"
+  PROFILES ||--o{ TRADE_REQUESTS : "solicita (requester_id)"
+  PROFILES ||--o{ TRADE_REQUESTS : "recibe (owner_id)"
+  LISTINGS ||--o{ TRADE_REQUESTS : "solicitada / ofrecida"
+  TRADE_REQUESTS ||--o{ TRADES : "se completa en"
+  PROFILES ||--o{ TRADES : "participa"
+  LISTINGS ||--o{ TRADES : "intercambiada"
+  TRADES ||--o{ REVIEWS : "se valora en"
+  PROFILES ||--o{ REVIEWS : "escribe / recibe"
+  PROFILES {
+    UUID id PK,FK
+  }
+  LISTINGS {
+    UUID id PK
+    UUID user_id FK
+  }
+  TRADE_REQUESTS {
+    UUID id PK
+    UUID requester_id FK
+    UUID owner_id FK
+    UUID requested_listing_id FK
+    UUID offered_listing_id FK
+    TEXT message
+    TEXT status
+    BOOLEAN requester_confirmed
+    BOOLEAN owner_confirmed
+    TIMESTAMPTZ completed_at
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  TRADES {
+    UUID id PK
+    UUID trade_request_id FK
+    UUID requester_id FK
+    UUID owner_id FK
+    UUID requested_listing_id FK
+    UUID offered_listing_id FK
+    TIMESTAMPTZ completed_at
+    JSONB eco_impact_total
+    TIMESTAMPTZ created_at
+  }
+  REVIEWS {
+    UUID id PK
+    UUID trade_id FK
+    UUID reviewer_id FK
+    UUID reviewed_id FK
+    SMALLINT rating
+    TEXT comment
+    TIMESTAMPTZ created_at
+  }

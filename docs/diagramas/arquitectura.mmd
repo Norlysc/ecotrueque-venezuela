@@ -1,0 +1,33 @@
+flowchart TB
+  subgraph CLIENTE["Cliente · aplicación EcoTrueque (un solo código)"]
+    direction TB
+    UI["Pantallas · Expo Router 6<br/>React Native 0.81 · React 19"]
+    EST["Estado local · Zustand 4<br/>Caché remota · TanStack Query 5<br/>Validación · Zod + React Hook Form"]
+    SRV["Capa de servicios (src/services)<br/>auth · listings · trades · chat · eco · reports"]
+    UI --> EST --> SRV
+  end
+  subgraph PLAT["Plataformas de ejecución"]
+    direction TB
+    AND["Android / iOS<br/>Expo Go o compilación EAS"]
+    WEB["Web · react-native-web<br/>Vercel (expo export)"]
+  end
+  subgraph SUPA["Supabase · backend como servicio"]
+    direction TB
+    AUTH["Supabase Auth<br/>correo y contraseña, enlace mágico"]
+    REST["PostgREST<br/>API REST y RPC"]
+    RT["Realtime<br/>postgres_changes (chat)"]
+    STO["Storage<br/>avatars · listings · messages (privado)"]
+    subgraph PG["PostgreSQL + PostGIS"]
+      TAB["13 tablas · RLS en todas"]
+      FN["Funciones y triggers<br/>complete_trade · get_nearby_listings ..."]
+    end
+    REST --> PG
+    RT --> PG
+  end
+  MAP["Mapas<br/>Leaflet + OpenStreetMap (web)<br/>react-native-maps (móvil)"]
+  PLAT -.-> CLIENTE
+  SRV -- "HTTPS · supabase-js 2" --> AUTH
+  SRV -- "HTTPS" --> REST
+  SRV -- "WebSocket" --> RT
+  SRV -- "HTTPS · URL firmadas" --> STO
+  UI --> MAP

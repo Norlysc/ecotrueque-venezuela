@@ -1,0 +1,198 @@
+erDiagram
+  AUTH_USERS ||--|| PROFILES : "id"
+  PROFILES ||--o{ LISTINGS : "publica"
+  PROFILES ||--o{ FAVORITES : "marca"
+  LISTINGS ||--o{ FAVORITES : "recibe"
+  PROFILES ||--o{ TRADE_REQUESTS : "solicita (requester_id)"
+  PROFILES ||--o{ TRADE_REQUESTS : "recibe (owner_id)"
+  LISTINGS ||--o{ TRADE_REQUESTS : "solicitada / ofrecida"
+  TRADE_REQUESTS ||--o{ TRADES : "se completa en"
+  PROFILES ||--o{ TRADES : "participa"
+  LISTINGS ||--o{ TRADES : "intercambiada"
+  TRADE_REQUESTS |o--o{ CONVERSATIONS : "origina"
+  PROFILES ||--o{ CONVERSATIONS : "participante 1 / 2"
+  LISTINGS |o--o{ CONVERSATIONS : "listing_id"
+  CONVERSATIONS ||--o{ MESSAGES : "contiene"
+  PROFILES ||--o{ MESSAGES : "envía"
+  TRADE_REQUESTS |o--o{ MESSAGES : "propuesta"
+  TRADES ||--o{ REVIEWS : "se valora en"
+  PROFILES ||--o{ REVIEWS : "escribe / recibe"
+  PROFILES ||--o{ USER_ACHIEVEMENTS : "obtiene"
+  ACHIEVEMENTS ||--o{ USER_ACHIEVEMENTS : "se otorga"
+  PROFILES ||--o{ NOTIFICATIONS : "recibe"
+  PROFILES ||--o{ REPORTS : "reporta / es reportado / revisa"
+  LISTINGS |o--o{ REPORTS : "reportada"
+  PROFILES ||--o{ USER_BLOCKS : "bloquea / es bloqueado"
+
+  AUTH_USERS {
+    UUID id PK
+    TEXT email
+  }
+  PROFILES {
+    UUID id PK,FK
+    TEXT email
+    TEXT full_name
+    TEXT avatar_url
+    TEXT phone
+    TEXT city
+    TEXT state
+    TEXT bio
+    BOOLEAN is_verified
+    INTEGER eco_points
+    TEXT eco_level
+    NUMERIC reputation_score
+    INTEGER total_trades
+    INTEGER active_listings_count
+    NUMERIC co2_saved_kg
+    NUMERIC waste_reduced_kg
+    TEXT push_token
+    BOOLEAN is_admin
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  LISTINGS {
+    UUID id PK
+    UUID user_id FK
+    TEXT title
+    TEXT description
+    TEXT type
+    TEXT category
+    TEXT subcategory
+    TEXT condition
+    JSONB images
+    TEXT_ARRAY tags
+    TEXT looking_for
+    NUMERIC estimated_value_usd
+    DOUBLE latitude
+    DOUBLE longitude
+    GEOGRAPHY location
+    TEXT city
+    TEXT state
+    TEXT status
+    INTEGER views_count
+    INTEGER favorites_count
+    JSONB eco_impact
+    TSVECTOR search_vector
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  FAVORITES {
+    UUID id PK
+    UUID user_id FK
+    UUID listing_id FK
+    TIMESTAMPTZ created_at
+  }
+  TRADE_REQUESTS {
+    UUID id PK
+    UUID requester_id FK
+    UUID owner_id FK
+    UUID requested_listing_id FK
+    UUID offered_listing_id FK
+    TEXT message
+    TEXT status
+    BOOLEAN requester_confirmed
+    BOOLEAN owner_confirmed
+    TIMESTAMPTZ completed_at
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  TRADES {
+    UUID id PK
+    UUID trade_request_id FK
+    UUID requester_id FK
+    UUID owner_id FK
+    UUID requested_listing_id FK
+    UUID offered_listing_id FK
+    TIMESTAMPTZ completed_at
+    JSONB eco_impact_total
+    TIMESTAMPTZ created_at
+  }
+  CONVERSATIONS {
+    UUID id PK
+    UUID trade_request_id FK
+    UUID participant_1_id FK
+    UUID participant_2_id FK
+    UUID listing_id FK
+    TIMESTAMPTZ last_message_at
+    TIMESTAMPTZ created_at
+  }
+  MESSAGES {
+    UUID id PK
+    UUID conversation_id FK
+    UUID sender_id FK
+    TEXT type
+    TEXT content
+    TEXT image_url
+    UUID trade_request_id FK
+    BOOLEAN is_read
+    TIMESTAMPTZ created_at
+  }
+  REVIEWS {
+    UUID id PK
+    UUID trade_id FK
+    UUID reviewer_id FK
+    UUID reviewed_id FK
+    SMALLINT rating
+    TEXT comment
+    TIMESTAMPTZ created_at
+  }
+  ACHIEVEMENTS {
+    UUID id PK
+    TEXT key UK
+    TEXT title
+    TEXT description
+    TEXT emoji
+    INTEGER points_reward
+    TEXT requirement_type
+    INTEGER requirement_value
+    TIMESTAMPTZ created_at
+  }
+  USER_ACHIEVEMENTS {
+    UUID id PK
+    UUID user_id FK
+    UUID achievement_id FK
+    TIMESTAMPTZ unlocked_at
+  }
+  SAFE_SPOTS {
+    UUID id PK
+    TEXT name
+    TEXT type
+    TEXT address
+    TEXT city
+    TEXT state
+    DOUBLE latitude
+    DOUBLE longitude
+    GEOGRAPHY location
+    BOOLEAN is_24h
+    TEXT phone
+    TIMESTAMPTZ created_at
+  }
+  NOTIFICATIONS {
+    UUID id PK
+    UUID user_id FK
+    TEXT type
+    TEXT title
+    TEXT body
+    JSONB data
+    BOOLEAN is_read
+    TIMESTAMPTZ created_at
+  }
+  REPORTS {
+    UUID id PK
+    UUID reporter_id FK
+    UUID reported_user_id FK
+    UUID reported_listing_id FK
+    TEXT reason
+    TEXT description
+    TEXT status
+    TIMESTAMPTZ created_at
+    UUID reviewed_by FK
+    TIMESTAMPTZ reviewed_at
+    TEXT admin_note
+  }
+  USER_BLOCKS {
+    UUID id PK
+    UUID blocker_id FK
+    UUID blocked_id FK
+    TIMESTAMPTZ created_at
+  }

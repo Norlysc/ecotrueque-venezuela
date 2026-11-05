@@ -1,0 +1,78 @@
+erDiagram
+  AUTH_USERS ||--|| PROFILES : "id"
+  PROFILES ||--o{ LISTINGS : "publica"
+  PROFILES ||--o{ FAVORITES : "marca"
+  LISTINGS ||--o{ FAVORITES : "recibe"
+  PROFILES ||--o{ REPORTS : "reporta / es reportado / revisa"
+  LISTINGS |o--o{ REPORTS : "reportada"
+  AUTH_USERS {
+    UUID id PK
+    TEXT email
+  }
+  PROFILES {
+    UUID id PK,FK
+    TEXT email
+    TEXT full_name
+    TEXT avatar_url
+    TEXT phone
+    TEXT city
+    TEXT state
+    TEXT bio
+    BOOLEAN is_verified
+    INTEGER eco_points
+    TEXT eco_level
+    NUMERIC reputation_score
+    INTEGER total_trades
+    INTEGER active_listings_count
+    NUMERIC co2_saved_kg
+    NUMERIC waste_reduced_kg
+    TEXT push_token
+    BOOLEAN is_admin
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  LISTINGS {
+    UUID id PK
+    UUID user_id FK
+    TEXT title
+    TEXT description
+    TEXT type
+    TEXT category
+    TEXT subcategory
+    TEXT condition
+    JSONB images
+    TEXT_ARRAY tags
+    TEXT looking_for
+    NUMERIC estimated_value_usd
+    DOUBLE latitude
+    DOUBLE longitude
+    GEOGRAPHY location
+    TEXT city
+    TEXT state
+    TEXT status
+    INTEGER views_count
+    INTEGER favorites_count
+    JSONB eco_impact
+    TSVECTOR search_vector
+    TIMESTAMPTZ created_at
+    TIMESTAMPTZ updated_at
+  }
+  FAVORITES {
+    UUID id PK
+    UUID user_id FK
+    UUID listing_id FK
+    TIMESTAMPTZ created_at
+  }
+  REPORTS {
+    UUID id PK
+    UUID reporter_id FK
+    UUID reported_user_id FK
+    UUID reported_listing_id FK
+    TEXT reason
+    TEXT description
+    TEXT status
+    TIMESTAMPTZ created_at
+    UUID reviewed_by FK
+    TIMESTAMPTZ reviewed_at
+    TEXT admin_note
+  }

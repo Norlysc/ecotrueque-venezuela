@@ -1,0 +1,45 @@
+erDiagram
+  PROFILES ||--o{ LISTINGS : "publica"
+  PROFILES ||--o{ TRADE_REQUESTS : "solicita (requester_id)"
+  PROFILES ||--o{ TRADE_REQUESTS : "recibe (owner_id)"
+  LISTINGS ||--o{ TRADE_REQUESTS : "solicitada / ofrecida"
+  TRADE_REQUESTS |o--o{ CONVERSATIONS : "origina"
+  PROFILES ||--o{ CONVERSATIONS : "participante 1 / 2"
+  LISTINGS |o--o{ CONVERSATIONS : "listing_id"
+  CONVERSATIONS ||--o{ MESSAGES : "contiene"
+  PROFILES ||--o{ MESSAGES : "envía"
+  TRADE_REQUESTS |o--o{ MESSAGES : "propuesta"
+  PROFILES {
+    UUID id PK,FK
+  }
+  LISTINGS {
+    UUID id PK
+    UUID user_id FK
+  }
+  TRADE_REQUESTS {
+    UUID id PK
+    UUID requester_id FK
+    UUID owner_id FK
+    UUID requested_listing_id FK
+    UUID offered_listing_id FK
+  }
+  CONVERSATIONS {
+    UUID id PK
+    UUID trade_request_id FK
+    UUID participant_1_id FK
+    UUID participant_2_id FK
+    UUID listing_id FK
+    TIMESTAMPTZ last_message_at
+    TIMESTAMPTZ created_at
+  }
+  MESSAGES {
+    UUID id PK
+    UUID conversation_id FK
+    UUID sender_id FK
+    TEXT type
+    TEXT content
+    TEXT image_url
+    UUID trade_request_id FK
+    BOOLEAN is_read
+    TIMESTAMPTZ created_at
+  }

@@ -1,0 +1,55 @@
+erDiagram
+  PROFILES ||--o{ USER_ACHIEVEMENTS : "obtiene"
+  ACHIEVEMENTS ||--o{ USER_ACHIEVEMENTS : "se otorga"
+  PROFILES ||--o{ NOTIFICATIONS : "recibe"
+  PROFILES ||--o{ USER_BLOCKS : "bloquea / es bloqueado"
+  PROFILES {
+    UUID id PK,FK
+  }
+  ACHIEVEMENTS {
+    UUID id PK
+    TEXT key UK
+    TEXT title
+    TEXT description
+    TEXT emoji
+    INTEGER points_reward
+    TEXT requirement_type
+    INTEGER requirement_value
+    TIMESTAMPTZ created_at
+  }
+  USER_ACHIEVEMENTS {
+    UUID id PK
+    UUID user_id FK
+    UUID achievement_id FK
+    TIMESTAMPTZ unlocked_at
+  }
+  NOTIFICATIONS {
+    UUID id PK
+    UUID user_id FK
+    TEXT type
+    TEXT title
+    TEXT body
+    JSONB data
+    BOOLEAN is_read
+    TIMESTAMPTZ created_at
+  }
+  USER_BLOCKS {
+    UUID id PK
+    UUID blocker_id FK
+    UUID blocked_id FK
+    TIMESTAMPTZ created_at
+  }
+  SAFE_SPOTS {
+    UUID id PK
+    TEXT name
+    TEXT type
+    TEXT address
+    TEXT city
+    TEXT state
+    DOUBLE latitude
+    DOUBLE longitude
+    GEOGRAPHY location
+    BOOLEAN is_24h
+    TEXT phone
+    TIMESTAMPTZ created_at
+  }

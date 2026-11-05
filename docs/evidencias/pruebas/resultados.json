@@ -1,0 +1,574 @@
+{
+  "fecha": "2026-11-04T23:16:25.535Z",
+  "url": "https://ecotrueque-venezuela-ten.vercel.app",
+  "resultados": [
+    {
+      "id": "CP-02",
+      "modulo": "Autenticación",
+      "nombre": "Validación de correo inválido al iniciar sesión",
+      "pasos": [
+        "Abrir /login",
+        "Escribir «correo-invalido» y una contraseña",
+        "Pulsar «Iniciar sesión»"
+      ],
+      "esperado": "Se muestra «Ingresa un email válido» y no se envía la solicitud",
+      "obtenido": "Mensaje «Ingresa un email válido» visible; la sesión no se inició",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-02.png"
+    },
+    {
+      "id": "CP-03",
+      "modulo": "Autenticación",
+      "nombre": "Registro: paso 1 a paso 2",
+      "pasos": [
+        "Abrir /register",
+        "Completar nombre, correo, teléfono, estado (Trujillo) y ciudad",
+        "Pulsar «Continuar»"
+      ],
+      "esperado": "Se avanza al paso 2 de 2 (contraseña y términos)",
+      "obtenido": "Se muestra «Paso 2 de 2» con los campos de contraseña",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-03.png"
+    },
+    {
+      "id": "CP-04",
+      "modulo": "Autenticación",
+      "nombre": "Registro: contraseñas que no coinciden",
+      "pasos": [
+        "En el paso 2 escribir «Clave1234» y confirmar con «Clave9999»",
+        "Aceptar términos",
+        "Pulsar «Crear cuenta»"
+      ],
+      "esperado": "Se muestra un error de coincidencia y no se crea la cuenta",
+      "obtenido": "Mensaje «Las contraseñas no coinciden»; no se envió el registro",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-04.png"
+    },
+    {
+      "id": "CP-05",
+      "modulo": "Autenticación",
+      "nombre": "Recuperación de contraseña: validación del correo",
+      "pasos": [
+        "Abrir /forgot-password",
+        "Escribir «abc»",
+        "Pulsar «Enviar enlace de recuperación»"
+      ],
+      "esperado": "Se muestra «Ingresa un email válido»",
+      "obtenido": "Mensaje de validación visible; no se envió el correo",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-05.png"
+    },
+    {
+      "id": "CP-01",
+      "modulo": "Autenticación",
+      "nombre": "Inicio de sesión con credenciales válidas",
+      "pasos": [
+        "Abrir /login",
+        "Escribir el correo y la contraseña de la cuenta de prueba",
+        "Pulsar «Iniciar sesión»"
+      ],
+      "esperado": "Se abre la pantalla principal con el saludo de la usuaria",
+      "obtenido": "Sesión iniciada; URL /; saludo «Norlys»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-01.png"
+    },
+    {
+      "id": "CP-06",
+      "modulo": "Publicaciones",
+      "nombre": "Listado de ofertas cercanas",
+      "pasos": [
+        "Abrir la pantalla principal con ubicación en Valera"
+      ],
+      "esperado": "Se listan ofertas con foto, distancia aproximada y lo que se busca a cambio",
+      "obtenido": "30 tarjetas con distancia «Menos de 1 km»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-06.png"
+    },
+    {
+      "id": "CP-07",
+      "modulo": "Publicaciones",
+      "nombre": "Búsqueda por texto",
+      "pasos": [
+        "Escribir «guitarra» en el buscador",
+        "Pulsar Enter"
+      ],
+      "esperado": "Los resultados contienen «Guitarra»",
+      "obtenido": "6 resultados con «Guitarra»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-07.png"
+    },
+    {
+      "id": "CP-08",
+      "modulo": "Publicaciones",
+      "nombre": "Filtro por categoría",
+      "pasos": [
+        "Volver a la pantalla principal",
+        "Pulsar la categoría «Electrónica»"
+      ],
+      "esperado": "El listado muestra el título «Electrónica»",
+      "obtenido": "Sección «Electrónica» con sus publicaciones",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-08.png"
+    },
+    {
+      "id": "CP-09",
+      "modulo": "Publicaciones",
+      "nombre": "Detalle de publicación",
+      "pasos": [
+        "Abrir «Escritorio de madera para estudio con gavetas»"
+      ],
+      "esperado": "Se ven fotos, «Busca a cambio», impacto estimado y «Proponer trueque»",
+      "obtenido": "«Busca a cambio», impacto (25 kg CO₂, 10 kg residuos, USD 60) y botón «Proponer trueque» visibles",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-09.png"
+    },
+    {
+      "id": "CP-10",
+      "modulo": "Publicaciones",
+      "nombre": "Marcar «Me gusta»",
+      "pasos": [
+        "En el detalle, pulsar el corazón"
+      ],
+      "esperado": "La app envía la solicitud a favorites con la publicación",
+      "obtenido": "POST favorites (listing_id 1e566dc3-9f20-4310-aa75-16a467704acd)",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "POST favorites"
+      ],
+      "archivo": "CP-10.png"
+    },
+    {
+      "id": "CP-11",
+      "modulo": "Publicaciones",
+      "nombre": "Asistente para publicar (paso 1 a paso 2)",
+      "pasos": [
+        "Abrir «Publicar»",
+        "Elegir «Un bien» y la categoría «Libros»",
+        "Pulsar «Siguiente»"
+      ],
+      "esperado": "Se avanza al paso 2 de 4",
+      "obtenido": "Indicador «2/4» visible",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-11.png"
+    },
+    {
+      "id": "CP-12",
+      "modulo": "Geolocalización",
+      "nombre": "Cambio del radio de búsqueda",
+      "pasos": [
+        "Abrir el mapa",
+        "Pulsar «5 km»"
+      ],
+      "esperado": "El contador indica «trueques en 5 km»",
+      "obtenido": "«30 trueques en 5 km»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-12.png"
+    },
+    {
+      "id": "CP-13",
+      "modulo": "Geolocalización",
+      "nombre": "Sitios seguros sugeridos en el mapa",
+      "pasos": [
+        "En el mapa, pulsar «Sitios seguros»"
+      ],
+      "esperado": "Se muestran los lugares públicos sugeridos de Valera",
+      "obtenido": "Botón «Sitios seguros (8)»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-13.png"
+    },
+    {
+      "id": "CP-14",
+      "modulo": "Intercambios",
+      "nombre": "Enviar una propuesta de trueque",
+      "pasos": [
+        "Abrir la propuesta para «Clases de Guitarra»",
+        "Elegir una publicación propia",
+        "Escribir un mensaje",
+        "Pulsar «Enviar propuesta de trueque»"
+      ],
+      "esperado": "La app crea la solicitud (trade_requests), la conversación y la notificación al dueño",
+      "obtenido": "Solicitudes enviadas: trade_requests, conversations, messages, notifications",
+      "estado": "Aprobado",
+      "nota": "Escrituras interceptadas",
+      "solicitudes": [
+        "POST trade_requests",
+        "POST conversations",
+        "POST messages",
+        "POST notifications"
+      ],
+      "archivo": "CP-14.png"
+    },
+    {
+      "id": "CP-15",
+      "modulo": "Intercambios",
+      "nombre": "Solicitudes recibidas y filtros",
+      "pasos": [
+        "Abrir «Solicitudes recibidas»",
+        "Pulsar «Aceptadas» y luego «Todas»"
+      ],
+      "esperado": "Se listan las solicitudes con su estado",
+      "obtenido": "2 solicitudes «Completado» de Rhonny Jaimes y Edicson Jaimes",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-15.png"
+    },
+    {
+      "id": "CP-16",
+      "modulo": "Intercambios",
+      "nombre": "Aceptar una solicitud recibida",
+      "pasos": [
+        "Abrir «Solicitudes recibidas» con una solicitud pendiente",
+        "Pulsar «Aceptar trueque»"
+      ],
+      "esperado": "La app cambia el estado a accepted y notifica a quien propuso",
+      "obtenido": "PATCH trade_requests {\"status\":\"accepted\"}",
+      "estado": "Aprobado",
+      "nota": "Estado «pendiente» simulado en el navegador; escrituras interceptadas",
+      "solicitudes": [
+        "PATCH trade_requests"
+      ],
+      "archivo": "CP-16.png"
+    },
+    {
+      "id": "CP-17",
+      "modulo": "Intercambios",
+      "nombre": "Rechazar una solicitud recibida",
+      "pasos": [
+        "Abrir «Solicitudes recibidas» con una solicitud pendiente",
+        "Pulsar «Rechazar»"
+      ],
+      "esperado": "La app cambia el estado a rejected y notifica a quien propuso",
+      "obtenido": "PATCH trade_requests {\"status\":\"rejected\"}",
+      "estado": "Aprobado",
+      "nota": "Estado «pendiente» simulado en el navegador; escrituras interceptadas",
+      "solicitudes": [
+        "PATCH trade_requests"
+      ],
+      "archivo": "CP-17.png"
+    },
+    {
+      "id": "CP-18",
+      "modulo": "Intercambios",
+      "nombre": "Confirmación doble del encuentro",
+      "pasos": [
+        "Abrir el chat del trueque aceptado por «Clases de Guitarra» (Norlys ya confirmó)"
+      ],
+      "esperado": "El chat muestra «¿Realizaron el encuentro?» con el estado de cada parte; el trueque se completa solo cuando ambas confirman",
+      "obtenido": "Banner visible: «Tú confirmaste» y «El otro: pendiente»; el botón ya no se ofrece a quien confirmó (requester_confirmed = true, owner_confirmed = false en la base de datos)",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [
+        "PATCH messages",
+        "PATCH messages"
+      ],
+      "archivo": "CP-18.png"
+    },
+    {
+      "id": "CP-19",
+      "modulo": "Intercambios",
+      "nombre": "Reseña con estrellas",
+      "pasos": [
+        "Abrir el formulario de reseña de Rhonny Jaimes",
+        "Elegir 5 estrellas",
+        "Escribir un comentario",
+        "Pulsar «Enviar reseña»"
+      ],
+      "esperado": "Se muestra «Excelente» y la app envía la reseña (reviews)",
+      "obtenido": "POST reviews rating 5",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "POST reviews",
+        "POST notifications"
+      ],
+      "archivo": "CP-19.png"
+    },
+    {
+      "id": "CP-20",
+      "modulo": "Comunicación",
+      "nombre": "Conversación con mensajes",
+      "pasos": [
+        "Abrir el chat con Rhonny Jaimes"
+      ],
+      "esperado": "Se ven la propuesta registrada y los mensajes con hora",
+      "obtenido": "Propuesta registrada y mensajes «hola q tal ?», «hols, si estoy interesado», «Super» visibles",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [
+        "PATCH messages",
+        "PATCH messages"
+      ],
+      "archivo": "CP-20.png"
+    },
+    {
+      "id": "CP-21",
+      "modulo": "Comunicación",
+      "nombre": "Enviar un mensaje de texto",
+      "pasos": [
+        "Escribir «Prueba funcional» en el campo de mensaje",
+        "Pulsar enviar"
+      ],
+      "esperado": "La app envía el mensaje (messages) con el contenido escrito",
+      "obtenido": "POST messages {\"conversation_id\":\"718559b9-7ab7-400b-b885-9552fa48b2d6\",\"sender_id\":\"ae465756-8673-43a4-",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "POST messages",
+        "PATCH conversations"
+      ],
+      "archivo": "CP-21.png"
+    },
+    {
+      "id": "CP-22",
+      "modulo": "Comunicación",
+      "nombre": "Menú de opciones del chat",
+      "pasos": [
+        "Pulsar los tres puntos"
+      ],
+      "esperado": "Aparecen Ver perfil, Ver publicación, Reportar usuario y Bloquear usuario",
+      "obtenido": "Opciones visibles: 4 de 4",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [
+        "PATCH messages",
+        "PATCH messages"
+      ],
+      "archivo": "CP-22.png"
+    },
+    {
+      "id": "CP-23",
+      "modulo": "Comunicación",
+      "nombre": "Reportar a un usuario",
+      "pasos": [
+        "En el menú, pulsar «Reportar usuario»",
+        "Elegir «No se presentó al encuentro»",
+        "Pulsar «Enviar reporte»"
+      ],
+      "esperado": "La app envía el reporte (reports) y confirma el envío",
+      "obtenido": "POST reports reason «No se presentó al encuentro»; aviso «Reporte enviado»",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "POST reports"
+      ],
+      "archivo": "CP-23.png"
+    },
+    {
+      "id": "CP-24",
+      "modulo": "Comunicación",
+      "nombre": "Bloquear a un usuario",
+      "pasos": [
+        "Abrir el menú de opciones",
+        "Pulsar «Bloquear usuario»",
+        "Confirmar con «Bloquear»"
+      ],
+      "esperado": "La app registra el bloqueo (user_blocks) y confirma",
+      "obtenido": "POST user_blocks {\"blocker_id\":\"ae465756-8673-43a4-aac7-7d9710877a7a\",\"blocked_id\":\"3334b81d-81ed-486f-8e47-381e6e709c45\"}",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada; en producción requiere la migración 021",
+      "solicitudes": [
+        "PATCH messages",
+        "PATCH messages",
+        "POST user_blocks"
+      ],
+      "archivo": "CP-24.png"
+    },
+    {
+      "id": "CP-25",
+      "modulo": "Notificaciones",
+      "nombre": "Lista de notificaciones",
+      "pasos": [
+        "Abrir la campana"
+      ],
+      "esperado": "Se listan los avisos de propuestas, aceptaciones y reseñas",
+      "obtenido": "5 notificaciones visibles",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-25.png"
+    },
+    {
+      "id": "CP-26",
+      "modulo": "Perfil",
+      "nombre": "Pestañas del perfil",
+      "pasos": [
+        "Abrir el perfil",
+        "Pulsar «Historial» y «Reseñas»"
+      ],
+      "esperado": "Cada pestaña muestra su contenido",
+      "obtenido": "Historial: 2 trueques; Reseñas: comentarios de otros usuarios",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-26.png"
+    },
+    {
+      "id": "CP-27",
+      "modulo": "Perfil",
+      "nombre": "Editar la biografía del perfil",
+      "pasos": [
+        "Abrir «Editar perfil»",
+        "Escribir una biografía",
+        "Pulsar «Guardar cambios»"
+      ],
+      "esperado": "La app actualiza el perfil (profiles) con la nueva biografía",
+      "obtenido": "PATCH profiles bio «Prueba funcional de edición»",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "PATCH profiles"
+      ],
+      "archivo": "CP-27.png"
+    },
+    {
+      "id": "CP-28",
+      "modulo": "Métricas e impacto",
+      "nombre": "Panel de impacto y logros registrados",
+      "pasos": [
+        "Abrir «Mi impacto ecológico»",
+        "Desplazarse hasta «Logros»"
+      ],
+      "esperado": "Se muestran EcoPoints, nivel y los 16 logros; los alcanzados aparecen marcados como desbloqueados",
+      "obtenido": "Panel con «286 EcoPoints» (nivel Brote); 3 logros desbloqueados y guardados en user_achievements: Primera Semilla, Nivel Brote, Primera Reseña",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-28.png"
+    },
+    {
+      "id": "CP-29",
+      "modulo": "Adaptación visual",
+      "nombre": "Cambio a modo oscuro desde el perfil",
+      "pasos": [
+        "Abrir el perfil",
+        "Pulsar «Tema del sistema» hasta «Modo oscuro»"
+      ],
+      "esperado": "La interfaz cambia a fondo oscuro",
+      "obtenido": "Selector «Modo oscuro»; fondo rgb(26, 26, 24)",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-29.png"
+    },
+    {
+      "id": "CP-31",
+      "modulo": "Administración",
+      "nombre": "Acceso al panel de administración",
+      "pasos": [
+        "Abrir el perfil con una cuenta administradora",
+        "Pulsar «Panel de administración»"
+      ],
+      "esperado": "Se abre /admin con el contador de reportes pendientes",
+      "obtenido": "Ruta /admin; «0 reportes pendientes»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-31.png"
+    },
+    {
+      "id": "CP-32",
+      "modulo": "Administración",
+      "nombre": "Filtro de reportes por estado",
+      "pasos": [
+        "En el panel, pulsar «Resueltos»"
+      ],
+      "esperado": "Se lista el reporte resuelto con su nota de revisión",
+      "obtenido": "«Nota: Reporte de prueba atendido: no se requieren medidas.»",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-32.png"
+    },
+    {
+      "id": "CP-33",
+      "modulo": "Administración",
+      "nombre": "Reabrir un reporte resuelto",
+      "pasos": [
+        "Abrir el reporte resuelto",
+        "Pulsar «Reabrir»"
+      ],
+      "esperado": "La app llama a admin_update_report con estado pending",
+      "obtenido": "POST rpc/admin_update_report {\"p_report_id\":\"b65cd790-d893-4bec-b3d3-1fb2954db031\",\"p_status\":\"pending\",\"p_note\":\"Reporte de prueba atendido: no se requieren medidas.\"}",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada",
+      "solicitudes": [
+        "POST rpc/admin_update_report"
+      ],
+      "archivo": "CP-33.png"
+    },
+    {
+      "id": "CP-34",
+      "modulo": "Administración",
+      "nombre": "Pausar la publicación reportada",
+      "pasos": [
+        "Abrir el reporte",
+        "Pulsar «Pausar publicación»"
+      ],
+      "esperado": "La app llama a admin_pause_listing con la publicación reportada",
+      "obtenido": "POST rpc/admin_pause_listing {\"p_listing_id\":\"e36ff206-f473-4173-9a5d-43e201984be5\"}",
+      "estado": "Aprobado",
+      "nota": "Escritura interceptada: la publicación real no se pausó",
+      "solicitudes": [
+        "POST rpc/admin_pause_listing"
+      ],
+      "archivo": "CP-34.png"
+    },
+    {
+      "id": "CP-35",
+      "modulo": "Notificaciones",
+      "nombre": "Aviso «Tu reporte fue atendido» (regresión DEF-01)",
+      "pasos": [
+        "Abrir la campana de notificaciones"
+      ],
+      "esperado": "El título se muestra completo: «Tu reporte fue atendido»",
+      "obtenido": "Título completo visible (antes de la corrección se mostraba «porte fue atendido»)",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-35.png"
+    },
+    {
+      "id": "CP-30",
+      "modulo": "Autenticación",
+      "nombre": "Cerrar sesión",
+      "pasos": [
+        "En el perfil, pulsar «Cerrar sesión»",
+        "Confirmar"
+      ],
+      "esperado": "Vuelve a la pantalla de inicio de sesión",
+      "obtenido": "Se muestra «Bienvenido de vuelta» en /login",
+      "estado": "Aprobado",
+      "nota": "",
+      "solicitudes": [],
+      "archivo": "CP-30.png"
+    }
+  ],
+  "escrituras_interceptadas": 24,
+  "errores_pagina": []
+}
